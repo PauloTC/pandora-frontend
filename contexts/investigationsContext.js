@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState } from "react";
 import { Investigation } from "@/api";
 
 export const InvestigationsContext = createContext();
