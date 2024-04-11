@@ -1,5 +1,4 @@
 "use client";
-
 import React, { createContext, useState } from "react";
 import { Investigation } from "@/api";
 

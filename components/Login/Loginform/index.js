@@ -19,7 +19,7 @@ export default function LoginForm() {
     onSubmit: async (values) => {
       try {
         const response = await authCtrl.login(values);
-        login(response.jwt);
+        // login(response.jwt);
         router.push("/investigations", { scroll: false });
       } catch (error) {
         console.log("error", error);
