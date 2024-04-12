@@ -20,7 +20,7 @@ import { initialValues, validationSchema } from "./InvestigationForm.form";
 import { useRouter } from "next/navigation";
 import { format, parse } from "date-fns";
 import { MaterialsForm } from "@/components/Materials/MaterialsForm";
-// import { uploadToS3 } from "@/utils";
+import { uploadToS3 } from "@/utils";
 
 import PulseLoader from "react-spinners/PulseLoader";
 
@@ -185,6 +185,8 @@ export function InvestigationForm({ params, title }) {
           initialGuideMediaLinkRef.current =
             response.attributes.guide_media_link;
         }
+
+        console.log("process", process);
 
         const responseProjects = await projectCtrl.getProjects();
         const responseTeams = await teamCtrl.getTeams();
