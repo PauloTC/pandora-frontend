@@ -1,6 +1,12 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const s3Client = new S3Client({ region: "sa-east-1" });
+const s3Client = new S3Client({
+  region: "sa-east-1", // Región de tu bucket S3
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 // Función para subir un archivo a S3
 export async function uploadToS3(file, onUploadStatusChange) {
