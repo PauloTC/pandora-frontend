@@ -326,16 +326,22 @@ export default function InvestigationsComponent() {
                             .name
                         }
                       </p>
-                      <ul className="flex items-center investigations-researchers justify-between grow relative w-40">
+                      <ul className="flex items-center justify-end grow relative w-40">
                         {investigation?.attributes?.researchers.data
                           .slice(0, 2)
                           .map((researcher, index) => {
                             return (
                               <li
-                                className="
-                                  investigations-researcher 
-                                  relative border-2 border-white
-                                  rounded-full"
+                                // prettier-ignore
+                                className={classNames(
+                                  {
+                                    "absolute": index === 1,
+                                    "right-7": index === 1
+                                  },
+                                  "border-2",
+                                  "border-white",
+                                  "rounded-full"
+                                )}
                                 key={index}
                               >
                                 <Image
