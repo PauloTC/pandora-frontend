@@ -6,7 +6,7 @@ export default function LayoutComponent({ children }) {
     <>
       <SidebarComponent />
       <div className="p-8 sm:ml-64 relative">
-        {/* <HeaderComponent /> */}
+        <HeaderComponent />
         {children}
       </div>
     </>
