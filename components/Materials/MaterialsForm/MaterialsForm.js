@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { validationSchema } from "./MaterialsForm.form";
 import { Material, Public, Location, Investigation } from "@/api";
-import { uploadToS3 } from "@/utils";
+// import { uploadToS3 } from "@/utils";
 import PulseLoader from "react-spinners/PulseLoader";
 
 export function MaterialsForm({ slug }) {
@@ -53,9 +53,9 @@ export function MaterialsForm({ slug }) {
         for (const material of investigation.attributes?.materials?.data) {
           let tool_media = values[material.id].tool_media;
 
-          if (tool_media instanceof File) {
-            tool_media = await uploadToS3(tool_media, setIsUploading);
-          }
+          // if (tool_media instanceof File) {
+          //   tool_media = await uploadToS3(tool_media, setIsUploading);
+          // }
 
           const materialData = {
             publics: values[material.id].publics.map((item) => item.value),
