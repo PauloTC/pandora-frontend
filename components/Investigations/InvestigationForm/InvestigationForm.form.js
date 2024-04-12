@@ -51,7 +51,9 @@ export function initialValues(investigation = {}) {
     specific_goals,
     guide_media_link,
     presented_to,
-    presented_date: "",
+    presented_date: presented_date
+      ? format(new Date(presented_date), "dd/MM/yyyy")
+      : "",
     guide: "",
   };
 }

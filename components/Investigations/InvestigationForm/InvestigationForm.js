@@ -186,8 +186,6 @@ export function InvestigationForm({ params, title }) {
             response.attributes.guide_media_link;
         }
 
-        console.log("process", process);
-
         const responseProjects = await projectCtrl.getProjects();
         const responseTeams = await teamCtrl.getTeams();
         const responseInvestigationTypes =
