@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.554.0",
     "classnames": "^2.5.1",
     "date-fns": "^3.6.0",
     "formik": "^2.4.5",
@@ -16,6 +17,9 @@
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-multi-select-component": "^4.3.4",
+    "react-spinners": "^0.13.8",
+    "slugify": "^1.6.6",
     "yup": "^1.4.0"
   },
   "devDependencies": {
