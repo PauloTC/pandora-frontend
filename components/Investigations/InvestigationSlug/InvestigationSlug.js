@@ -69,7 +69,7 @@ export function InvestigationSlugComponent({ params }) {
             <h4 className={`${libre_franklin700.className} text-xl mb-4 flex`}>
               Ficha Técnica
             </h4>
-            <div className="divide-x divide-gray-200 grid grid-cols-2 gap-6">
+            <div className="divide-x divide-gray-200 grid grid-cols-2">
               <ul className="flex flex-col gap-6">
                 <li className="flex items-center gap-4">
                   <label htmlFor="name" className="w-80">
@@ -251,7 +251,7 @@ export function InvestigationSlugComponent({ params }) {
                   investigation?.investigation_types?.data[index]?.attributes
                     .name}
               </h4>
-              <div className="divide-x divide-gray-200 grid grid-cols-2 gap-6">
+              <div className="divide-x divide-gray-200 grid grid-cols-2">
                 <ul className="flex flex-col gap-4">
                   <li className="flex items-center gap-4">
                     <label htmlFor="name" className="w-80">
