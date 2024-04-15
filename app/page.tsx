@@ -1,6 +1,6 @@
 import Image from "next/image";
 import LoginForm from "@/components/Login/Loginform";
-// import "./styles.scss";
+import "./styles.css";
 
 export default function Home() {
   const persons = [
