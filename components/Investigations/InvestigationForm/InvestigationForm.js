@@ -74,10 +74,6 @@ export function InvestigationForm({ params, title }) {
 
         const initial_date = format(startDate, "yyyy-MM-dd");
 
-        const end_date = format(endDate, "yyyy-MM-dd");
-
-        const presented_date = format(presentedDate, "yyyy-MM-dd");
-
         const file = formValues.guide_media_link;
         let guide_media_link = "";
 
@@ -112,6 +108,17 @@ export function InvestigationForm({ params, title }) {
 
           return;
         } else {
+          if (presentedDate) {
+            investigationData.presented_date = format(
+              presentedDate,
+              "yyyy-MM-dd"
+            );
+          }
+
+          if (endDate) {
+            investigationData.end_date = format(endDate, "yyyy-MM-dd");
+          }
+
           let result = await investigationCtrl.createInvestigation({
             ...formValues,
             slug,
@@ -121,8 +128,6 @@ export function InvestigationForm({ params, title }) {
             team_extended,
             guide_media_link,
             initial_date,
-            end_date,
-            presented_date,
           });
 
           const createdInvestigation = result;
@@ -153,6 +158,9 @@ export function InvestigationForm({ params, title }) {
             ? setStep(2)
             : router.push("/investigations", { scroll: false });
         }
+
+        console.log(formValues);
+
         formik.handleReset();
       } catch (error) {
         console.error(error);
@@ -618,6 +626,7 @@ export function InvestigationForm({ params, title }) {
                         value={formik.values.goal}
                         onChange={formik.handleChange}
                         error={formik.errors.goal}
+                        maxLength={40}
                         type="text"
                         id="goal"
                         className="

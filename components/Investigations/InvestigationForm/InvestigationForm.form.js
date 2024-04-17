@@ -8,7 +8,6 @@ export function initialValues(investigation = {}) {
     description = "",
     project = { data: { id: "" } },
     initial_date = "",
-    end_date = "",
     teams = { data: [] },
     status = "en curso",
     investigation_types = { data: [] },
@@ -18,7 +17,6 @@ export function initialValues(investigation = {}) {
     specific_goals = "",
     guide_media_link = "",
     presented_to = "",
-    presented_date = "",
   } = attributes;
 
   return {
@@ -28,7 +26,6 @@ export function initialValues(investigation = {}) {
     initial_date: initial_date
       ? format(new Date(initial_date), "dd/MM/yyyy")
       : "",
-    end_date: end_date ? format(new Date(end_date), "dd/MM/yyyy") : "",
     teams: teams.data.map((team) => ({
       value: team.id,
       label: team.attributes.name,
@@ -51,9 +48,6 @@ export function initialValues(investigation = {}) {
     specific_goals,
     guide_media_link,
     presented_to,
-    presented_date: presented_date
-      ? format(new Date(presented_date), "dd/MM/yyyy")
-      : "",
     guide: "",
   };
 }
@@ -73,8 +67,6 @@ export function validationSchema() {
     guide: Yup.string(),
     guide_media_link: Yup.string(),
     initial_date: Yup.string(),
-    end_date: Yup.string(),
     presented_to: Yup.string(),
-    presented_date: Yup.string(),
   });
 }

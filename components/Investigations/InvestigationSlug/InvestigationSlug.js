@@ -23,10 +23,6 @@ export function InvestigationSlugComponent({ params }) {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log(investigation);
-  }, [investigation]);
-
   return (
     <>
       <div className="flex items-center justify-between mb-6">
@@ -431,7 +427,7 @@ export function InvestigationSlugComponent({ params }) {
                   {investigation?.presented_date && (
                     <p className="text-sm  w-full capitalize">
                       {format(
-                        new Date(investigation.presented_date),
+                        new Date(investigation?.presented_date),
                         "dd/MM/yy"
                       )}
                     </p>
