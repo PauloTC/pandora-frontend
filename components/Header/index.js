@@ -110,7 +110,7 @@ export default function HeaderComponent() {
             className="absolute cursor-pointer inset-y-0 left-0 h-6 w-6 opacity-0"
             title="config"
           />
-          <ul
+          {/* <ul
             className="
             header-config
             absolute 
@@ -135,7 +135,7 @@ export default function HeaderComponent() {
             >
               Cerrar sesión
             </button>
-          </ul>
+          </ul> */}
         </div>
 
         <p className="text-gray-900 w-44 flex justify-end text-sm">{time}</p>
