@@ -3,7 +3,9 @@ import slugify from "slugify";
 import Link from "next/link";
 import { libre_franklin700, libre_franklin600 } from "@/app/fonts";
 import { useRef, useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
 
+import "react-datepicker/dist/react-datepicker.css";
 import { MultiSelect } from "react-multi-select-component";
 
 import {
@@ -18,7 +20,7 @@ import {
 import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./InvestigationForm.form";
 import { useRouter } from "next/navigation";
-import { format, parse } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { MaterialsForm } from "@/components/Materials/MaterialsForm";
 import { uploadToS3 } from "@/utils";
 
@@ -37,6 +39,11 @@ export function InvestigationForm({ params, title }) {
   const [researchers, setResearchers] = useState([]);
   const [extendedTeam, setExtendedTeam] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+
+  //Estado de las fechas
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [presentedDate, setPresentedDate] = useState(null);
 
   const investigationCtrl = new Investigation();
   const investigationTypeCtrl = new InvestigationType();
@@ -65,27 +72,11 @@ export function InvestigationForm({ params, title }) {
           (team) => team.value
         );
 
-        const initial_date = format(
-          parse(formValues.initial_date, "dd/MM/yyyy", new Date()),
-          "yyyy-MM-dd"
-        );
+        const initial_date = format(startDate, "yyyy-MM-dd");
 
-        const end_date =
-          formValues.end_date.length && formValues.end_date.trim() !== ""
-            ? format(
-                parse(formValues.end_date, "dd/MM/yyyy", new Date()),
-                "yyyy-MM-dd"
-              )
-            : null;
+        const end_date = format(endDate, "yyyy-MM-dd");
 
-        const presented_date =
-          formValues.presented_date.length &&
-          formValues.presented_date.trim() !== ""
-            ? format(
-                parse(formValues.presented_date, "dd/MM/yyyy", new Date()),
-                "yyyy-MM-dd"
-              )
-            : null;
+        const presented_date = format(presentedDate, "yyyy-MM-dd");
 
         const file = formValues.guide_media_link;
         let guide_media_link = "";
@@ -237,10 +228,22 @@ export function InvestigationForm({ params, title }) {
   }, []);
 
   useEffect(() => {
-    if (investigation) {
+    if (investigation.attributes) {
       formik.resetForm({ values: initialValues(investigation) });
+      // setStartDate(investigation.initial_date);
+      setStartDate(parseISO(investigation?.attributes?.initial_date));
+      setEndDate(parseISO(investigation?.attributes?.end_date));
+      if (investigation?.attributes?.presented_date) {
+        setPresentedDate(parseISO(investigation?.attributes?.presented_date));
+      }
+      // console.log(investigation?.initial_date);
     }
   }, [investigation]);
+
+  useEffect(() => {
+    console.log(startDate);
+    console.log(formik.values.initial_date);
+  }, [startDate, formik.values.initial_date]);
 
   const status = [
     { value: "en curso", label: "En curso" },
@@ -312,7 +315,7 @@ export function InvestigationForm({ params, title }) {
                 <div className="divide-x divide-gray-200 grid grid-cols-2 gap-6">
                   <ul className="flex flex-col gap-6">
                     <li className="flex gap-4">
-                      <label htmlFor="name" className="flex flex-col w-80">
+                      <label htmlFor="name" className="flex flex-col grow">
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
@@ -335,7 +338,7 @@ export function InvestigationForm({ params, title }) {
                                 border border-gray-300 
                                 text-gray-900 text-sm rounded-lg 
                                 focus:ring-blue-500 focus:border-blue-500 
-                                block w-full p-2.5"
+                                block w-64 p-2.5"
                         placeholder="Titulo de la investigación"
                         required
                       />
@@ -343,7 +346,7 @@ export function InvestigationForm({ params, title }) {
 
                     <li className="flex gap-4">
                       <label
-                        className="flex flex-col w-80"
+                        className="flex flex-col grow"
                         htmlFor="description"
                       >
                         <span
@@ -359,7 +362,7 @@ export function InvestigationForm({ params, title }) {
                         id="description"
                         rows="5"
                         maxLength={200}
-                        className="w-full text-sm text-gray-900 bg-white border border-gray-200 p-4 rounded-xl "
+                        className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-4 rounded-xl "
                         placeholder="Escribir la descripción..."
                         value={formik.values.description}
                         onChange={formik.handleChange}
@@ -368,7 +371,7 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex items-center gap-4">
-                      <label htmlFor="project" className="flex flex-col w-80">
+                      <label htmlFor="project" className="flex flex-col grow">
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
@@ -392,7 +395,7 @@ export function InvestigationForm({ params, title }) {
                                 text-sm rounded-lg 
                                 focus:ring-blue-500 
                                 focus:border-blue-500 
-                                block w-full p-2.5"
+                                block w-64 p-2.5"
                       >
                         <option value="">Seleccionar proyecto</option>
                         {projects.map((project) => (
@@ -403,38 +406,32 @@ export function InvestigationForm({ params, title }) {
                       </select>
                     </li>
 
-                    <li className="flex items-center gap-4">
+                    <li className="flex items-center">
                       <label
                         htmlFor="initial_date"
-                        className="flex flex-col w-80"
+                        className="flex flex-col grow"
                       >
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
                           Fecha de inicio*
                         </span>
-                        <span className="text-xs font-regular">
+                        <span className="text-sm font-regular">
                           ejemplo: (10/02/2023)
                         </span>
                       </label>
-                      <input
-                        value={formik.values.initial_date}
-                        onChange={formik.handleChange}
-                        error={formik.errors.initial_date}
-                        type="text"
-                        id="initial_date"
-                        className="
-                                self-start 
-                                border border-gray-300 
-                                text-gray-900 text-sm rounded-lg 
-                                focus:ring-blue-500 focus:border-blue-500 
-                                block w-full p-2.5"
-                        placeholder="Fecha inicial"
+                      <DatePicker
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="Selecciona una fecha inicial"
+                        className="border text-sm block p-2 w-64 rounded-lg"
+                        selected={startDate}
+                        required
+                        onChange={(date) => setStartDate(date)}
                       />
                     </li>
 
-                    <li className="flex items-center gap-4">
-                      <label htmlFor="end_date" className="flex flex-col w-80">
+                    <li className="flex items-center">
+                      <label htmlFor="end_date" className="flex flex-col grow">
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
@@ -444,25 +441,18 @@ export function InvestigationForm({ params, title }) {
                           ejemplo: (10/02/2023)
                         </span>
                       </label>
-                      <input
-                        value={formik.values.end_date}
-                        onChange={formik.handleChange}
-                        error={formik.errors.end_date}
-                        type="text"
-                        id="end_date"
-                        className="
-                                self-start 
-                                border border-gray-300 
-                                text-gray-900 text-sm rounded-lg 
-                                focus:ring-blue-500 focus:border-blue-500 
-                                block w-full p-2.5"
-                        placeholder="Fecha de cierre"
+                      <DatePicker
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="Selecciona una fecha final"
+                        className="border text-sm block p-2 w-64 rounded-lg"
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
                       />
                     </li>
                   </ul>
                   <ul className="flex flex-col gap-6 pl-6">
                     <li className="flex gap-4">
-                      <label htmlFor="teams" className="flex flex-col w-80">
+                      <label htmlFor="teams" className="flex flex-col grow">
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
@@ -474,7 +464,7 @@ export function InvestigationForm({ params, title }) {
                       </label>
 
                       <MultiSelect
-                        className="w-full text-sm"
+                        className="w-64 text-sm"
                         required
                         options={teams}
                         placeholder="Seleccionar equipos"
@@ -488,7 +478,7 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex items-center gap-4">
-                      <label htmlFor="status" className="flex flex-col w-80">
+                      <label htmlFor="status" className="flex flex-col grow">
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
@@ -511,7 +501,7 @@ export function InvestigationForm({ params, title }) {
                                 text-sm rounded-md
                                 focus:ring-blue-500 
                                 focus:border-blue-500 
-                                block w-full p-2.5"
+                                block w-64 p-2.5"
                       >
                         {status.map((state) => (
                           <option key={state.value} value={state.value}>
@@ -523,7 +513,7 @@ export function InvestigationForm({ params, title }) {
 
                     <li className="flex gap-4">
                       <label
-                        className="flex flex-col w-80"
+                        className="flex flex-col grow"
                         htmlFor="investigation_types"
                       >
                         <span
@@ -536,7 +526,7 @@ export function InvestigationForm({ params, title }) {
                         </span>
                       </label>
                       <MultiSelect
-                        className="w-full text-sm"
+                        className="w-64 text-sm "
                         options={investigationTypes}
                         value={formik.values.investigation_types}
                         onChange={(value) =>
@@ -549,7 +539,7 @@ export function InvestigationForm({ params, title }) {
 
                     <li className="flex gap-4">
                       <label
-                        className="flex flex-col w-80"
+                        className="flex flex-col grow"
                         htmlFor="researchers"
                       >
                         <span
@@ -562,7 +552,7 @@ export function InvestigationForm({ params, title }) {
                         </span>
                       </label>
                       <MultiSelect
-                        className="w-full text-sm"
+                        className="text-sm w-64"
                         required
                         options={researchers}
                         value={formik.values.researchers}
@@ -576,7 +566,7 @@ export function InvestigationForm({ params, title }) {
 
                     <li className="flex gap-4">
                       <label
-                        className="flex flex-col w-80"
+                        className="flex flex-col grow"
                         htmlFor="team_extended"
                       >
                         <span
@@ -589,7 +579,7 @@ export function InvestigationForm({ params, title }) {
                         </span>
                       </label>
                       <MultiSelect
-                        className="w-full text-sm"
+                        className="w-64 text-sm"
                         options={extendedTeam}
                         value={formik.values.team_extended}
                         onChange={(value) =>
@@ -612,7 +602,7 @@ export function InvestigationForm({ params, title }) {
                   </h4>
                   <ul className="flex flex-col gap-4">
                     <li className="flex items-center gap-4">
-                      <label htmlFor="goal" className="flex flex-col w-80">
+                      <label htmlFor="goal" className="flex flex-col grow">
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
@@ -635,14 +625,14 @@ export function InvestigationForm({ params, title }) {
                               border border-gray-300 
                               text-gray-900 text-sm rounded-lg 
                               focus:ring-blue-500 focus:border-blue-500 
-                              block w-full p-2.5"
+                              block w-64 p-2.5"
                         placeholder="Principal objetivo"
                       />
                     </li>
 
                     <li className="flex gap-4">
                       <label
-                        className="flex flex-col w-80"
+                        className="flex flex-col grow"
                         htmlFor="specific_goals"
                       >
                         <span
@@ -657,7 +647,7 @@ export function InvestigationForm({ params, title }) {
                       <textarea
                         id="specific_goals"
                         rows="5"
-                        className="w-full text-sm text-gray-900 bg-white border border-gray-200 p-4 rounded-xl "
+                        className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-4 rounded-xl "
                         placeholder="Objetivos especificos..."
                         defaultValue={investigation?.specific_goals}
                         value={formik.values.specific_goals}
@@ -716,7 +706,7 @@ export function InvestigationForm({ params, title }) {
                     <li className="flex gap-4">
                       <label
                         htmlFor="presented_to"
-                        className="flex flex-col w-80"
+                        className="flex flex-col grow"
                       >
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
@@ -737,15 +727,15 @@ export function InvestigationForm({ params, title }) {
                               self-start 
                               border border-gray-300 
                               text-gray-900 text-sm rounded-lg 
-                              focus:ring-blue-500 focus:border-blue-500 
-                              block w-full p-2.5"
+                              focus:ring-blue-500 focus:border-blue-500
+                              w-64 block p-2.5"
                         placeholder="Listado de personas"
                       />
                     </li>
-                    <li className="flex items-center gap-4">
+                    <li className="flex items-center">
                       <label
                         htmlFor="presented_date"
-                        className="flex flex-col w-80"
+                        className="flex flex-col grow"
                       >
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
@@ -756,21 +746,13 @@ export function InvestigationForm({ params, title }) {
                           ejemplo: (10/02/2023)
                         </span>
                       </label>
-                      <input
-                        value={formik.values.presented_date}
-                        onChange={formik.handleChange}
-                        error={formik.errors.presented_date}
-                        type="text"
-                        id="presented_date"
-                        className="
-                              self-start 
-                              border border-gray-300 
-                              text-gray-900 text-sm rounded-lg 
-                              focus:ring-blue-500 focus:border-blue-500 
-                              block w-full p-2.5"
-                        placeholder="Fecha de presentación"
+                      <DatePicker
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="Selecciona una fecha"
+                        className="border text-sm block p-2 w-64 rounded-lg"
+                        selected={presentedDate}
+                        onChange={(date) => setPresentedDate(date)}
                       />
-                      <br />
                     </li>
                   </ul>
                 </div>
