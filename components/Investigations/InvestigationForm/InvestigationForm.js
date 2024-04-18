@@ -81,21 +81,32 @@ export function InvestigationForm({ params, title }) {
           guide_media_link = await uploadToS3(file, setIsUploading);
         }
 
+        let investigationData = {
+          ...formValues,
+          slug,
+          teams,
+          investigation_types,
+          researchers,
+          team_extended,
+          guide_media_link,
+          initial_date,
+        };
+
+        if (presentedDate) {
+          investigationData.presented_date = format(
+            presentedDate,
+            "yyyy-MM-dd"
+          );
+        }
+
+        if (endDate) {
+          investigationData.end_date = format(endDate, "yyyy-MM-dd");
+        }
+
         if (investigation && investigation.id) {
           const result = await investigationCtrl.updateInvestigation(
             investigation.id,
-            {
-              ...formValues,
-              slug,
-              teams,
-              investigation_types,
-              researchers,
-              team_extended,
-              guide_media_link,
-              initial_date,
-              end_date,
-              presented_date,
-            }
+            investigationData
           );
 
           setInvestigationResult(result);
@@ -108,27 +119,9 @@ export function InvestigationForm({ params, title }) {
 
           return;
         } else {
-          if (presentedDate) {
-            investigationData.presented_date = format(
-              presentedDate,
-              "yyyy-MM-dd"
-            );
-          }
-
-          if (endDate) {
-            investigationData.end_date = format(endDate, "yyyy-MM-dd");
-          }
-
-          let result = await investigationCtrl.createInvestigation({
-            ...formValues,
-            slug,
-            teams,
-            investigation_types,
-            researchers,
-            team_extended,
-            guide_media_link,
-            initial_date,
-          });
+          let result = await investigationCtrl.createInvestigation(
+            investigationData
+          );
 
           const createdInvestigation = result;
 
@@ -158,8 +151,6 @@ export function InvestigationForm({ params, title }) {
             ? setStep(2)
             : router.push("/investigations", { scroll: false });
         }
-
-        console.log(formValues);
 
         formik.handleReset();
       } catch (error) {
@@ -238,20 +229,17 @@ export function InvestigationForm({ params, title }) {
   useEffect(() => {
     if (investigation.attributes) {
       formik.resetForm({ values: initialValues(investigation) });
-      // setStartDate(investigation.initial_date);
+
       setStartDate(parseISO(investigation?.attributes?.initial_date));
-      setEndDate(parseISO(investigation?.attributes?.end_date));
+
+      if (investigation?.attributes?.end_date) {
+        setEndDate(parseISO(investigation?.attributes?.end_date));
+      }
       if (investigation?.attributes?.presented_date) {
         setPresentedDate(parseISO(investigation?.attributes?.presented_date));
       }
-      // console.log(investigation?.initial_date);
     }
   }, [investigation]);
-
-  useEffect(() => {
-    console.log(startDate);
-    console.log(formik.values.initial_date);
-  }, [startDate, formik.values.initial_date]);
 
   const status = [
     { value: "en curso", label: "En curso" },

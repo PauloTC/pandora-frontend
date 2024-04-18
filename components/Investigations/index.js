@@ -14,8 +14,6 @@ import classNames from "classnames";
 import { format } from "date-fns";
 import { InvestigationsContext } from "@/contexts";
 
-// import "./styles.scss";
-
 const projectCtrl = new Project();
 const publicCtrl = new Public();
 

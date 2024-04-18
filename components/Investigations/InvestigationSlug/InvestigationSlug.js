@@ -5,7 +5,7 @@ import { libre_franklin700, libre_franklin600 } from "@/app/fonts";
 import Image from "next/image";
 import { Investigation } from "@/api";
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
+import { format, parse, startOfDay, isValid } from "date-fns";
 
 export function InvestigationSlugComponent({ params }) {
   const investigationCtrl = new Investigation();
@@ -22,6 +22,68 @@ export function InvestigationSlugComponent({ params }) {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    console.log("investigation", investigation);
+  }, [investigation]);
+
+  let formattedPresentedDate = "";
+  let formattedInitialDate = "";
+  let formattedEndDate = "";
+
+  if (investigation?.presented_date) {
+    try {
+      const parsedDate = parse(
+        investigation.presented_date,
+        "yyyy-MM-dd",
+        new Date()
+      );
+
+      if (isValid(parsedDate)) {
+        formattedPresentedDate = format(parsedDate, "dd/MM/yy");
+      } else {
+        console.error("parsedDate is not a valid date:", parsedDate);
+      }
+    } catch (error) {
+      console.error("Error parsing date:", error);
+    }
+  }
+
+  if (investigation?.initial_date) {
+    try {
+      const parsedDate = parse(
+        investigation.initial_date,
+        "yyyy-MM-dd",
+        new Date()
+      );
+
+      if (isValid(parsedDate)) {
+        formattedInitialDate = format(parsedDate, "dd/MM/yy");
+      } else {
+        console.error("parsedDate is not a valid date:", parsedDate);
+      }
+    } catch (error) {
+      console.error("Error parsing date:", error);
+    }
+  }
+
+  if (investigation?.end_date) {
+    try {
+      const parsedDate = parse(
+        investigation.end_date,
+        "yyyy-MM-dd",
+        new Date()
+      );
+
+      if (isValid(parsedDate)) {
+        formattedEndDate = format(parsedDate, "dd/MM/yy");
+      } else {
+        console.error("parsedDate is not a valid date:", parsedDate);
+      }
+    } catch (error) {
+      console.error("Error parsing date:", error);
+    }
+  }
 
   return (
     <>
@@ -117,8 +179,7 @@ export function InvestigationSlugComponent({ params }) {
                   </label>
 
                   <p className="text-sm  w-full capitalize">
-                    {investigation?.initial_date &&
-                      format(new Date(investigation?.initial_date), "dd/MM/yy")}
+                    {formattedInitialDate}
                   </p>
                 </li>
                 <li className="flex items-center gap-4">
@@ -131,8 +192,7 @@ export function InvestigationSlugComponent({ params }) {
                   </label>
 
                   <p className="text-sm w-full capitalize">
-                    {investigation?.end_date &&
-                      format(new Date(investigation?.end_date), "dd/MM/yy")}
+                    {formattedEndDate}
                   </p>
                 </li>
                 <li className="flex items-center gap-4">
@@ -425,12 +485,11 @@ export function InvestigationSlugComponent({ params }) {
                   </label>
 
                   {investigation?.presented_date && (
-                    <p className="text-sm  w-full capitalize">
-                      {format(
-                        new Date(investigation?.presented_date),
-                        "dd/MM/yy"
-                      )}
-                    </p>
+                    <div>
+                      <p className="text-sm  w-full capitalize">
+                        {formattedPresentedDate}
+                      </p>
+                    </div>
                   )}
                 </li>
               </ul>
