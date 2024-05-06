@@ -106,15 +106,27 @@ export class Investigation {
   }
 
   async filterInvestigations(filters) {
-    const { project, objectivePublic, sort, pagination, search } = filters;
+    const {
+      project,
+      objectivePublic,
+      objetiveResearcher,
+      sort,
+      pagination,
+      search,
+    } = filters;
 
-    // debugger;
+    console.log("objetiveResearcher", objetiveResearcher);
+    console.log("objectivePublic", objectivePublic);
 
     let filter = ``;
 
     // Si objectivePublic existe, agregarlo al filtro
     if (objectivePublic) {
       filter += `&filters[materials][publics][name][$in][0]=${objectivePublic}`;
+    }
+
+    if (objetiveResearcher) {
+      filter += `&filters[researchers][id][$eq]=${objetiveResearcher}`;
     }
 
     if (pagination) {
