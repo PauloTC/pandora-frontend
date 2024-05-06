@@ -115,9 +115,6 @@ export class Investigation {
       search,
     } = filters;
 
-    console.log("objetiveResearcher", objetiveResearcher);
-    console.log("objectivePublic", objectivePublic);
-
     let filter = ``;
 
     // Si objectivePublic existe, agregarlo al filtro

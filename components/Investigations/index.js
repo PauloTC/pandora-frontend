@@ -145,7 +145,6 @@ export default function InvestigationsComponent() {
       ...prevFilters,
       page: 1,
     }));
-    console.log(filters);
   }, [filters.project, filters.objectivePublic, filters.objetiveResearcher]);
 
   return (
