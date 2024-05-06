@@ -12,6 +12,7 @@ export function initialValues(investigation = {}) {
     status = "en curso",
     investigation_types = { data: [] },
     researchers = { data: [] },
+    service_team = { data: [] },
     team_extended = { data: [] },
     goal = "",
     specific_goals = "",
@@ -36,10 +37,18 @@ export function initialValues(investigation = {}) {
       value: type.id,
       label: type.attributes.name,
     })),
-    researchers: researchers.data.map((researcher) => ({
-      value: researcher.id,
-      label: researcher.attributes.name,
-    })),
+    researchers: researchers.data
+      .filter((researcher) => researcher.attributes.role === "researcher")
+      .map((researcher) => ({
+        value: researcher.id,
+        label: researcher.attributes.name,
+      })),
+    service_team: researchers.data
+      .filter((researcher) => researcher.attributes.role === "service")
+      .map((researcher) => ({
+        value: researcher.id,
+        label: researcher.attributes.name,
+      })),
     team_extended: team_extended.data.map((extended) => ({
       value: extended.id,
       label: extended.attributes.name,
@@ -61,6 +70,7 @@ export function validationSchema() {
     status: Yup.string(),
     investigation_types: Yup.array(),
     researchers: Yup.array(),
+    service_team: Yup.array(),
     team_extended: Yup.array(),
     goal: Yup.string(),
     specific_goals: Yup.string(),

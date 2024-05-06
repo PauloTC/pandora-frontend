@@ -11,6 +11,8 @@ export function InvestigationSlugComponent({ params }) {
   const investigationCtrl = new Investigation();
 
   const [investigation, setInvestigation] = useState(null);
+  const [serviceTeam, setServiceTeam] = useState(null);
+  const [researchTeam, setResearchTeam] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -24,7 +26,16 @@ export function InvestigationSlugComponent({ params }) {
   }, []);
 
   useEffect(() => {
-    console.log("investigation", investigation);
+    const filterServiceTeam = investigation?.researchers?.data?.filter(
+      (researcher) => researcher.attributes.role === "service"
+    );
+
+    const filterResearcherTeam = investigation?.researchers?.data.filter(
+      (researcher) => researcher.attributes.role === "researcher"
+    );
+
+    setResearchTeam(filterResearcherTeam);
+    setServiceTeam(filterServiceTeam);
   }, [investigation]);
 
   let formattedPresentedDate = "";
@@ -245,32 +256,60 @@ export function InvestigationSlugComponent({ params }) {
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
-                      Researchers:
+                      Equipo Research:
                     </span>
                   </label>
 
                   <ul className="text-sm  w-full gap-4 capitalize grid grid-cols-2">
-                    {investigation?.researchers.data.map(
-                      (researcher, index) => (
-                        <li className="flex gap-4 items-center" key={index}>
-                          <Image
-                            alt={
-                              researcher.attributes.photo?.data?.[0]?.attributes
-                                ?.name
-                            }
-                            src={
-                              researcher.attributes.photo?.data?.[0]?.attributes
-                                ?.url
-                            }
-                            width={30}
-                            height={30}
-                          />
-                          <span>{researcher.attributes.name}</span>
-                        </li>
-                      )
-                    )}
+                    {researchTeam?.map((researcher, index) => (
+                      <li className="flex gap-4 items-center" key={index}>
+                        <Image
+                          alt={
+                            researcher.attributes.photo?.data?.[0]?.attributes
+                              ?.name
+                          }
+                          src={
+                            researcher.attributes.photo?.data?.[0]?.attributes
+                              ?.url
+                          }
+                          width={30}
+                          height={30}
+                        />
+                        <span>{researcher.attributes.name}</span>
+                      </li>
+                    ))}
                   </ul>
                 </li>
+
+                <li className="flex flex-col gap-4">
+                  <label htmlFor="name" className="w-80">
+                    <span
+                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                    >
+                      Equipo Service:
+                    </span>
+                  </label>
+
+                  <ul className="text-sm  w-full gap-4 capitalize grid grid-cols-2">
+                    {serviceTeam?.map((service, index) => (
+                      <li className="flex gap-4 items-center" key={index}>
+                        <Image
+                          alt={
+                            service.attributes.photo?.data?.[0]?.attributes
+                              ?.name
+                          }
+                          src={
+                            service.attributes.photo?.data?.[0]?.attributes?.url
+                          }
+                          width={30}
+                          height={30}
+                        />
+                        <span>{service.attributes.name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+
                 <li className="flex flex-col gap-4">
                   <label htmlFor="name" className="w-80">
                     <span

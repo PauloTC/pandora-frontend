@@ -37,6 +37,7 @@ export function InvestigationForm({ params, title }) {
   const [projects, setProjects] = useState([]);
   const [investigationTypes, setInvestigationTypes] = useState([]);
   const [researchers, setResearchers] = useState([]);
+  const [serviceTeam, setServiceTeam] = useState([]);
   const [extendedTeam, setExtendedTeam] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -64,9 +65,16 @@ export function InvestigationForm({ params, title }) {
         const investigation_types = formValues.investigation_types.map(
           (type) => type.value
         );
-        const researchers = formValues.researchers.map(
+
+        const researchersValues = formValues.researchers.map(
           (researcher) => researcher.value
         );
+
+        const serviceTeamValues = formValues.service_team.map(
+          (team) => team.value
+        );
+
+        const researchers = [...researchersValues, ...serviceTeamValues];
 
         const team_extended = formValues.team_extended.map(
           (team) => team.value
@@ -85,9 +93,9 @@ export function InvestigationForm({ params, title }) {
           ...formValues,
           slug,
           teams,
-          investigation_types,
           researchers,
           team_extended,
+          investigation_types,
           guide_media_link,
           initial_date,
         };
@@ -183,8 +191,22 @@ export function InvestigationForm({ params, title }) {
         const responseResearchers = await researcherCtrl.getResearchersByRole(
           "researcher"
         );
+
         const responseExtendedTeam =
           await researcherCtrl.getResearchersOtherRole();
+
+        const participants = await researcherCtrl.getAllParticipants();
+
+        const serviceParticipants = participants.data.filter(
+          (participant) => participant.attributes.role === "service"
+        );
+
+        setServiceTeam(
+          serviceParticipants.map((service) => ({
+            value: service.id,
+            label: service.attributes.name,
+          }))
+        );
 
         setProjects(
           responseProjects.data.map((project) => ({
@@ -220,6 +242,15 @@ export function InvestigationForm({ params, title }) {
             label: team.attributes.name,
           }))
         );
+
+        // const nonResearchers = participants?.data
+        //   .filter((participant) => participant.attributes.role !== "researcher")
+        //   .map((participant) => ({
+        //     value: participant.id,
+        //     label: participant.attributes.name,
+        //   }));
+
+        // setExtendedTeam(nonResearchers);
       } catch (error) {
         console.log("error", error);
       }
@@ -541,7 +572,7 @@ export function InvestigationForm({ params, title }) {
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Researchers*
+                          Equipo Research
                         </span>
                         <span className="text-xs font-regular">
                           Principales responsables
@@ -549,13 +580,35 @@ export function InvestigationForm({ params, title }) {
                       </label>
                       <MultiSelect
                         className="text-sm w-64"
-                        required
                         options={researchers}
                         value={formik.values.researchers}
                         onChange={(value) =>
                           formik.setFieldValue("researchers", value)
                         }
                         error={formik.errors.researchers}
+                        labelledBy="Select"
+                      />
+                    </li>
+
+                    <li className="flex gap-4">
+                      <label className="flex flex-col grow" htmlFor="service">
+                        <span
+                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                        >
+                          Equipo service
+                        </span>
+                        <span className="text-xs font-regular">
+                          Responsables Service
+                        </span>
+                      </label>
+                      <MultiSelect
+                        className="text-sm w-64"
+                        options={serviceTeam}
+                        value={formik.values.service_team}
+                        onChange={(value) =>
+                          formik.setFieldValue("service_team", value)
+                        }
+                        error={formik.errors.service_team}
                         labelledBy="Select"
                       />
                     </li>
