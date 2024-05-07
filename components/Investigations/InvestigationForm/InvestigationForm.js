@@ -22,7 +22,7 @@ import { initialValues, validationSchema } from "./InvestigationForm.form";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { MaterialsForm } from "@/components/Materials/MaterialsForm";
-import { uploadToS3 } from "@/utils";
+import { uploadToAzureStorage } from "@/utils";
 
 import PulseLoader from "react-spinners/PulseLoader";
 
@@ -37,6 +37,7 @@ export function InvestigationForm({ params, title }) {
   const [projects, setProjects] = useState([]);
   const [investigationTypes, setInvestigationTypes] = useState([]);
   const [researchers, setResearchers] = useState([]);
+  const [serviceTeam, setServiceTeam] = useState([]);
   const [extendedTeam, setExtendedTeam] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -64,9 +65,16 @@ export function InvestigationForm({ params, title }) {
         const investigation_types = formValues.investigation_types.map(
           (type) => type.value
         );
-        const researchers = formValues.researchers.map(
+
+        const researchersValues = formValues.researchers.map(
           (researcher) => researcher.value
         );
+
+        const serviceTeamValues = formValues.service_team.map(
+          (team) => team.value
+        );
+
+        const researchers = [...researchersValues, ...serviceTeamValues];
 
         const team_extended = formValues.team_extended.map(
           (team) => team.value
@@ -74,32 +82,43 @@ export function InvestigationForm({ params, title }) {
 
         const initial_date = format(startDate, "yyyy-MM-dd");
 
-        const end_date = format(endDate, "yyyy-MM-dd");
-
-        const presented_date = format(presentedDate, "yyyy-MM-dd");
-
         const file = formValues.guide_media_link;
         let guide_media_link = "";
 
         if (file instanceof File) {
-          guide_media_link = await uploadToS3(file, setIsUploading);
+          guide_media_link = await uploadToAzureStorage(
+            file,
+            "presentaciones",
+            setIsUploading
+          );
+        }
+
+        let investigationData = {
+          ...formValues,
+          slug,
+          teams,
+          researchers,
+          team_extended,
+          investigation_types,
+          guide_media_link,
+          initial_date,
+        };
+
+        if (presentedDate) {
+          investigationData.presented_date = format(
+            presentedDate,
+            "yyyy-MM-dd"
+          );
+        }
+
+        if (endDate) {
+          investigationData.end_date = format(endDate, "yyyy-MM-dd");
         }
 
         if (investigation && investigation.id) {
           const result = await investigationCtrl.updateInvestigation(
             investigation.id,
-            {
-              ...formValues,
-              slug,
-              teams,
-              investigation_types,
-              researchers,
-              team_extended,
-              guide_media_link,
-              initial_date,
-              end_date,
-              presented_date,
-            }
+            investigationData
           );
 
           setInvestigationResult(result);
@@ -112,18 +131,9 @@ export function InvestigationForm({ params, title }) {
 
           return;
         } else {
-          let result = await investigationCtrl.createInvestigation({
-            ...formValues,
-            slug,
-            teams,
-            investigation_types,
-            researchers,
-            team_extended,
-            guide_media_link,
-            initial_date,
-            end_date,
-            presented_date,
-          });
+          let result = await investigationCtrl.createInvestigation(
+            investigationData
+          );
 
           const createdInvestigation = result;
 
@@ -153,6 +163,7 @@ export function InvestigationForm({ params, title }) {
             ? setStep(2)
             : router.push("/investigations", { scroll: false });
         }
+
         formik.handleReset();
       } catch (error) {
         console.error(error);
@@ -184,8 +195,22 @@ export function InvestigationForm({ params, title }) {
         const responseResearchers = await researcherCtrl.getResearchersByRole(
           "researcher"
         );
+
         const responseExtendedTeam =
           await researcherCtrl.getResearchersOtherRole();
+
+        const participants = await researcherCtrl.getAllParticipants();
+
+        const serviceParticipants = participants.data.filter(
+          (participant) => participant.attributes.role === "service"
+        );
+
+        setServiceTeam(
+          serviceParticipants.map((service) => ({
+            value: service.id,
+            label: service.attributes.name,
+          }))
+        );
 
         setProjects(
           responseProjects.data.map((project) => ({
@@ -221,6 +246,15 @@ export function InvestigationForm({ params, title }) {
             label: team.attributes.name,
           }))
         );
+
+        // const nonResearchers = participants?.data
+        //   .filter((participant) => participant.attributes.role !== "researcher")
+        //   .map((participant) => ({
+        //     value: participant.id,
+        //     label: participant.attributes.name,
+        //   }));
+
+        // setExtendedTeam(nonResearchers);
       } catch (error) {
         console.log("error", error);
       }
@@ -230,20 +264,17 @@ export function InvestigationForm({ params, title }) {
   useEffect(() => {
     if (investigation.attributes) {
       formik.resetForm({ values: initialValues(investigation) });
-      // setStartDate(investigation.initial_date);
+
       setStartDate(parseISO(investigation?.attributes?.initial_date));
-      setEndDate(parseISO(investigation?.attributes?.end_date));
+
+      if (investigation?.attributes?.end_date) {
+        setEndDate(parseISO(investigation?.attributes?.end_date));
+      }
       if (investigation?.attributes?.presented_date) {
         setPresentedDate(parseISO(investigation?.attributes?.presented_date));
       }
-      // console.log(investigation?.initial_date);
     }
   }, [investigation]);
-
-  useEffect(() => {
-    console.log(startDate);
-    console.log(formik.values.initial_date);
-  }, [startDate, formik.values.initial_date]);
 
   const status = [
     { value: "en curso", label: "En curso" },
@@ -545,7 +576,7 @@ export function InvestigationForm({ params, title }) {
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Researchers*
+                          Equipo Research
                         </span>
                         <span className="text-xs font-regular">
                           Principales responsables
@@ -553,13 +584,35 @@ export function InvestigationForm({ params, title }) {
                       </label>
                       <MultiSelect
                         className="text-sm w-64"
-                        required
                         options={researchers}
                         value={formik.values.researchers}
                         onChange={(value) =>
                           formik.setFieldValue("researchers", value)
                         }
                         error={formik.errors.researchers}
+                        labelledBy="Select"
+                      />
+                    </li>
+
+                    <li className="flex gap-4">
+                      <label className="flex flex-col grow" htmlFor="service">
+                        <span
+                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                        >
+                          Equipo service
+                        </span>
+                        <span className="text-xs font-regular">
+                          Responsables Service
+                        </span>
+                      </label>
+                      <MultiSelect
+                        className="text-sm w-64"
+                        options={serviceTeam}
+                        value={formik.values.service_team}
+                        onChange={(value) =>
+                          formik.setFieldValue("service_team", value)
+                        }
+                        error={formik.errors.service_team}
                         labelledBy="Select"
                       />
                     </li>
@@ -618,6 +671,7 @@ export function InvestigationForm({ params, title }) {
                         value={formik.values.goal}
                         onChange={formik.handleChange}
                         error={formik.errors.goal}
+                        maxLength={40}
                         type="text"
                         id="goal"
                         className="

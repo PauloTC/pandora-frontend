@@ -8,17 +8,16 @@ export function initialValues(investigation = {}) {
     description = "",
     project = { data: { id: "" } },
     initial_date = "",
-    end_date = "",
     teams = { data: [] },
     status = "en curso",
     investigation_types = { data: [] },
     researchers = { data: [] },
+    service_team = { data: [] },
     team_extended = { data: [] },
     goal = "",
     specific_goals = "",
     guide_media_link = "",
     presented_to = "",
-    presented_date = "",
   } = attributes;
 
   return {
@@ -28,7 +27,6 @@ export function initialValues(investigation = {}) {
     initial_date: initial_date
       ? format(new Date(initial_date), "dd/MM/yyyy")
       : "",
-    end_date: end_date ? format(new Date(end_date), "dd/MM/yyyy") : "",
     teams: teams.data.map((team) => ({
       value: team.id,
       label: team.attributes.name,
@@ -39,10 +37,18 @@ export function initialValues(investigation = {}) {
       value: type.id,
       label: type.attributes.name,
     })),
-    researchers: researchers.data.map((researcher) => ({
-      value: researcher.id,
-      label: researcher.attributes.name,
-    })),
+    researchers: researchers.data
+      .filter((researcher) => researcher.attributes.role === "researcher")
+      .map((researcher) => ({
+        value: researcher.id,
+        label: researcher.attributes.name,
+      })),
+    service_team: researchers.data
+      .filter((researcher) => researcher.attributes.role === "service")
+      .map((researcher) => ({
+        value: researcher.id,
+        label: researcher.attributes.name,
+      })),
     team_extended: team_extended.data.map((extended) => ({
       value: extended.id,
       label: extended.attributes.name,
@@ -51,9 +57,6 @@ export function initialValues(investigation = {}) {
     specific_goals,
     guide_media_link,
     presented_to,
-    presented_date: presented_date
-      ? format(new Date(presented_date), "dd/MM/yyyy")
-      : "",
     guide: "",
   };
 }
@@ -67,14 +70,13 @@ export function validationSchema() {
     status: Yup.string(),
     investigation_types: Yup.array(),
     researchers: Yup.array(),
+    service_team: Yup.array(),
     team_extended: Yup.array(),
     goal: Yup.string(),
     specific_goals: Yup.string(),
     guide: Yup.string(),
     guide_media_link: Yup.string(),
     initial_date: Yup.string(),
-    end_date: Yup.string(),
     presented_to: Yup.string(),
-    presented_date: Yup.string(),
   });
 }

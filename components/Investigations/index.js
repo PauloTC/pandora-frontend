@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { Project, Public } from "@/api";
+import { Project, Public, Researcher } from "@/api";
 import { map } from "lodash";
 import {
   libre_franklin600,
@@ -14,10 +14,9 @@ import classNames from "classnames";
 import { format } from "date-fns";
 import { InvestigationsContext } from "@/contexts";
 
-// import "./styles.scss";
-
 const projectCtrl = new Project();
 const publicCtrl = new Public();
+const researcherCtrl = new Researcher();
 
 export default function InvestigationsComponent() {
   const {
@@ -29,11 +28,16 @@ export default function InvestigationsComponent() {
 
   const [projects, setProjects] = useState([]);
   const [filterPublics, setFilterPublics] = useState([]);
+  const [filterResearchers, setFilterResearchers] = useState([]);
   const [filters, setFilters] = useState({
     project: "Todos",
     objectivePublic: "Todos",
+    objetiveResearcher: "Todos",
     sort: "desc",
   });
+
+  const [showAllProjects, setShowAllProjects] = useState(false);
+  const [showAllPublics, setShowAllPublics] = useState(false);
 
   const sortOptions = [
     { value: "desc", label: "Más Actual" },
@@ -45,6 +49,7 @@ export default function InvestigationsComponent() {
       setFilters({
         project: "Todos",
         objectivePublic: "Todos",
+        objetiveResearcher: "Todos",
         sort: "desc",
       });
     } else {
@@ -57,6 +62,7 @@ export default function InvestigationsComponent() {
       try {
         const responseProjects = await projectCtrl.getProjects();
         const responsePublics = await publicCtrl.getPublics();
+        const responseResearchers = await researcherCtrl.getAllParticipants();
 
         // Agregar la opción "Todos" al inicio del array de proyectos
         const projectsWithAllOption = [
@@ -70,8 +76,23 @@ export default function InvestigationsComponent() {
           ...responsePublics?.data,
         ];
 
+        const researchersWithAllOption = [
+          { value: "Todos", label: "Todos" },
+          ...responseResearchers?.data
+            .filter(
+              (researcher) =>
+                researcher.attributes.role === "service" ||
+                researcher.attributes.role === "researcher"
+            )
+            .map((researcher) => ({
+              value: researcher.id,
+              label: researcher.attributes.name,
+            })),
+        ];
+
         setProjects(projectsWithAllOption);
         setFilterPublics(publicsWithAllOption);
+        setFilterResearchers(researchersWithAllOption);
       } catch (error) {
         console.log("error", error);
       }
@@ -83,6 +104,7 @@ export default function InvestigationsComponent() {
       if (
         filters.project ||
         filters.objectivePublic ||
+        filters.objetiveResearcher ||
         filters.sort ||
         filters.page
       ) {
@@ -90,6 +112,7 @@ export default function InvestigationsComponent() {
           if (
             filters.project === "Todos" &&
             filters.objectivePublic === "Todos" &&
+            filters.objetiveResearcher === "Todos" &&
             filters.sort === "desc" &&
             filters.page === 1
           ) {
@@ -101,6 +124,10 @@ export default function InvestigationsComponent() {
                 filters.objectivePublic === "Todos"
                   ? ""
                   : filters.objectivePublic,
+              objetiveResearcher:
+                filters.objetiveResearcher === "Todos"
+                  ? ""
+                  : filters.objetiveResearcher,
               sort: filters.sort,
               pagination: { page: filters.page || 1 },
             });
@@ -118,7 +145,7 @@ export default function InvestigationsComponent() {
       ...prevFilters,
       page: 1,
     }));
-  }, [filters.project, filters.objectivePublic]);
+  }, [filters.project, filters.objectivePublic, filters.objetiveResearcher]);
 
   return (
     <section>
@@ -473,37 +500,50 @@ export default function InvestigationsComponent() {
               Proyecto
             </h4>
             <ul className="flex flex-wrap gap-1 mb-6">
-              {projects?.map((project, index) => (
-                <li key={index}>
-                  <button
-                    onClick={() =>
-                      handleFilterClick("project", project.attributes.name)
-                    }
-                    className={classNames(
-                      filters.project === project.attributes.name
-                        ? "bg-blue-100"
-                        : "bg-gray-100",
-                      filters.project === project.attributes.name
-                        ? "text-blue-800"
-                        : "text-gray-800",
-                      "text-xs",
-                      "font-medium",
-                      "me-2",
-                      "px-3",
-                      "py-1",
-                      "rounded-full"
-                    )}
-                  >
-                    {project.attributes.alias}
-                  </button>
-                </li>
-              ))}
+              {(showAllProjects ? projects : projects.slice(0, 5))?.map(
+                (project, index) => (
+                  <li key={index}>
+                    <button
+                      onClick={() =>
+                        handleFilterClick("project", project.attributes.name)
+                      }
+                      className={classNames(
+                        filters.project === project.attributes.name
+                          ? "bg-blue-100"
+                          : "bg-gray-100",
+                        filters.project === project.attributes.name
+                          ? "text-blue-800"
+                          : "text-gray-800",
+                        "text-xs",
+                        "font-medium",
+                        "me-2",
+                        "px-3",
+                        "py-1",
+                        "rounded-full"
+                      )}
+                    >
+                      {project.attributes.alias}
+                    </button>
+                  </li>
+                )
+              )}
+              {projects.length > 5 && (
+                <button
+                  className="text-xs text-blue-800 underline leading-4"
+                  onClick={() => setShowAllProjects(!showAllProjects)}
+                >
+                  {showAllProjects ? "Ocultar proyectos" : "Más proyectos"}
+                </button>
+              )}
             </ul>
             <h4 className={`${libre_franklin500.className} text-sm block mb-2`}>
               Público objetivo
             </h4>
             <ul className="flex flex-wrap gap-1 mb-6">
-              {filterPublics.map((publicItem, index) => (
+              {(showAllPublics
+                ? filterPublics
+                : filterPublics.slice(0, 5)
+              )?.map((publicItem, index) => (
                 <li key={index}>
                   <button
                     onClick={() =>
@@ -528,6 +568,44 @@ export default function InvestigationsComponent() {
                     )}
                   >
                     {publicItem.attributes.name}
+                  </button>
+                </li>
+              ))}
+              {filterPublics.length > 5 && (
+                <button
+                  className="text-xs text-blue-800 underline leading-4"
+                  onClick={() => setShowAllPublics(!showAllPublics)}
+                >
+                  {showAllPublics ? "Ocultar públicos" : "Más públicos"}
+                </button>
+              )}
+            </ul>
+            <h4 className={`${libre_franklin500.className} text-sm block mb-2`}>
+              Personas
+            </h4>
+            <ul className="flex flex-wrap gap-1 mb-6">
+              {filterResearchers.map((researcher, index) => (
+                <li key={index}>
+                  <button
+                    onClick={() =>
+                      handleFilterClick("objetiveResearcher", researcher.value)
+                    }
+                    className={classNames(
+                      filters.objetiveResearcher === researcher.value
+                        ? "bg-blue-100"
+                        : "bg-gray-100",
+                      filters.objetiveResearcher === researcher.value
+                        ? "text-blue-800"
+                        : "text-gray-800",
+                      "text-xs",
+                      "font-medium",
+                      "me-2",
+                      "px-3",
+                      "py-1",
+                      "rounded-full"
+                    )}
+                  >
+                    {researcher.label}
                   </button>
                 </li>
               ))}
