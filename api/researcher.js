@@ -49,7 +49,7 @@ export class Researcher {
   }
 
   async getResearchersOtherRole() {
-    const filter = `filters[role][$ne]=researcher`;
+    const filter = `filters[role][$contains]=product_designer&filters[role][$contains]=developer`;
 
     try {
       const url = `${ENV.API_URL}${ENV.ENDPOINTS.RESEARCHERS}?${filter}`;

@@ -22,7 +22,7 @@ import { initialValues, validationSchema } from "./InvestigationForm.form";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { MaterialsForm } from "@/components/Materials/MaterialsForm";
-import { uploadToS3 } from "@/utils";
+import { uploadToAzureStorage } from "@/utils";
 
 import PulseLoader from "react-spinners/PulseLoader";
 
@@ -86,7 +86,11 @@ export function InvestigationForm({ params, title }) {
         let guide_media_link = "";
 
         if (file instanceof File) {
-          guide_media_link = await uploadToS3(file, setIsUploading);
+          guide_media_link = await uploadToAzureStorage(
+            file,
+            "presentaciones",
+            setIsUploading
+          );
         }
 
         let investigationData = {

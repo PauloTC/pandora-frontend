@@ -34,6 +34,8 @@ export function InvestigationSlugComponent({ params }) {
       (researcher) => researcher.attributes.role === "researcher"
     );
 
+    console.log("investigation", investigation);
+
     setResearchTeam(filterResearcherTeam);
     setServiceTeam(filterServiceTeam);
   }, [investigation]);
@@ -495,6 +497,7 @@ export function InvestigationSlugComponent({ params }) {
                     <a
                       href={investigation?.guide_media_link}
                       target="_blank"
+                      rel="noopener noreferrer"
                       className="text-sm w-full capitalize text-blue-600 hover:underline"
                     >
                       Descargar aquí
@@ -524,11 +527,9 @@ export function InvestigationSlugComponent({ params }) {
                   </label>
 
                   {investigation?.presented_date && (
-                    <div>
-                      <p className="text-sm  w-full capitalize">
-                        {formattedPresentedDate}
-                      </p>
-                    </div>
+                    <p className="text-sm  w-full capitalize">
+                      {formattedPresentedDate}
+                    </p>
                   )}
                 </li>
               </ul>
