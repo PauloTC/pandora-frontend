@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CostumerForm } from "@/components/Costumers/CostumerForm";
+import CustomerFaqList from "../../components/Costumers/CostumerFaqList";
 
 const options = [
   {
@@ -19,24 +20,6 @@ const options = [
     description:
       "Coordina con nosotros la mejor fecha y hora para participar en las actividades planificadas.",
     image: "/costumers/entrevista.png",
-  },
-];
-
-const faq = [
-  {
-    question: "¿Quiénes pueden unirse a “Nombre XXXXX”?",
-    answer:
-      "Explicar los criterios de elegibilidad para bodegueros y dueños de restaurantes.",
-  },
-  {
-    question: "¿Cómo protege Alicorp mi información y privacidad?",
-    answer:
-      "Detallar las medidas de seguridad y privacidad para la información compartida.",
-  },
-  {
-    question: "¿Hay alguna compensación por participar en “Nombre XXXXX”?",
-    answer:
-      "Describir los tipos de compensación o incentivos disponibles para los participantes.",
   },
 ];
 
@@ -169,39 +152,10 @@ export default function CostumersPage() {
         </div>
       </section>
 
-      <section className="flex flex-col items-center p-12">
+      <section className="flex flex-col items-center p-8 md:p-12">
         <h4 className="text-3xl mb-8 font-bold">Preguntas frecuentes</h4>
 
-        <ul>
-          {faq.map((q, index) => {
-            return (
-              <li key={index}>
-                <label className="flex justify-between" htmlFor={`faq${index}`}>
-                  {q.question}
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="w-4 h-4"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </label>
-                <input
-                  type="checkbox"
-                  id={`faq${index}`}
-                  value="second_checkbox"
-                />
-                <div>{q.answer}</div>
-              </li>
-            );
-          })}
-        </ul>
+        <CustomerFaqList />
       </section>
     </>
   );
