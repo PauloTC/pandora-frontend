@@ -3,34 +3,35 @@ import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./loginform.form";
 import { Auth } from "@/api";
 import { useRouter } from "next/navigation";
-
+import { useState } from "react";
 import { useAuth } from "@/hooks";
+import BeatLoader from "react-spinners/BeatLoader";
 
 const authCtrl = new Auth();
 
 export default function LoginForm() {
   const router = useRouter();
   const { user, login } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: validationSchema(),
     validateOnChange: false,
     onSubmit: async (values) => {
+      setLoading(true);
       try {
         const response = await authCtrl.login(values);
         login(response.jwt);
         router.push("/investigations", { scroll: false });
       } catch (error) {
         console.log("error", error);
+        setLoading(false);
+        setError("Correo electrónico o contraseña incorrectos");
       }
     },
   });
-
-  // if (user) {
-  //   router.push("/dashboard", { scroll: false });
-  //   return null;
-  // }
 
   return (
     <div className="w-2/6 right-0 min-h-screen flex items-center justify-center p-4 bg-white sm:p-6 md:p-8">
@@ -54,6 +55,7 @@ export default function LoginForm() {
             value={formik.values.identifier}
             onChange={formik.handleChange}
             error={formik.errors.identifier}
+            required
           />
         </div>
         <div>
@@ -75,7 +77,7 @@ export default function LoginForm() {
             required
           />
         </div>
-
+        {error && <div className="text-xs text-red-500">{error}</div>}
         <button
           type="submit"
           className="
@@ -86,12 +88,20 @@ export default function LoginForm() {
             rounded-lg text-sm px-5 py-2.5 text-center
             transition-all"
         >
-          Acceder a tu cuenta
+          {loading ? (
+            <BeatLoader size={10} color="#fff" />
+          ) : (
+            "Acceder a tu cuenta "
+          )}
         </button>
         <div className="text-sm font-medium text-gray-500">
-          No registrado?{" "}
-          <a href="#" className="text-blue-700 hover:underline">
-            Contactanos
+          ¿Tienes problemas para iniciar sesión?{" "}
+          <a
+            target="_blank"
+            href="https://wa.link/8c5ncp"
+            className="text-blue-700 hover:underline"
+          >
+            Contáctanos
           </a>
         </div>
       </form>

@@ -435,6 +435,26 @@ export function InvestigationForm({ params, title }) {
                           </option>
                         ))}
                       </select>
+                      {/* <MultiSelect
+                        options={projects}
+                        value={
+                          formik.values.project
+                            ? projects.find(
+                                (option) =>
+                                  option.value === formik.values.project
+                              )
+                            : null
+                        }
+                        onChange={(selected) =>
+                          formik.setFieldValue(
+                            "project",
+                            selected?.length > 0 ? selected[0].value : ""
+                          )
+                        }
+                        labelledBy="Select"
+                        hasSelectAll={false}
+                        className="w-64 text-sm"
+                      /> */}
                     </li>
 
                     <li className="flex items-center">

@@ -1,5 +1,5 @@
 import InvestigationsComponent from "@/components/Investigations";
 
-export default async function InvestigationsPage() {
+export default function InvestigationsPage() {
   return <InvestigationsComponent />;
 }
