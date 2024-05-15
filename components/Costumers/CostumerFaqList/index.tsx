@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 export default function CustomerFaqList() {
-  const [checkedItems, setCheckedItems] = useState({});
+  const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
 
   const faq = [
     {
