@@ -75,19 +75,23 @@ export default function CostumersPage() {
           />
         </figure>
         <div
-          className="flex items-center justify-between w-full relative px-5"
-          style={{ maxWidth: 1124 }}
+          className="flex items-center justify-around w-full relative px-5"
+          // style={{ maxWidth: 1124 }}
         >
-          <div className="max-w-2xl text-white flex flex-col">
+          <div
+            className="
+            text-white 
+            flex flex-col w-full md:w-1/2"
+          >
             <h1 className={`font-bold text-4xl`}>Creando contigo</h1>
             <span
               className={`font-bold  text-md block mt-4 mb-4`}
-              style={{ width: 500 }}
+              // style={{ width: 500 }}
             >
               Una iniciativa de Diseño y Experiencia para innovar y co-crear
               junto a la comunidad de bodegueros y restauranteros.
             </span>
-            <p className="text-md" style={{ width: 700 }}>
+            <p className="text-md">
               En Alicorp queremos revolucionar la forma en que interactuamos y
               apoyamos a los negocios locales. Por eso, lanzamos
               <b> Creando Contigo</b>, un espacio donde tu voz y experiencia son
@@ -110,12 +114,14 @@ export default function CostumersPage() {
               Quiero ser parte
             </button>
           </div>
-          <Image
-            height={400}
-            width={400}
-            alt="juntos-banner"
-            src="/costumers/juntos.png"
-          />
+          <figure className="hidden justify-center md:flex">
+            <Image
+              height={400}
+              width={400}
+              alt="juntos-banner"
+              src="/costumers/juntos.png"
+            />
+          </figure>
         </div>
       </section>
       <br />
@@ -170,7 +176,7 @@ export default function CostumersPage() {
           {faq.map((q, index) => {
             return (
               <li key={index}>
-                <label htmlFor={`faq${index}`}>
+                <label className="flex justify-between" htmlFor={`faq${index}`}>
                   {q.question}
 
                   <svg
