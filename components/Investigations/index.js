@@ -151,9 +151,7 @@ export default function InvestigationsComponent() {
     <section>
       <div className="flex justify-between">
         <div className="flex items-center">
-          <h4
-            className={`${libre_franklin600.className} text-slate-700 capitalize text-3xl mb-6`}
-          >
+          <h4 className="font-semibold text-slate-700 capitalize text-3xl mb-6">
             Investigaciones
           </h4>
           {/* <ul className="flex flex-wrap gap-1 mb-6 ml-6">

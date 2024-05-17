@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CostumerForm } from "@/components/Costumers/CostumerForm";
+import CustomersFaqList from "../../components/Costumers/CostumerFaqList";
 
 const options = [
   {
@@ -19,24 +20,6 @@ const options = [
     description:
       "Coordina con nosotros la mejor fecha y hora para participar en las actividades planificadas.",
     image: "/costumers/entrevista.png",
-  },
-];
-
-const faq = [
-  {
-    question: "¿Quiénes pueden unirse a “Nombre XXXXX”?",
-    answer:
-      "Explicar los criterios de elegibilidad para bodegueros y dueños de restaurantes.",
-  },
-  {
-    question: "¿Cómo protege Alicorp mi información y privacidad?",
-    answer:
-      "Detallar las medidas de seguridad y privacidad para la información compartida.",
-  },
-  {
-    question: "¿Hay alguna compensación por participar en “Nombre XXXXX”?",
-    answer:
-      "Describir los tipos de compensación o incentivos disponibles para los participantes.",
   },
 ];
 
@@ -75,19 +58,23 @@ export default function CostumersPage() {
           />
         </figure>
         <div
-          className="flex items-center justify-between w-full relative px-5"
-          style={{ maxWidth: 1124 }}
+          className="flex items-center justify-around w-full relative px-5"
+          // style={{ maxWidth: 1124 }}
         >
-          <div className="max-w-2xl text-white flex flex-col">
+          <div
+            className="
+            text-white 
+            flex flex-col w-full md:w-1/2"
+          >
             <h1 className={`font-bold text-4xl`}>Creando contigo</h1>
             <span
               className={`font-bold  text-md block mt-4 mb-4`}
-              style={{ width: 500 }}
+              // style={{ width: 500 }}
             >
               Una iniciativa de Diseño y Experiencia para innovar y co-crear
               junto a la comunidad de bodegueros y restauranteros.
             </span>
-            <p className="text-md" style={{ width: 700 }}>
+            <p className="text-md">
               En Alicorp queremos revolucionar la forma en que interactuamos y
               apoyamos a los negocios locales. Por eso, lanzamos
               <b> Creando Contigo</b>, un espacio donde tu voz y experiencia son
@@ -110,12 +97,14 @@ export default function CostumersPage() {
               Quiero ser parte
             </button>
           </div>
-          <Image
-            height={400}
-            width={400}
-            alt="juntos-banner"
-            src="/costumers/juntos.png"
-          />
+          <figure className="hidden justify-center md:flex">
+            <Image
+              height={400}
+              width={400}
+              alt="juntos-banner"
+              src="/costumers/juntos.png"
+            />
+          </figure>
         </div>
       </section>
       <br />
@@ -163,39 +152,10 @@ export default function CostumersPage() {
         </div>
       </section>
 
-      <section className="flex flex-col items-center p-12">
+      <section className="flex flex-col items-center p-8 md:p-12">
         <h4 className="text-3xl mb-8 font-bold">Preguntas frecuentes</h4>
 
-        <ul>
-          {faq.map((q, index) => {
-            return (
-              <li key={index}>
-                <label htmlFor={`faq${index}`}>
-                  {q.question}
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="w-4 h-4"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </label>
-                <input
-                  type="checkbox"
-                  id={`faq${index}`}
-                  value="second_checkbox"
-                />
-                <div>{q.answer}</div>
-              </li>
-            );
-          })}
-        </ul>
+        <CustomersFaqList />
       </section>
     </>
   );
