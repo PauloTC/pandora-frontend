@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-export default function CustomerFaqList() {
+export default function CustomersFaqList() {
   const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
 
   const faq = [

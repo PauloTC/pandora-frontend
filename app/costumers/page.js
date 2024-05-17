@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { CostumerForm } from "@/components/Costumers/CostumerForm";
-import CustomerFaqList from "../../components/Costumers/CostumerFaqList";
+import CustomersFaqList from "../../components/Costumers/CostumerFaqList";
 
 const options = [
   {
@@ -155,7 +155,7 @@ export default function CostumersPage() {
       <section className="flex flex-col items-center p-8 md:p-12">
         <h4 className="text-3xl mb-8 font-bold">Preguntas frecuentes</h4>
 
-        <CustomerFaqList />
+        <CustomersFaqList />
       </section>
     </>
   );
