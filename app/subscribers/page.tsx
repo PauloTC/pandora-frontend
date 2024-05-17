@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 
 import { Costumer } from "@/api";
+import * as XLSX from "xlsx";
 
 export default function Subscribers() {
   const costumerCtrl = new Costumer();
@@ -12,32 +13,62 @@ export default function Subscribers() {
     (async () => {
       try {
         const response = await costumerCtrl.getAllCostumers();
-        setCostumers(response.data);
+        const transformedData = response.data.map((costumer: any) => ({
+          name: costumer.attributes.name,
+          birthdate: costumer.attributes.birthdate,
+          cellphone: costumer.attributes.cellphone,
+          document_number: costumer.attributes.document_number,
+          email: costumer.attributes.email,
+          business: costumer.attributes.business,
+        }));
+
+        setCostumers(transformedData);
       } catch (error) {
         console.log("error", error);
       }
     })();
   }, []);
 
+  const downloadExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(costumers);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Costumers");
+    XLSX.writeFile(wb, "clientes.xlsx");
+  };
+
   return (
     <section>
-      <h4 className="font-semibold text-slate-700 capitalize text-3xl mb-6">
-        Clientes Amigos
-      </h4>
-      <p className="tex-sm mb-6">
+      <div className="flex items-center justify-between mb-6">
+        <h4 className="font-semibold text-slate-700 capitalize text-3xl">
+          Clientes Amigos
+        </h4>
+        <button
+          onClick={downloadExcel}
+          className="
+              text-white flex items-center 
+              gap-1 bg-blue-700 hover:bg-blue-800 
+              focus:outline-none focus:ring-4 
+              focus:ring-blue-300 font-medium 
+              rounded-full text-sm px-5 py-2.5 
+              text-center"
+        >
+          Descargar Excel
+        </button>
+      </div>
+      <p className="tex-sm mb-6 text-sm">
         Aquí encontrarás la Base de Datos de clientes suscritos de forma
         voluntaria a nuestro panel de investigación a través de la landing de{" "}
         <span className="font-bold">Conecta Alicorp.</span>
       </p>
       <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+          <thead className="text-xs text-gray-700 bg-gray-50">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Nombres
               </th>
               <th scope="col" className="px-6 py-3">
-                Edad
+                Negocio
               </th>
               <th scope="col" className="px-6 py-3">
                 Telefono
@@ -49,85 +80,32 @@ export default function Subscribers() {
                 Email
               </th>
               <th scope="col" className="px-6 py-3">
-                Negocio
+                Edad
               </th>
             </tr>
           </thead>
           <tbody>
             {costumers &&
-              costumers.map((subscriber, index) => {
+              costumers.map((costumer, index) => {
                 return (
                   <tr key={index} className="bg-white border-b">
                     <th
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                     >
-                      {subscriber.attributes.name}
+                      {costumer.name}
                     </th>
-                    <td className="px-6 py-4">
-                      {subscriber.attributes.birthdate}
-                    </td>
-                    <td className="px-6 py-4">
-                      {subscriber.attributes.cellphone}
-                    </td>
-                    <td className="px-6 py-4">
-                      {subscriber.attributes.document_number}
-                    </td>
-                    <td className="px-6 py-4">{subscriber.attributes.email}</td>
                     <td className="px-6 py-4 capitalize">
-                      {subscriber.attributes.business}
+                      {costumer.business}
                     </td>
+                    <td className="px-6 py-4">{costumer.cellphone}</td>
+
+                    <td className="px-6 py-4">{costumer.document_number}</td>
+                    <td className="px-6 py-4">{costumer.email}</td>
+                    <td className="px-6 py-4">{costumer.birthdate}</td>
                   </tr>
                 );
               })}
-            {/* {costumers &&
-              costumers.map((subscriber, index) => {
-                return (
-                  <tr key={index} className="bg-white border-b">
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                    >
-                      {subscriber.name}
-                    </th>
-                    <td className="px-6 py-4">{subscriber.email}</td>
-                    <td className="px-6 py-4">{subscriber.phone}</td>
-                  </tr>
-                );
-              })}
-            <tr className="bg-white border-b">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                Apple MacBook Pro 17
-              </th>
-              <td className="px-6 py-4">Silver</td>
-              <td className="px-6 py-4">Laptop</td>
-              <td className="px-6 py-4">$2999</td>
-            </tr>
-            <tr className="bg-white border-b">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                Microsoft Surface Pro
-              </th>
-              <td className="px-6 py-4">White</td>
-              <td className="px-6 py-4">Laptop PC</td>
-              <td className="px-6 py-4">$1999</td>
-            </tr>
-            <tr className="bg-white">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                Magic Mouse 2
-              </th>
-              <td className="px-6 py-4">Black</td>
-              <td className="px-6 py-4">Accessories</td>
-              <td className="px-6 py-4">$99</td>
-            </tr> */}
           </tbody>
         </table>
       </div>
