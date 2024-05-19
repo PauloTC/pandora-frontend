@@ -365,11 +365,10 @@ export function InvestigationForm({ params, title }) {
                         type="text"
                         id="name"
                         className="
-                                self-start 
-                                border border-gray-300 
-                                text-gray-900 text-sm rounded-lg 
-                                focus:ring-blue-500 focus:border-blue-500 
-                                block w-64 p-2.5"
+                          self-start h-10 border border-gray-300 
+                          text-gray-900 text-sm rounded
+                          outline-blue-500
+                          block w-64 p-2.5"
                         placeholder="Titulo de la investigación"
                         required
                       />
@@ -393,7 +392,7 @@ export function InvestigationForm({ params, title }) {
                         id="description"
                         rows="5"
                         maxLength={200}
-                        className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-4 rounded-xl "
+                        className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-4 rounded outline-blue-500 "
                         placeholder="Escribir la descripción..."
                         value={formik.values.description}
                         onChange={formik.handleChange}
@@ -420,13 +419,11 @@ export function InvestigationForm({ params, title }) {
                         name="project"
                         id="project"
                         className="
-                                border 
-                                border-gray-300 
-                                text-gray-900 
-                                text-sm rounded-lg 
-                                focus:ring-blue-500 
-                                focus:border-blue-500 
-                                block w-64 p-2.5"
+                          appearance-none
+                          text-gray-900 text-sm 
+                          rounded-lg block 
+                          w-64 p-2.5
+                          border border-gray-300"
                       >
                         <option value="">Seleccionar proyecto</option>
                         {projects.map((project) => (
@@ -435,26 +432,6 @@ export function InvestigationForm({ params, title }) {
                           </option>
                         ))}
                       </select>
-                      {/* <MultiSelect
-                        options={projects}
-                        value={
-                          formik.values.project
-                            ? projects.find(
-                                (option) =>
-                                  option.value === formik.values.project
-                              )
-                            : null
-                        }
-                        onChange={(selected) =>
-                          formik.setFieldValue(
-                            "project",
-                            selected?.length > 0 ? selected[0].value : ""
-                          )
-                        }
-                        labelledBy="Select"
-                        hasSelectAll={false}
-                        className="w-64 text-sm"
-                      /> */}
                     </li>
 
                     <li className="flex items-center">
@@ -474,7 +451,7 @@ export function InvestigationForm({ params, title }) {
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha inicial"
-                        className="border text-sm block p-2 w-64 rounded-lg"
+                        className="border text-sm block p-2 w-64 rounded-lg h-10"
                         selected={startDate}
                         required
                         onChange={(date) => setStartDate(date)}
@@ -495,7 +472,7 @@ export function InvestigationForm({ params, title }) {
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha final"
-                        className="border text-sm block p-2 w-64 rounded-lg"
+                        className="border text-sm block p-2 w-64 rounded-lg h-10"
                         selected={endDate}
                         onChange={(date) => setEndDate(date)}
                       />
@@ -546,13 +523,13 @@ export function InvestigationForm({ params, title }) {
                         required
                         id="status"
                         className="
-                                border 
-                                border-gray-300 
-                                text-gray-900 
-                                text-sm rounded-md
-                                focus:ring-blue-500 
-                                focus:border-blue-500 
-                                block w-64 p-2.5"
+                          border appearance-none
+                          border-gray-300 
+                          text-gray-900 
+                          text-sm rounded-md
+                          focus:ring-blue-500 
+                          focus:border-blue-500 
+                          block w-64 p-2.5 h-10"
                       >
                         {status.map((state) => (
                           <option key={state.value} value={state.value}>
