@@ -180,7 +180,7 @@ export function MaterialsForm({ slug }) {
           </h4>
         </div>
         <button
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+          className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-full text-sm px-5 py-2.5 text-center"
           type="submit"
         >
           Guardar
@@ -225,7 +225,7 @@ export function MaterialsForm({ slug }) {
                   </li>
 
                   <li className="flex gap-4">
-                    <label className="flex flex-col w-80" htmlFor="sample">
+                    <label className="flex flex-col grow" htmlFor="sample">
                       <span
                         className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                       >
@@ -238,7 +238,7 @@ export function MaterialsForm({ slug }) {
                     <textarea
                       id="sample"
                       rows="5"
-                      className="w-full text-sm text-gray-900 bg-white border border-gray-200 p-4 rounded-xl "
+                      className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-2.5 rounded outline-blue-500"
                       placeholder="Escribir la muestra..."
                       value={formik.values[material.id]?.sample || ""}
                       onChange={(event) =>
@@ -251,7 +251,7 @@ export function MaterialsForm({ slug }) {
                     ></textarea>
                   </li>
 
-                  <li className="flex items-center gap-4">
+                  <li className="flex gap-4">
                     <label
                       htmlFor="investigation_types"
                       className="flex flex-col w-80"
@@ -278,7 +278,7 @@ export function MaterialsForm({ slug }) {
                 </ul>
                 <ul className="flex flex-col gap-4 pl-6">
                   <li className="flex gap-4">
-                    <label className="flex flex-col w-80" htmlFor="tool">
+                    <label className="flex flex-col grow" htmlFor="tool">
                       <span
                         className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                       >
@@ -292,11 +292,9 @@ export function MaterialsForm({ slug }) {
                       type="text"
                       id="tool"
                       className="
-                      self-start 
-                      border border-gray-300 
-                      text-gray-900 text-sm rounded-lg 
-                      focus:ring-blue-500 focus:border-blue-500 
-                      block w-full p-2.5"
+                      self-start border border-gray-300 
+                      text-gray-900 text-sm rounded
+                      block w-64 p-2.5 outline-blue-500"
                       placeholder="Nombre de la herramienta"
                       value={formik.values[material.id]?.tool || ""}
                       onChange={(event) =>

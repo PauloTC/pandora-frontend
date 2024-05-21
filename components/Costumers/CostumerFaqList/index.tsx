@@ -6,19 +6,29 @@ export default function CustomersFaqList() {
 
   const faq = [
     {
-      question: "¿Quiénes pueden unirse a “Nombre XXXXX”?",
+      question: "¿Quiénes pueden unirse a “Conecta Alicorp”?",
       answer:
-        "Explicar los criterios de elegibilidad para bodegueros y dueños de restaurantes.",
+        "Todos nuestros clientes que tengan un negocio y que les gustaría paricipar voluntariamente en investigaciones para mejorar nuestros productos digitales.",
     },
     {
       question: "¿Cómo protege Alicorp mi información y privacidad?",
       answer:
-        "Detallar las medidas de seguridad y privacidad para la información compartida.",
+        "Los datos que nos proporciones son confidencias y solo se utilizarán con fines de investigación. No serán utilizados con fines comerciales ni publicitarios.",
     },
     {
-      question: "¿Hay alguna compensación por participar en “Nombre XXXXX”?",
+      question: "¿Hay alguna compensación por participar en “Conecta Alicorp”?",
       answer:
-        "Describir los tipos de compensación o incentivos disponibles para los participantes.",
+        "Sí. En la eventualidad de participar de alguna actividad con los diseñadores e investigadores de nuestro equipo y de acuerdo al tipo de investigación, se te entregará un incentivo por tu tiempo.",
+    },
+    {
+      question: "¿Cómo y cuándo me contactará el equipo de “Conecta Alicorp”?",
+      answer:
+        "Te contactaremos por llamada o mensaje de WhatsApp al celular que proporcionaste para confirmar tu disponibilidad.",
+    },
+    {
+      question: "¿Cómo puedo dejar de participar en “Conecta Alicorp”?",
+      answer:
+        "Por favor envía un correo a experiencedesign@alicorp.com.pe indicando que te gustaría dejar de participar y tus datos serán eliminados dentro de las siguientes 48 horas hábiles. Si cambias de opinión, puedes registrarte nuevamente.",
     },
   ];
 
@@ -27,28 +37,30 @@ export default function CustomersFaqList() {
       <ul className="full-width  md:w-9/12">
         {faq.map((q, index) => {
           return (
-            <li key={index} className="relative mb-4">
+            <li key={index} className="relative">
               <label
                 className="
-                  cursor-pointer flex justify-between 
-                  items-center p-4 bg-slate-50 text-base 
-                  font-bold text-gray-800"
+                  cursor-pointer rounded flex gap-4 justify-between items-center p-4 bg-slate-50 sm:text-base text-sm font-bold text-gray-800"
                 htmlFor={`faq${index}`}
               >
                 {q.question}
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-8 h-8"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className={`w-8 h-8 text-red-500 transform transition-transform duration-500 ${
+                      checkedItems[index] ? "rotate-180" : ""
+                    }`}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
               </label>
               <input
                 className="absolute top-0 right-0 opacity-0"
@@ -64,8 +76,10 @@ export default function CustomersFaqList() {
               />
               <div
                 className={`${
-                  checkedItems[index] ? "block" : "hidden"
-                } px-4 py-3.5 bg-slate-50 text-sm text-gray-800`}
+                  checkedItems[index]
+                    ? "opacity-100 max-h-96"
+                    : "opacity-0 max-h-0"
+                } transition-all duration-500 overflow-hidden px-4 bg-slate-50 text-sm text-gray-800`}
               >
                 {q.answer}
               </div>

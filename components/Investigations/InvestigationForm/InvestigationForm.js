@@ -326,7 +326,7 @@ export function InvestigationForm({ params, title }) {
               </h4>
             </div>
             <button
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+              className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-full text-sm px-5 py-2.5 text-center"
               type="submit"
             >
               Guardar
@@ -343,14 +343,14 @@ export function InvestigationForm({ params, title }) {
                     (*) Campos requeridos
                   </span>
                 </h4>
-                <div className="divide-x divide-gray-200 grid grid-cols-2 gap-6">
-                  <ul className="flex flex-col gap-6">
+                <div className="divide-x divide-gray-200 grid grid-cols-2 gap-y-6">
+                  <ul className="flex flex-col gap-6 pr-6">
                     <li className="flex gap-4">
                       <label htmlFor="name" className="flex flex-col grow">
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Título de la investigación*
+                          Título*
                         </span>
                         <span className="text-xs font-regular">
                           Máximo 40 caracteres
@@ -367,8 +367,7 @@ export function InvestigationForm({ params, title }) {
                         className="
                           self-start h-10 border border-gray-300 
                           text-gray-900 text-sm rounded
-                          outline-blue-500
-                          block w-64 p-2.5"
+                          outline-blue-500 block w-64 p-2.5"
                         placeholder="Titulo de la investigación"
                         required
                       />
@@ -382,7 +381,7 @@ export function InvestigationForm({ params, title }) {
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Contexto de investigación
+                          Contexto
                         </span>
                         <span className="text-xs font-regular">
                           Máximo 200 caracteres
@@ -392,7 +391,10 @@ export function InvestigationForm({ params, title }) {
                         id="description"
                         rows="5"
                         maxLength={200}
-                        className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-4 rounded outline-blue-500 "
+                        className="
+                          w-64 text-sm text-gray-900 
+                          bg-white border border-gray-200 p-2.5 
+                          rounded outline-blue-500"
                         placeholder="Escribir la descripción..."
                         value={formik.values.description}
                         onChange={formik.handleChange}
@@ -418,12 +420,20 @@ export function InvestigationForm({ params, title }) {
                         required
                         name="project"
                         id="project"
-                        className="
+                        className={`
                           appearance-none
                           text-gray-900 text-sm 
-                          rounded-lg block 
+                          rounded block 
                           w-64 p-2.5
-                          border border-gray-300"
+                          border border-gray-300
+                          outline-blue-500
+                          ${
+                            formik.values.project === ""
+                              ? "text-gray-400"
+                              : "text-gray-900"
+                          }
+                        
+                        `}
                       >
                         <option value="">Seleccionar proyecto</option>
                         {projects.map((project) => (
@@ -444,14 +454,14 @@ export function InvestigationForm({ params, title }) {
                         >
                           Fecha de inicio*
                         </span>
-                        <span className="text-sm font-regular">
-                          ejemplo: (10/02/2023)
+                        <span className="text-xs font-regular">
+                          Elige una fecha de inicio
                         </span>
                       </label>
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha inicial"
-                        className="border text-sm block p-2 w-64 rounded-lg h-10"
+                        className="border text-sm block p-2 w-64 rounded h-10 outline-blue-500"
                         selected={startDate}
                         required
                         onChange={(date) => setStartDate(date)}
@@ -466,13 +476,13 @@ export function InvestigationForm({ params, title }) {
                           Fecha de cierre
                         </span>
                         <span className="text-xs font-regular">
-                          ejemplo: (10/02/2023)
+                          Elige una fecha final
                         </span>
                       </label>
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha final"
-                        className="border text-sm block p-2 w-64 rounded-lg h-10"
+                        className="border text-sm block p-2 w-64 rounded h-10 outline-blue-500"
                         selected={endDate}
                         onChange={(date) => setEndDate(date)}
                       />
@@ -526,10 +536,9 @@ export function InvestigationForm({ params, title }) {
                           border appearance-none
                           border-gray-300 
                           text-gray-900 
-                          text-sm rounded-md
-                          focus:ring-blue-500 
-                          focus:border-blue-500 
-                          block w-64 p-2.5 h-10"
+                          text-sm rounded
+                          block w-64 p-2.5 h-10
+                          outline-blue-500"
                       >
                         {status.map((state) => (
                           <option key={state.value} value={state.value}>
@@ -576,7 +585,7 @@ export function InvestigationForm({ params, title }) {
                           Equipo Research
                         </span>
                         <span className="text-xs font-regular">
-                          Principales responsables
+                          Researchers involucrados
                         </span>
                       </label>
                       <MultiSelect
@@ -599,7 +608,7 @@ export function InvestigationForm({ params, title }) {
                           Equipo service
                         </span>
                         <span className="text-xs font-regular">
-                          Responsables Service
+                          Services involucrados
                         </span>
                       </label>
                       <MultiSelect
@@ -625,7 +634,7 @@ export function InvestigationForm({ params, title }) {
                           Equipo extendido
                         </span>
                         <span className="text-xs font-regular">
-                          Personas involucradas
+                          Otros perfiles involucrados
                         </span>
                       </label>
                       <MultiSelect
@@ -674,8 +683,8 @@ export function InvestigationForm({ params, title }) {
                         className="
                               self-start 
                               border border-gray-300 
-                              text-gray-900 text-sm rounded-lg 
-                              focus:ring-blue-500 focus:border-blue-500 
+                              text-gray-900 text-sm rounded 
+                              outline-blue-500 h-10
                               block w-64 p-2.5"
                         placeholder="Principal objetivo"
                       />
@@ -698,7 +707,7 @@ export function InvestigationForm({ params, title }) {
                       <textarea
                         id="specific_goals"
                         rows="5"
-                        className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-4 rounded-xl "
+                        className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-2.5 rounded outline-blue-500"
                         placeholder="Objetivos especificos..."
                         defaultValue={investigation?.specific_goals}
                         value={formik.values.specific_goals}
@@ -777,9 +786,9 @@ export function InvestigationForm({ params, title }) {
                         className="
                               self-start 
                               border border-gray-300 
-                              text-gray-900 text-sm rounded-lg 
-                              focus:ring-blue-500 focus:border-blue-500
-                              w-64 block p-2.5"
+                              text-gray-900 text-sm rounded
+                              outline-blue-500
+                              w-64 block p-2.5 h-10"
                         placeholder="Listado de personas"
                       />
                     </li>
@@ -794,13 +803,13 @@ export function InvestigationForm({ params, title }) {
                           Fecha de Presentación
                         </span>
                         <span className="text-xs font-regular">
-                          ejemplo: (10/02/2023)
+                          Cuando se presentó
                         </span>
                       </label>
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha"
-                        className="border text-sm block p-2 w-64 rounded-lg"
+                        className="border text-sm block p-2 w-64 rounded h-10 outline-blue-500"
                         selected={presentedDate}
                         onChange={(date) => setPresentedDate(date)}
                       />

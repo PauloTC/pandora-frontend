@@ -186,22 +186,11 @@ export default function InvestigationsComponent() {
           <Link
             href={"/investigations/create"}
             className="
-              text-white 
-              flex 
-              items-center 
-              gap-1 
-              bg-blue-700 
-              hover:bg-blue-800 
-              focus:outline-none 
-              focus:ring-4 
-              focus:ring-blue-300 
-              font-medium 
-              rounded-full 
-              text-sm 
-              px-5 py-2.5 
-              text-center 
-              me-2 mb-2 
-              "
+              text-white flex 
+              items-center gap-1 
+              bg-blue-700 hover:bg-blue-800 
+              font-medium rounded-full text-sm 
+              px-5 py-2.5 text-center"
           >
             Agregar Investigación
           </Link>
@@ -257,7 +246,7 @@ export default function InvestigationsComponent() {
                       <div className="mb-3">
                         <h4
                           title={investigation?.attributes?.name}
-                          className={`${libre_franklin500.className} capitalize min-h-10 text-slate-800 text-sm`}
+                          className={`font-semibold capitalize min-h-10 text-slate-800 text-sm`}
                         >
                           {investigation?.attributes?.name}
                         </h4>
