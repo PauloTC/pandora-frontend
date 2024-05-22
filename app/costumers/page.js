@@ -57,27 +57,20 @@ export default function CostumersPage() {
             width={2000}
           />
         </figure>
-        <div
-          className="flex items-center justify-around w-full relative px-5"
-          // style={{ maxWidth: 1124 }}
-        >
-          <div
-            className="
-            text-white 
-            flex flex-col w-full md:w-1/2"
-          >
-            <h1 className={`font-bold text-4xl`}>Creando contigo</h1>
+        <div className="flex items-center justify-around w-full relative px-5">
+          <div className="text-white flex flex-col w-full md:w-1/2">
+            <h1 className="font-bold text-4xl">Conecta Alicorp</h1>
             <span
-              className={`font-bold  text-md block mt-4 mb-4`}
+              className="font-bold  text-md block mt-4 mb-4"
               // style={{ width: 500 }}
             >
               Una iniciativa de Diseño y Experiencia para innovar y co-crear
-              junto a la comunidad de bodegueros y restauranteros.
+              junto a la comunidad.
             </span>
             <p className="text-md">
               En Alicorp queremos revolucionar la forma en que interactuamos y
-              apoyamos a los negocios locales. Por eso, lanzamos
-              <b> Creando Contigo</b>, un espacio donde tu voz y experiencia son
+              apoyamos a los negocios locales. Por eso, lanzamos{" "}
+              <b>Conecta Alicorp</b>, un espacio donde tu voz y experiencia son
               fundamentales para construir el futuro de los negocios de
               alimentación en nuestra región.
             </p>
@@ -86,10 +79,8 @@ export default function CostumersPage() {
               className="
                 text-gray-900 bg-white 
                 border border-gray-300 
-                focus:outline-none 
+                outline-none
                 hover:bg-gray-100 
-                focus:ring-4 
-                focus:ring-gray-100 
                 font-medium rounded-lg 
                 text-sm px-5 py-2.5 me-2 mt-6
                 w-60"
@@ -134,15 +125,15 @@ export default function CostumersPage() {
 
       <section className="p-4 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-red-500 p-8">
-          <h3 className={`text-white text-3xl font-bold`}>
+          <h3 className="text-white text-3xl font-bold">
             Beneficios de ser parte de Conecta Alicorp
           </h3>
 
           <ul>
             {benefits.map((benefit, index) => (
               <li key={index} className="text-white mt-8">
-                <h4 className={`font-bold text-2xl`}>{benefit.title}</h4>
-                <p className={`text-md`}>{benefit.description}</p>
+                <h4 className="font-bold text-2xl mb-2">{benefit.title}</h4>
+                <p className="text-md">{benefit.description}</p>
               </li>
             ))}
           </ul>
@@ -152,11 +143,15 @@ export default function CostumersPage() {
         </div>
       </section>
 
-      <section className="flex flex-col items-center p-8 md:p-12">
+      <section className="flex flex-col mt-8 mb-16 items-center p-4 md:mt-0 md:p-12">
         <h4 className="text-3xl mb-8 font-bold">Preguntas frecuentes</h4>
 
         <CustomersFaqList />
       </section>
+
+      <footer className="bg-red-500 text-white p-2 text-sm text-center mt-5">
+        Made with <span>&#9829;</span> by the Design & Experience Team
+      </footer>
     </>
   );
 }
