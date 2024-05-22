@@ -29,6 +29,20 @@ export default function RootLayout({
             })(window, document, "clarity", "script", "mdlnlwz9kw");
           `}
         </Script>
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-FSQEPD4T59"
+        ></Script>
+        <Script id="google-analytics">
+          {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-FSQEPD4T59');
+          
+          `}
+        </Script>
       </head>
       <body className="overflow-x-hidden">
         <AuthProvider>
