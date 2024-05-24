@@ -203,7 +203,7 @@ export function MaterialsForm({ slug }) {
               <div className="divide-x divide-gray-200 grid grid-cols-2 gap-6">
                 <ul className="flex flex-col gap-4">
                   <li className="flex items-center gap-4">
-                    <label htmlFor="publics" className="flex flex-col w-80">
+                    <label htmlFor="publics" className="flex flex-col grow">
                       <span
                         className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                       >
@@ -214,7 +214,7 @@ export function MaterialsForm({ slug }) {
                       </span>
                     </label>
                     <MultiSelect
-                      className="w-full"
+                      className="w-64 text-sm"
                       options={publics}
                       value={formik.values[material.id]?.publics || []}
                       onChange={(value) =>
@@ -254,7 +254,7 @@ export function MaterialsForm({ slug }) {
                   <li className="flex gap-4">
                     <label
                       htmlFor="investigation_types"
-                      className="flex flex-col w-80"
+                      className="flex flex-col grow"
                     >
                       <span
                         className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
@@ -266,7 +266,7 @@ export function MaterialsForm({ slug }) {
                       </span>
                     </label>
                     <MultiSelect
-                      className="w-full"
+                      className="w-64 text-sm"
                       options={locations}
                       value={formik.values[material.id]?.locations || []}
                       onChange={(value) =>
@@ -294,7 +294,7 @@ export function MaterialsForm({ slug }) {
                       className="
                       self-start border border-gray-300 
                       text-gray-900 text-sm rounded
-                      block w-64 p-2.5 outline-blue-500"
+                      block w-64 p-2.5 outline-blue-500 h-10"
                       placeholder="Nombre de la herramienta"
                       value={formik.values[material.id]?.tool || ""}
                       onChange={(event) =>

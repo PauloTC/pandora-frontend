@@ -494,31 +494,14 @@ export function InvestigationSlugComponent({ params }) {
                   </label>
 
                   {investigation?.guide_media_link && (
-                    <div>
-                      <a
-                        href={investigation?.guide_media_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm w-full capitalize text-blue-600 hover:underline"
-                      >
-                        Ver previsualización
-                      </a>
-                      <a
-                        href={investigation?.guide_media_link}
-                        download
-                        className="text-sm w-full capitalize text-blue-600 hover:underline"
-                      >
-                        Descargar aquí
-                      </a>
-                      {/* <a
-                        href={investigation?.guide_media_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm w-full capitalize text-blue-600 hover:underline"
-                      >
-                        Descargar aquí
-                      </a> */}
-                    </div>
+                    <a
+                      href={investigation?.guide_media_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm w-full block capitalize text-blue-600 hover:underline"
+                    >
+                      Descargar aquí
+                    </a>
                   )}
                 </li>
                 <li className="flex items-center gap-4">

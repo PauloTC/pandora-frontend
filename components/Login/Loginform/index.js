@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./loginform.form";
 import { Auth } from "@/api";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks";
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -32,6 +32,16 @@ export default function LoginForm() {
       }
     },
   });
+
+  useEffect(() => {
+    if (window.dataLayer) {
+      window.dataLayer.push({
+        event: "pageview",
+        page: "/home",
+        title: "Home Page",
+      });
+    }
+  }, []);
 
   return (
     <div className="w-2/6 right-0 min-h-screen flex items-center justify-center p-4 bg-white sm:p-6 md:p-8">
