@@ -1,5 +1,6 @@
 import Image from "next/image";
 import LoginForm from "@/components/Login/Loginform";
+import { useEffect } from "react";
 import "./styles.css";
 
 export default function Home() {
@@ -7,10 +8,6 @@ export default function Home() {
     {
       name: "Mafer",
       image: "mafer.png",
-    },
-    {
-      name: "Magra",
-      image: "magra.png",
     },
     {
       name: "Javier",
@@ -51,10 +48,6 @@ export default function Home() {
     {
       name: "Marythe",
       image: "maythe.png",
-    },
-    {
-      name: "Rena",
-      image: "rena.png",
     },
     {
       name: "Sebas",
