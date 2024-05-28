@@ -54,7 +54,7 @@ export function AuthProvider(props) {
     tokenCtrl.removeToken();
     setToken(null);
     setUser(null);
-    router.push("/", { scroll: false });
+    // router.push("/", { scroll: false });
   };
 
   const updateUser = (key, value) => {

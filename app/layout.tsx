@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { AuthProvider } from "@/contexts";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import Script from "next/dist/client/script";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Proyecto Pandora",
