@@ -16,7 +16,6 @@ export function CostumerForm() {
         // await subscribeCtrl.createSubscribe(formValues);
 
         // formik.handleReset();
-        console.log(formValues);
         setIsSubmitted(true);
       } catch (error) {
         console.error(error);

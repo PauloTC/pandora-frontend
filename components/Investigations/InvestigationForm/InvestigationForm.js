@@ -121,6 +121,27 @@ export function InvestigationForm({ params, title }) {
             investigationData
           );
 
+          const createdInvestigation = result;
+
+          createdInvestigation.attributes.investigation_types.data.map(
+            (type) => {
+              //create material
+              let material = {
+                publics: [],
+                slug: slugify(
+                  `${type.attributes.name}-${createdInvestigation.id}`,
+                  { lower: true, strict: true }
+                ),
+                sample: "",
+                locations: [],
+                tool: "",
+                tool_media: "",
+                investigation: createdInvestigation.id,
+              };
+              materialCtrl.createMaterial(material);
+            }
+          );
+
           setInvestigationResult(result);
 
           if (formValues.investigation_types.length === 0) {
@@ -246,15 +267,6 @@ export function InvestigationForm({ params, title }) {
             label: team.attributes.name,
           }))
         );
-
-        // const nonResearchers = participants?.data
-        //   .filter((participant) => participant.attributes.role !== "researcher")
-        //   .map((participant) => ({
-        //     value: participant.id,
-        //     label: participant.attributes.name,
-        //   }));
-
-        // setExtendedTeam(nonResearchers);
       } catch (error) {
         console.log("error", error);
       }
@@ -494,16 +506,15 @@ export function InvestigationForm({ params, title }) {
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Áreas involucradas*
+                          Otras áreas involucradas
                         </span>
                         <span className="text-xs font-regular">
-                          Areas que participan
+                          Áreas amigas que participaron
                         </span>
                       </label>
 
                       <MultiSelect
                         className="w-64 text-sm"
-                        required
                         options={teams}
                         placeholder="Seleccionar equipos"
                         value={formik.values.teams}

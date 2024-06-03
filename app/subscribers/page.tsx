@@ -14,12 +14,16 @@ export default function Subscribers() {
       try {
         const response = await costumerCtrl.getAllCostumers();
         const transformedData = response.data.map((costumer: any) => ({
-          name: costumer.attributes.name,
-          birthdate: costumer.attributes.birthdate,
-          cellphone: costumer.attributes.cellphone,
-          document_number: costumer.attributes.document_number,
-          email: costumer.attributes.email,
-          business: costumer.attributes.business,
+          negocio: costumer.attributes.business_type,
+          giro: costumer.attributes.business_subtype,
+          ruc: costumer.attributes.business_document,
+          nombre_negocio: costumer.attributes.business_name,
+          cliente: costumer.attributes.business_owner,
+          distrito: costumer.attributes.business_district,
+          celular: costumer.attributes.owner_cellphone,
+          dni: costumer.attributes.owner_document_number,
+          email: costumer.attributes.owner_email,
+          edad: costumer.attributes.owner_birthday,
         }));
 
         setCostumers(transformedData);
@@ -28,6 +32,10 @@ export default function Subscribers() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    console.log("costumers", costumers);
+  }, [costumers]);
 
   const downloadExcel = () => {
     const ws = XLSX.utils.json_to_sheet(costumers);
@@ -64,22 +72,34 @@ export default function Subscribers() {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead className="text-xs text-gray-700 bg-gray-50">
             <tr>
-              <th scope="col" className="px-6 py-3">
-                Nombres
-              </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-2 py-3">
                 Negocio
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-2 py-3">
+                Giro
+              </th>
+              <th scope="col" className="px-2 py-3">
+                RUC
+              </th>
+              <th scope="col" className="px-2 py-3">
+                Nombre del Negocio
+              </th>
+              <th scope="col" className="px-2 py-3">
+                Cliente
+              </th>
+              <th scope="col" className="px-2 py-3">
+                Distrito
+              </th>
+              <th scope="col" className="px-2 py-3">
                 Telefono
               </th>
-              <th scope="col" className="px-6 py-3">
-                Documento
+              <th scope="col" className="px-2 py-3">
+                DNI
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-2 py-3">
                 Email
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-2 py-3">
                 Edad
               </th>
             </tr>
@@ -89,20 +109,22 @@ export default function Subscribers() {
               costumers.map((costumer, index) => {
                 return (
                   <tr key={index} className="bg-white border-b">
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                    >
-                      {costumer.name}
-                    </th>
-                    <td className="px-6 py-4 capitalize">
-                      {costumer.business}
+                    <td className="px-2 py-2 capitalize">{costumer.negocio}</td>
+                    <td className="px-2 py-2 capitalize">{costumer.giro}</td>
+                    <td className="px-2 py-2 capitalize">{costumer.ruc}</td>
+                    <td className="px-2 py-2 capitalize font-medium text-gray-900">
+                      {costumer.nombre_negocio}
                     </td>
-                    <td className="px-6 py-4">{costumer.cellphone}</td>
-
-                    <td className="px-6 py-4">{costumer.document_number}</td>
-                    <td className="px-6 py-4">{costumer.email}</td>
-                    <td className="px-6 py-4">{costumer.birthdate}</td>
+                    <td className="px-2 py-2 font-medium text-gray-900">
+                      {costumer.cliente}
+                    </td>
+                    <td className="px-2 py-2 capitalize">
+                      {costumer.distrito}
+                    </td>
+                    <td className="px-2 py-2">{costumer.celular}</td>
+                    <td className="px-2 py-2">{costumer.dni}</td>
+                    <td className="px-2 py-2">{costumer.email}</td>
+                    <td className="px-2 py-2">{costumer.edad}</td>
                   </tr>
                 );
               })}
