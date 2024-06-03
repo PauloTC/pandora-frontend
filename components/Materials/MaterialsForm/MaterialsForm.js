@@ -90,9 +90,6 @@ export function MaterialsForm({ slug }) {
         const responseLocations = await locationCtrl.getLocations();
         const response = await investigationCtrl.getInvestigation(slug);
 
-        console.log("slug", slug);
-        console.log("response", response);
-
         setInvestigation(response);
 
         setPublics(

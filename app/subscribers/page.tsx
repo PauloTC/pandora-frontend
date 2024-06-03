@@ -33,10 +33,6 @@ export default function Subscribers() {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log("costumers", costumers);
-  }, [costumers]);
-
   const downloadExcel = () => {
     const ws = XLSX.utils.json_to_sheet(costumers);
     const wb = XLSX.utils.book_new();
