@@ -23,7 +23,6 @@ export default function Subscribers() {
           celular: costumer.attributes.owner_cellphone,
           dni: costumer.attributes.owner_document_number,
           email: costumer.attributes.owner_email,
-          edad: costumer.attributes.owner_birthday,
         }));
 
         setCostumers(transformedData);
@@ -80,11 +79,12 @@ export default function Subscribers() {
               <th scope="col" className="px-2 py-3">
                 Nombre del Negocio
               </th>
-              <th scope="col" className="px-2 py-3">
-                Cliente
-              </th>
+
               <th scope="col" className="px-2 py-3">
                 Distrito
+              </th>
+              <th scope="col" className="px-2 py-3">
+                Cliente
               </th>
               <th scope="col" className="px-2 py-3">
                 Telefono
@@ -94,9 +94,6 @@ export default function Subscribers() {
               </th>
               <th scope="col" className="px-2 py-3">
                 Email
-              </th>
-              <th scope="col" className="px-2 py-3">
-                Edad
               </th>
             </tr>
           </thead>
@@ -111,16 +108,16 @@ export default function Subscribers() {
                     <td className="px-2 py-2 capitalize font-medium text-gray-900">
                       {costumer.nombre_negocio}
                     </td>
-                    <td className="px-2 py-2 font-medium text-gray-900">
-                      {costumer.cliente}
-                    </td>
+
                     <td className="px-2 py-2 capitalize">
                       {costumer.distrito}
+                    </td>
+                    <td className="px-2 py-2 font-medium text-gray-900">
+                      {costumer.cliente}
                     </td>
                     <td className="px-2 py-2">{costumer.celular}</td>
                     <td className="px-2 py-2">{costumer.dni}</td>
                     <td className="px-2 py-2">{costumer.email}</td>
-                    <td className="px-2 py-2">{costumer.edad}</td>
                   </tr>
                 );
               })}
