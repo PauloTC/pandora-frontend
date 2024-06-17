@@ -263,23 +263,26 @@ export function InvestigationSlugComponent({ params }) {
                   </label>
 
                   <ul className="text-sm  w-full gap-4 capitalize grid grid-cols-2">
-                    {researchTeam?.map((researcher, index) => (
-                      <li className="flex gap-4 items-center" key={index}>
-                        <Image
-                          alt={
-                            researcher.attributes.photo?.data?.[0]?.attributes
-                              ?.name
-                          }
-                          src={
-                            researcher.attributes.photo?.data?.[0]?.attributes
-                              ?.url
-                          }
-                          width={30}
-                          height={30}
-                        />
-                        <span>{researcher.attributes.name}</span>
-                      </li>
-                    ))}
+                    {researchTeam?.map((researcher, index) => {
+                      console.log("researcher", researcher);
+
+                      return (
+                        <li className="flex gap-4 items-center" key={index}>
+                          <Image
+                            alt={
+                              researcher.attributes.photo.data.attributes
+                                .formats.thumbnail.name
+                            }
+                            src={
+                              researcher.attributes.photo.data.attributes.url
+                            }
+                            width={30}
+                            height={30}
+                          />
+                          <span>{researcher.attributes.name}</span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </li>
 
@@ -297,12 +300,10 @@ export function InvestigationSlugComponent({ params }) {
                       <li className="flex gap-4 items-center" key={index}>
                         <Image
                           alt={
-                            service.attributes.photo?.data?.[0]?.attributes
-                              ?.name
+                            service.attributes.photo.data.attributes.formats
+                              .thumbnail.name
                           }
-                          src={
-                            service.attributes.photo?.data?.[0]?.attributes?.url
-                          }
+                          src={service.attributes.photo.data.attributes.url}
                           width={30}
                           height={30}
                         />
@@ -327,11 +328,10 @@ export function InvestigationSlugComponent({ params }) {
                         <Image
                           className="rounded-full"
                           alt={
-                            team.attributes.photo?.data?.[0]?.attributes?.name
+                            team.attributes.photo.data.attributes.formats
+                              .thumbnail.name
                           }
-                          src={
-                            team.attributes.photo?.data?.[0]?.attributes?.url
-                          }
+                          src={team.attributes.photo.data.attributes.url}
                           width={30}
                           height={30}
                         />

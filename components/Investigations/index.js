@@ -139,6 +139,10 @@ export default function InvestigationsComponent() {
     })();
   }, [filters]);
 
+  useEffect(() => {
+    console.log("investigations", investigations);
+  }, [investigations]);
+
   //Setea la pagina a 1 cuando se cambia el proyecto o el publico objetivo
   useEffect(() => {
     setFilters((prevFilters) => ({
@@ -360,12 +364,12 @@ export default function InvestigationsComponent() {
                               >
                                 <Image
                                   src={
-                                    researcher.attributes.photo.data[0]
-                                      .attributes.url
+                                    researcher.attributes.photo.data.attributes
+                                      .formats.thumbnail.url
                                   }
                                   alt={
-                                    researcher.attributes.photo.data[0]
-                                      .attributes.name
+                                    researcher.attributes.photo.data.attributes
+                                      .formats.thumbnail.name
                                   }
                                   width={40}
                                   height={40}
