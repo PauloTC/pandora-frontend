@@ -132,12 +132,11 @@ export function InvestigationForm({ params, title }) {
         const initial_date = format(startDate, "yyyy-MM-dd");
 
         const file = formValues.guide_media_link;
-        let guide_media_link = "";
+        let guide_media_link =
+          investigation?.attributes?.guide_media_link || "";
 
         if (file instanceof File) {
           guide_media_link = await uploadToS3(file, setIsUploading);
-
-          console.log("guide_media_link", guide_media_link);
         }
 
         let investigationData = {

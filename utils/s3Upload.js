@@ -1,23 +1,17 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import AWS from "aws-sdk";
 
-const s3Client = new S3Client({
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: "sa-east-1",
-  credentials: {
-    accessKeyId: "AKIARUO3BI5AIKALEON6",
-    secretAccessKey: "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",
-  },
 });
 
-// AWS.config.update({
-//   region: "sa-east-1", // ej. 'us-east-1'
-// });
-
-// const s3 = new AWS.S3();
+const s3 = new AWS.S3();
 
 // Función para subir un archivo a S3
 export async function uploadToS3(file, onUploadStatusChange) {
   const params = {
-    Bucket: "data-center-strapi",
+    Bucket: "data-center-strapi", // Nombre de tu bucket S3
     Key: file.name, // Nombre del archivo en tu bucket S3
     Body: file,
     ACL: "public-read", // Si quieres que el archivo sea público
@@ -28,8 +22,7 @@ export async function uploadToS3(file, onUploadStatusChange) {
     // Comenzar la carga
     onUploadStatusChange(true);
 
-    const command = new PutObjectCommand(params);
-    const data = await s3Client.send(command);
+    const data = await s3.upload(params).promise();
 
     // Finalizar la carga
     onUploadStatusChange(false);
