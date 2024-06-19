@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { validationSchema } from "./MaterialsForm.form";
 import { Material, Public, Location, Investigation } from "@/api";
-import { uploadToS3  } from "@/utils";
+import { uploadToS3 } from "@/utils";
 import PulseLoader from "react-spinners/PulseLoader";
 
 export function MaterialsForm({ slug }) {
