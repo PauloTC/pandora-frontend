@@ -36,6 +36,13 @@ const config: Config = {
       },
       animation: {
         "floating": "floating 3s ease-in-out infinite"
+      },
+      fontSize: {
+        '4.5xl': '2.5rem',
+        '3.2xl': '2rem',
+      },
+      maxWidth: {
+        '648': '40.5rem'
       }
     },
   },

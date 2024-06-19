@@ -14,7 +14,7 @@ const Hero = () => {
         xl:flex
         xl:justify-between
         xl:pt-14
-        xl:pb-[120px]
+        xl:pb-32
       '
     >
       <div className='xl:max-w-screen-md'>
@@ -27,7 +27,7 @@ const Hero = () => {
             font-semibold
             mb-4
             mt-10
-            xl:text-[32px]
+            xl:text-3.2xl
             xl:mb-8
             xl:mt-32
           '

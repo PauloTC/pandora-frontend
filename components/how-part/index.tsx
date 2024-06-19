@@ -26,7 +26,7 @@ const HowPart = () => {
   return (
     <div className='pb-20 xl:bg-[url("/costumers/bg-dots.svg")] xl:pb-44 xl:pt-24'>
       <div className='container mx-auto px-4 flex items-center flex-col xl:px-0'>
-        <h2 className='text-2xl font-bold mb-10 xl:text-[40px] xl:mb-14'>
+        <h2 className='text-2xl font-bold mb-10 xl:text-4.5xl xl:mb-14'>
           ¿Cómo participar?
         </h2>
         <div className='grid gap-8 xl:grid-cols-3 xl:gap-12'>
@@ -68,7 +68,7 @@ const HowPart = () => {
                   </div>
                   <Image src={card.image} alt={card.title} width={140} height={140} />
                 </div>
-                <h4 className='text-2xl font-bold mb-2 mt-4 xl:text-[32px] xl:mb-4'>
+                <h4 className='text-2xl font-bold mb-2 mt-4 xl:text-3.2xl xl:mb-4'>
                   {card.title}
                 </h4>
                 <p className='text-xs text-center xl:text-base'>

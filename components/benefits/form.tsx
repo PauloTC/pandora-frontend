@@ -15,25 +15,25 @@ const Form = () => {
       <div className='flex flex-col gap-5'>
         <div className='flex flex-col xl:flex-row w-full gap-5'>
           <div className='w-full'>
-            <label htmlFor="email" className="block mb-[6px] font-semibold">Nombres y apellidos</label>
+            <label htmlFor="email" className="block mb-1.5 font-semibold">Nombres y apellidos</label>
             <input type="email" id="email" className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light" placeholder="Ingresa tus nombres y apellidos" required />
           </div>
           <div className='w-full'>
-            <label htmlFor="email" className="block mb-[6px] font-semibold">DNI</label>
+            <label htmlFor="email" className="block mb-1.5 font-semibold">DNI</label>
             <input type="email" id="email" className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light" placeholder="Documento de identidad" required />
           </div>
         </div>
         <div>
-          <label htmlFor="email" className="block mb-[6px] font-semibold">Correo electrónico</label>
+          <label htmlFor="email" className="block mb-1.5 font-semibold">Correo electrónico</label>
           <input type="email" id="email" className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light" placeholder="micorreo@correo.com" required />
         </div>
         <div className='flex flex-col xl:flex-row w-full gap-5'>
           <div className='w-full'>
-            <label htmlFor="email" className="block mb-[6px] font-semibold">Fecha de nacimiento</label>
+            <label htmlFor="email" className="block mb-1.5 font-semibold">Fecha de nacimiento</label>
             <input type="email" id="email" className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light" placeholder="DD/MM/YYYY" required />
           </div>
           <div className='w-full'>
-            <label htmlFor="email" className="block mb-[6px] font-semibold">Celular</label>
+            <label htmlFor="email" className="block mb-1.5 font-semibold">Celular</label>
             <input type="email" id="email" className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light" placeholder="998883322" required />
           </div>
         </div>

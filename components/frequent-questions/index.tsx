@@ -18,7 +18,7 @@ const FrequentQuestions = () => {
           xl:py-24
         '
       >
-        <h2 className='text-2xl mb-14 font-bold xl:text-[40px]'>
+        <h2 className='text-2xl mb-14 font-bold xl:text-4.5xl'>
           Preguntas fecuentes
         </h2>
         <CustomersFaqList />
