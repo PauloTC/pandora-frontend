@@ -10,9 +10,10 @@ const Hero = () => {
         pt-4
         pb-16
         mx-auto
-        xl:px-0
-        xl:flex
-        xl:justify-between
+        lg:px-0
+        lg:flex
+        gap-8
+        lg:justify-between
         xl:pt-14
         xl:pb-32
       '

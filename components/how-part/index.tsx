@@ -29,7 +29,7 @@ const HowPart = () => {
         <h2 className='text-2xl font-bold mb-10 xl:text-4.5xl xl:mb-14'>
           ¿Cómo participar?
         </h2>
-        <div className='grid gap-8 xl:grid-cols-3 xl:gap-12'>
+        <div className='grid gap-8 lg:grid-cols-2 xl:grid-cols-3 xl:gap-12'>
           {cards.map((card, index) => {
             return (
               <div
