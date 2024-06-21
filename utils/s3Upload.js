@@ -11,7 +11,7 @@ const s3 = new AWS.S3();
 // Función para subir un archivo a S3
 export async function uploadToS3(file, onUploadStatusChange) {
   const params = {
-    Bucket: "data-center-strapi", // Nombre de tu bucket S3
+    Bucket: "bucket-pandora", // Nombre de tu bucket S3
     Key: file.name, // Nombre del archivo en tu bucket S3
     Body: file,
     ACL: "public-read", // Si quieres que el archivo sea público
