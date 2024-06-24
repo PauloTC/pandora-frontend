@@ -15,6 +15,7 @@ import {
   InvestigationType,
   Researcher,
   Project,
+  uploadToS3,
 } from "@/api";
 
 import { useFormik } from "formik";
@@ -22,7 +23,6 @@ import { initialValues, validationSchema } from "./InvestigationForm.form";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { MaterialsForm } from "@/components/Materials/MaterialsForm";
-import { uploadToS3 } from "@/utils";
 
 import PulseLoader from "react-spinners/PulseLoader";
 

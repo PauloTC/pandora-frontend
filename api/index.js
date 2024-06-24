@@ -10,3 +10,4 @@ export * from "./type";
 export * from "./researcher";
 export * from "./location";
 export * from "./costumer";
+export * from "./upload";
