@@ -263,23 +263,26 @@ export function InvestigationSlugComponent({ params }) {
                   </label>
 
                   <ul className="text-sm  w-full gap-4 capitalize grid grid-cols-2">
-                    {researchTeam?.map((researcher, index) => (
-                      <li className="flex gap-4 items-center" key={index}>
-                        <Image
-                          alt={
-                            researcher.attributes.photo?.data?.[0]?.attributes
-                              ?.name
-                          }
-                          src={
-                            researcher.attributes.photo?.data?.[0]?.attributes
-                              ?.url
-                          }
-                          width={30}
-                          height={30}
-                        />
-                        <span>{researcher.attributes.name}</span>
-                      </li>
-                    ))}
+                    {researchTeam?.map((researcher, index) => {
+                      console.log("researcher", researcher);
+
+                      return (
+                        <li className="flex gap-4 items-center" key={index}>
+                          <Image
+                            alt={
+                              researcher.attributes.photo.data.attributes
+                                .formats.thumbnail.name
+                            }
+                            src={
+                              researcher.attributes.photo.data.attributes.url
+                            }
+                            width={30}
+                            height={30}
+                          />
+                          <span>{researcher.attributes.name}</span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </li>
 
@@ -297,12 +300,10 @@ export function InvestigationSlugComponent({ params }) {
                       <li className="flex gap-4 items-center" key={index}>
                         <Image
                           alt={
-                            service.attributes.photo?.data?.[0]?.attributes
-                              ?.name
+                            service.attributes.photo.data.attributes.formats
+                              .thumbnail.name
                           }
-                          src={
-                            service.attributes.photo?.data?.[0]?.attributes?.url
-                          }
+                          src={service.attributes.photo.data.attributes.url}
                           width={30}
                           height={30}
                         />
@@ -327,11 +328,10 @@ export function InvestigationSlugComponent({ params }) {
                         <Image
                           className="rounded-full"
                           alt={
-                            team.attributes.photo?.data?.[0]?.attributes?.name
+                            team.attributes.photo.data.attributes.formats
+                              .thumbnail.name
                           }
-                          src={
-                            team.attributes.photo?.data?.[0]?.attributes?.url
-                          }
+                          src={team.attributes.photo.data.attributes.url}
                           width={30}
                           height={30}
                         />
@@ -344,103 +344,112 @@ export function InvestigationSlugComponent({ params }) {
             </div>
           </div>
 
-          {investigation?.materials.data.map((material, index) => (
-            <div key={index} className="border border-gray-200 rounded-xl p-6">
-              <h4 className={`${libre_franklin700.className} text-xl mb-4`}>
-                Material de
-                {" " +
-                  investigation?.investigation_types?.data[index]?.attributes
-                    .name}
-              </h4>
-              <div className="divide-x divide-gray-200 grid grid-cols-2">
-                <ul className="flex flex-col gap-4">
-                  <li className="flex items-center gap-4">
-                    <label htmlFor="name" className="w-80">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Público objetivo:
-                      </span>
-                    </label>
+          {investigation?.materials.data.map((material, index) => {
+            if (
+              investigation?.investigation_types?.data[index]?.attributes.name
+            ) {
+              return (
+                <div
+                  key={index}
+                  className="border border-gray-200 rounded-xl p-6"
+                >
+                  <h4 className={`${libre_franklin700.className} text-xl mb-4`}>
+                    Material de
+                    {" " +
+                      investigation?.investigation_types?.data[index]
+                        ?.attributes.name}
+                  </h4>
+                  <div className="divide-x divide-gray-200 grid grid-cols-2">
+                    <ul className="flex flex-col gap-4">
+                      <li className="flex items-center gap-4">
+                        <label htmlFor="name" className="w-80">
+                          <span
+                            className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                          >
+                            Público objetivo:
+                          </span>
+                        </label>
 
-                    <p className="text-sm  w-full capitalize">
-                      {material?.attributes?.publics?.data
-                        .map((item) => item.attributes.name)
-                        .join(", ")}
-                    </p>
-                  </li>
-                  <li className="flex gap-4 flex-col">
-                    <label className="flex w-80" htmlFor="description">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Muestra:
-                      </span>
-                    </label>
-                    <div className="text-sm w-full">
-                      {material.attributes.sample
-                        .split("\n")
-                        .map((line, index) => (
-                          <p key={index}>
-                            {line}
-                            <br />
-                          </p>
-                        ))}
-                    </div>
-                  </li>
-                </ul>
-                <ul className="flex flex-col gap-4 pl-6">
-                  <li className="flex items-center gap-4">
-                    <label htmlFor="name" className="w-80">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Ámbito geográfico:
-                      </span>
-                    </label>
+                        <p className="text-sm  w-full capitalize">
+                          {material?.attributes?.publics?.data
+                            .map((item) => item.attributes.name)
+                            .join(", ")}
+                        </p>
+                      </li>
+                      <li className="flex gap-4 flex-col">
+                        <label className="flex w-80" htmlFor="description">
+                          <span
+                            className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                          >
+                            Muestra:
+                          </span>
+                        </label>
+                        <div className="text-sm w-full">
+                          {material.attributes.sample
+                            .split("\n")
+                            .map((line, index) => (
+                              <p key={index}>
+                                {line}
+                                <br />
+                              </p>
+                            ))}
+                        </div>
+                      </li>
+                    </ul>
+                    <ul className="flex flex-col gap-4 pl-6">
+                      <li className="flex items-center gap-4">
+                        <label htmlFor="name" className="w-80">
+                          <span
+                            className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                          >
+                            Ámbito geográfico:
+                          </span>
+                        </label>
 
-                    <p className="text-sm  w-full capitalize">
-                      {material?.attributes?.locations?.data
-                        .map((item) => item.attributes.name)
-                        .join(", ")}
-                    </p>
-                  </li>
-                  <li className="flex items-center gap-4">
-                    <label htmlFor="name" className="w-80">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Herramienta:
-                      </span>
-                    </label>
+                        <p className="text-sm  w-full capitalize">
+                          {material?.attributes?.locations?.data
+                            .map((item) => item.attributes.name)
+                            .join(", ")}
+                        </p>
+                      </li>
+                      <li className="flex items-center gap-4">
+                        <label htmlFor="name" className="w-80">
+                          <span
+                            className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                          >
+                            Herramienta:
+                          </span>
+                        </label>
 
-                    <p className="text-sm w-full capitalize">
-                      {material.attributes.tool}
-                    </p>
-                  </li>
-                  <li className="flex items-center gap-4">
-                    <label htmlFor="name" className="w-80">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Herramienta adjunta:
-                      </span>
-                    </label>
+                        <p className="text-sm w-full capitalize">
+                          {material.attributes.tool}
+                        </p>
+                      </li>
+                      <li className="flex items-center gap-4">
+                        <label htmlFor="name" className="w-80">
+                          <span
+                            className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                          >
+                            Herramienta adjunta:
+                          </span>
+                        </label>
 
-                    {material.attributes.tool_media && (
-                      <a
-                        target="_blank"
-                        href={material.attributes.tool_media}
-                        className="text-sm w-full capitalize text-blue-600 hover:underline"
-                      >
-                        Descargar aquí
-                      </a>
-                    )}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          ))}
+                        {material.attributes.tool_media && (
+                          <a
+                            target="_blank"
+                            href={material.attributes.tool_media}
+                            className="text-sm w-full capitalize text-blue-600 hover:underline"
+                          >
+                            Descargar aquí
+                          </a>
+                        )}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              );
+            }
+          })}
 
           <div className="grid grid-cols-2 gap-4">
             <div className="border border-gray-200 rounded-xl p-6">

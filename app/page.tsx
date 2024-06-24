@@ -1,6 +1,5 @@
 import Image from "next/image";
 import LoginForm from "@/components/Login/Loginform";
-import { useEffect } from "react";
 import "./styles.css";
 
 export default function Home() {

@@ -15,6 +15,7 @@ import {
   InvestigationType,
   Researcher,
   Project,
+  uploadToS3,
 } from "@/api";
 
 import { useFormik } from "formik";
@@ -22,7 +23,6 @@ import { initialValues, validationSchema } from "./InvestigationForm.form";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { MaterialsForm } from "@/components/Materials/MaterialsForm";
-import { uploadToAzureStorage } from "@/utils";
 
 import PulseLoader from "react-spinners/PulseLoader";
 
@@ -80,17 +80,63 @@ export function InvestigationForm({ params, title }) {
           (team) => team.value
         );
 
+        const updateMaterials = async (investigationType, investigationId) => {
+          for (const type of investigationType) {
+            //create material
+            let material = {
+              publics: [],
+              slug: slugify(`${type.label}-${investigationId}`, {
+                lower: true,
+                strict: true,
+              }),
+              sample: "",
+              locations: [],
+              tool: "",
+              tool_media: "",
+              investigation: investigation.id,
+            };
+
+            try {
+              await materialCtrl.createMaterial(material);
+            } catch (error) {
+              console.error(`Error creating material:`, error);
+            }
+          }
+        };
+
+        const createMaterials = async (investigation) => {
+          for (const type of investigation.attributes.investigation_types
+            .data) {
+            //create material
+            let material = {
+              publics: [],
+              slug: slugify(`${type.attributes.name}-${investigation.id}`, {
+                lower: true,
+                strict: true,
+              }),
+              sample: "",
+              locations: [],
+              tool: "",
+              tool_media: "",
+              investigation: investigation.id,
+            };
+
+            try {
+              await materialCtrl.createMaterial(material);
+            } catch (error) {
+              console.error(`Error creating material:`, error);
+            }
+          }
+        };
+
         const initial_date = format(startDate, "yyyy-MM-dd");
 
         const file = formValues.guide_media_link;
-        let guide_media_link = "";
+        let guide_media_link =
+          investigation?.attributes?.guide_media_link || "";
 
         if (file instanceof File) {
-          guide_media_link = await uploadToAzureStorage(
-            file,
-            "presentaciones",
-            setIsUploading
-          );
+          guide_media_link = await uploadToS3(file, setIsUploading);
         }
 
         let investigationData = {
@@ -121,6 +167,50 @@ export function InvestigationForm({ params, title }) {
             investigationData
           );
 
+          if (result.attributes.materials) {
+            const formattedLabels = formValues.investigation_types.map((type) =>
+              type.label.toLowerCase().replace(/ /g, "-")
+            );
+
+            const unselectedMaterials = result.attributes.materials.data.filter(
+              (material) =>
+                !formattedLabels.some((label) =>
+                  material.attributes.slug.includes(label)
+                )
+            );
+
+            const materialSlugs = result.attributes.materials.data.map(
+              (material) => material.attributes.slug
+            );
+
+            const unselectedMaterialIds = unselectedMaterials.map(
+              (material) => material.id
+            );
+
+            const unselectedInvestigationTypes =
+              formValues.investigation_types.filter(
+                (type) =>
+                  !materialSlugs.some((slug) =>
+                    slug.includes(type.label.toLowerCase().replace(/ /g, "-"))
+                  )
+              );
+            console.log(
+              "Investigation types not in materials:",
+              unselectedInvestigationTypes
+            );
+
+            updateMaterials(unselectedInvestigationTypes, result.id);
+
+            for (const id of unselectedMaterialIds) {
+              try {
+                await materialCtrl.deleteMaterial(id);
+              } catch (error) {
+                console.error(`Error deleting material ${id}:`, error);
+                throw error;
+              }
+            }
+          }
+
           setInvestigationResult(result);
 
           if (formValues.investigation_types.length === 0) {
@@ -131,40 +221,17 @@ export function InvestigationForm({ params, title }) {
 
           return;
         } else {
-          let result = await investigationCtrl.createInvestigation(
-            investigationData
-          );
+          let investigationCreated =
+            await investigationCtrl.createInvestigation(investigationData);
 
-          const createdInvestigation = result;
+          setInvestigationResult(investigationCreated);
 
-          setInvestigationResult(result);
+          createMaterials(investigationCreated);
 
-          createdInvestigation.attributes.investigation_types.data.map(
-            (type) => {
-              //create material
-              let material = {
-                publics: [],
-                slug: slugify(
-                  `${type.attributes.name}-${createdInvestigation.id}`,
-                  { lower: true, strict: true }
-                ),
-                sample: "",
-                locations: [],
-                tool: "",
-                tool_media: "",
-                investigation: createdInvestigation.id,
-              };
-              materialCtrl.createMaterial(material);
-            }
-          );
-
-          createdInvestigation?.attributes.investigation_types?.data.length !==
-          0
+          investigationCreated.attributes.investigation_types.data.length !== 0
             ? setStep(2)
             : router.push("/investigations", { scroll: false });
         }
-
-        formik.handleReset();
       } catch (error) {
         console.error(error);
       }
@@ -246,15 +313,6 @@ export function InvestigationForm({ params, title }) {
             label: team.attributes.name,
           }))
         );
-
-        // const nonResearchers = participants?.data
-        //   .filter((participant) => participant.attributes.role !== "researcher")
-        //   .map((participant) => ({
-        //     value: participant.id,
-        //     label: participant.attributes.name,
-        //   }));
-
-        // setExtendedTeam(nonResearchers);
       } catch (error) {
         console.log("error", error);
       }
@@ -494,16 +552,15 @@ export function InvestigationForm({ params, title }) {
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Áreas involucradas*
+                          Otras áreas involucradas
                         </span>
                         <span className="text-xs font-regular">
-                          Areas que participan
+                          Áreas amigas que participaron
                         </span>
                       </label>
 
                       <MultiSelect
                         className="w-64 text-sm"
-                        required
                         options={teams}
                         placeholder="Seleccionar equipos"
                         value={formik.values.teams}
