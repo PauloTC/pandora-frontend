@@ -145,8 +145,8 @@ export function InvestigationSlugComponent({ params }) {
               Ficha Técnica
             </h4>
             <div className="divide-x divide-gray-200 grid grid-cols-2">
-              <ul className="flex flex-col gap-6">
-                <li className="flex items-center gap-4">
+              <ul className="flex flex-col gap-6 pr-6">
+                <li className="flex gap-4">
                   <label htmlFor="name" className="w-80">
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
@@ -208,6 +208,8 @@ export function InvestigationSlugComponent({ params }) {
                     {formattedEndDate}
                   </p>
                 </li>
+              </ul>
+              <ul className="flex flex-col gap-6 pl-6">
                 <li className="flex items-center gap-4">
                   <label htmlFor="name" className="w-80">
                     <span
@@ -223,8 +225,6 @@ export function InvestigationSlugComponent({ params }) {
                       .join(", ")}
                   </p>
                 </li>
-              </ul>
-              <ul className="flex flex-col gap-6 pl-6">
                 <li className="flex items-center gap-4">
                   <label htmlFor="name" className="w-80">
                     <span
@@ -286,60 +286,64 @@ export function InvestigationSlugComponent({ params }) {
                   </ul>
                 </li>
 
-                <li className="flex flex-col gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Equipo Service:
-                    </span>
-                  </label>
+                {serviceTeam && serviceTeam.length > 0 && (
+                  <li className="flex flex-col gap-4">
+                    <label htmlFor="name" className="w-80">
+                      <span
+                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                      >
+                        Equipo Service:
+                      </span>
+                    </label>
 
-                  <ul className="text-sm  w-full gap-4 capitalize grid grid-cols-2">
-                    {serviceTeam?.map((service, index) => (
-                      <li className="flex gap-4 items-center" key={index}>
-                        <Image
-                          alt={
-                            service.attributes.photo.data.attributes.formats
-                              .thumbnail.name
-                          }
-                          src={service.attributes.photo.data.attributes.url}
-                          width={30}
-                          height={30}
-                        />
-                        <span>{service.attributes.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
+                    <ul className="text-sm  w-full gap-4 capitalize grid grid-cols-2">
+                      {serviceTeam?.map((service, index) => (
+                        <li className="flex gap-4 items-center" key={index}>
+                          <Image
+                            alt={
+                              service.attributes.photo.data.attributes.formats
+                                .thumbnail.name
+                            }
+                            src={service.attributes.photo.data.attributes.url}
+                            width={30}
+                            height={30}
+                          />
+                          <span>{service.attributes.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
 
-                <li className="flex flex-col gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Equipo extendido:
-                    </span>
-                  </label>
+                {investigation?.team_extended.data.length > 0 && (
+                  <li className="flex flex-col gap-4">
+                    <label htmlFor="name" className="w-80">
+                      <span
+                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                      >
+                        Equipo extendido:
+                      </span>
+                    </label>
 
-                  <ul className="text-sm gap-4 w-full capitalize grid grid-cols-2">
-                    {investigation?.team_extended.data.map((team, index) => (
-                      <li className="flex gap-4 items-center" key={index}>
-                        <Image
-                          className="rounded-full"
-                          alt={
-                            team.attributes.photo.data.attributes.formats
-                              .thumbnail.name
-                          }
-                          src={team.attributes.photo.data.attributes.url}
-                          width={30}
-                          height={30}
-                        />
-                        <span>{team.attributes.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
+                    <ul className="text-sm gap-4 w-full capitalize grid grid-cols-2">
+                      {investigation?.team_extended.data.map((team, index) => (
+                        <li className="flex gap-4 items-center" key={index}>
+                          <Image
+                            className="rounded-full"
+                            alt={
+                              team.attributes.photo.data.attributes.formats
+                                .thumbnail.name
+                            }
+                            src={team.attributes.photo.data.attributes.url}
+                            width={30}
+                            height={30}
+                          />
+                          <span>{team.attributes.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
               </ul>
             </div>
           </div>

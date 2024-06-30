@@ -1,28 +1,58 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import { Costumer } from "@/api";
 import * as XLSX from "xlsx";
 
+import { libre_franklin600 } from "@/app/fonts";
+
 export default function Subscribers() {
+  const [costumers, setCostumers] = useState([] as any[]);
+  const [openEditClient, setOpenEditClient] = useState(false);
+  const [clientData, setClientData] = useState({} as any);
+
   const costumerCtrl = new Costumer();
 
-  const [costumers, setCostumers] = useState([] as any[]);
+  const formik = useFormik({
+    initialValues: {
+      business_type: clientData.data?.attributes.business_type,
+      business_subtype: "",
+      business_document: "",
+      business_name: "",
+      business_owner: "",
+      business_district: "",
+      owner_cellphone: "",
+      owner_document_number: "",
+    },
+    onSubmit: async (values) => {
+      console.log("values", values);
+      // try {
+      //   const response = await costumerCtrl.createCostumer(values);
+      //   console.log("response", response);
+      // } catch (error) {
+      //   console.log("error", error);
+      // }
+    },
+  });
 
   useEffect(() => {
     (async () => {
       try {
         const response = await costumerCtrl.getAllCostumers();
         const transformedData = response.data.map((costumer: any) => ({
-          negocio: costumer.attributes.business_type,
-          giro: costumer.attributes.business_subtype,
-          ruc: costumer.attributes.business_document,
-          nombre_negocio: costumer.attributes.business_name,
-          cliente: costumer.attributes.business_owner,
-          distrito: costumer.attributes.business_district,
-          celular: costumer.attributes.owner_cellphone,
-          dni: costumer.attributes.owner_document_number,
-          email: costumer.attributes.owner_email,
+          id: costumer.id,
+          negocio: costumer.attributes.type,
+          giro: costumer.attributes.subtype,
+          ruc: costumer.attributes.ruc,
+          nombre_negocio: costumer.attributes.name,
+          cliente: costumer.attributes.social_reason,
+          departamento: costumer.attributes.department,
+          provincia: costumer.attributes.province,
+          distrito: costumer.attributes.district,
+          direccion: costumer.attributes.address,
+          celular: costumer.attributes.cellphone,
         }));
 
         setCostumers(transformedData);
@@ -32,11 +62,27 @@ export default function Subscribers() {
     })();
   }, []);
 
+  useEffect(() => {
+    console.log("costumers", costumers);
+  }, [costumers]);
+
   const downloadExcel = () => {
     const ws = XLSX.utils.json_to_sheet(costumers);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Costumers");
     XLSX.writeFile(wb, "clientes.xlsx");
+  };
+
+  const openEditModal = async (costumer: any) => {
+    console.log("costumer", costumer);
+
+    const clientData = await costumerCtrl.getCostumerById(costumer.id);
+
+    console.log("clientData", clientData);
+
+    setClientData(clientData);
+
+    setOpenEditClient(true);
   };
 
   return (
@@ -50,8 +96,7 @@ export default function Subscribers() {
           className="
               text-white flex items-center 
               gap-1 bg-blue-700 hover:bg-blue-800 
-              focus:outline-none focus:ring-4 
-              focus:ring-blue-300 font-medium 
+              focus:outline-none focus:ring-0 font-medium 
               rounded-full text-sm px-5 py-2.5 
               text-center"
         >
@@ -77,23 +122,28 @@ export default function Subscribers() {
                 RUC
               </th>
               <th scope="col" className="px-2 py-3">
+                Razon Social
+              </th>
+              <th scope="col" className="px-2 py-3">
                 Nombre del Negocio
               </th>
-
+              <th scope="col" className="px-2 py-3">
+                Departamento
+              </th>
+              <th scope="col" className="px-2 py-3">
+                Provincia
+              </th>
               <th scope="col" className="px-2 py-3">
                 Distrito
               </th>
               <th scope="col" className="px-2 py-3">
-                Cliente
+                Dirección
               </th>
               <th scope="col" className="px-2 py-3">
                 Telefono
               </th>
               <th scope="col" className="px-2 py-3">
-                DNI
-              </th>
-              <th scope="col" className="px-2 py-3">
-                Email
+                Acciones
               </th>
             </tr>
           </thead>
@@ -105,25 +155,278 @@ export default function Subscribers() {
                     <td className="px-2 py-2 capitalize">{costumer.negocio}</td>
                     <td className="px-2 py-2 capitalize">{costumer.giro}</td>
                     <td className="px-2 py-2 capitalize">{costumer.ruc}</td>
-                    <td className="px-2 py-2 capitalize font-medium text-gray-900">
-                      {costumer.nombre_negocio}
-                    </td>
-
-                    <td className="px-2 py-2 capitalize">
-                      {costumer.distrito}
-                    </td>
                     <td className="px-2 py-2 font-medium text-gray-900">
                       {costumer.cliente}
                     </td>
+                    <td className="px-2 py-2 capitalize font-medium text-gray-900">
+                      {costumer.nombre_negocio}
+                    </td>
+                    <td className="px-2 py-2 capitalize font-medium text-gray-900">
+                      {costumer.provincia}
+                    </td>
+                    <td className="px-2 py-2 capitalize font-medium text-gray-900">
+                      {costumer.departamento}
+                    </td>
+                    <td className="px-2 py-2 capitalize">
+                      {costumer.distrito}
+                    </td>
+                    <td className="px-2 py-2 capitalize">
+                      {costumer.direccion}
+                    </td>
                     <td className="px-2 py-2">{costumer.celular}</td>
-                    <td className="px-2 py-2">{costumer.dni}</td>
-                    <td className="px-2 py-2">{costumer.email}</td>
+                    <td className="px-2 py-2 text-center">
+                      <button onClick={() => openEditModal(costumer)}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                          />
+                        </svg>
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
           </tbody>
         </table>
       </div>
+
+      {openEditClient && (
+        <section className="fixed top-0 w-full h-full right-0 flex">
+          <div
+            className="w-full bg-black/40 cursor-pointer"
+            onClick={() => setOpenEditClient(false)}
+          ></div>
+          <div
+            style={
+              openEditClient ? { transform: "translateX(0)", opacity: 1 } : {}
+            }
+            className="w-2/5 px-8 pt-10 right-0 bg-white h-full absolute transition-all duration-500 ease-in-out transform translate-x-full opacity-0"
+          >
+            <div className="mb-8 flex justify-between">
+              <h3 className="text-3xl font-medium">Cliente</h3>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setOpenEditClient(false)}
+                  className="text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-0 font-medium rounded-full text-sm px-9 py-2.5 text-center"
+                >
+                  Cancelar
+                </button>
+                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-0 font-medium rounded-full text-sm px-9 py-2.5 text-center">
+                  Guardar
+                </button>
+              </div>
+            </div>
+
+            <form>
+              <ul className="flex flex-col gap-y-6">
+                <li className="flex gap-4">
+                  <label htmlFor="business_type" className="flex flex-col grow">
+                    <span
+                      className={`${libre_franklin600.className} text-sm text-gray-900`}
+                    >
+                      Negocio
+                    </span>
+                    <span className="text-xs font-regular">
+                      Tipo de negocio
+                    </span>
+                  </label>
+
+                  <input
+                    maxLength={40}
+                    type="text"
+                    value={clientData.data?.attributes.business_type}
+                    onChange={formik.handleChange}
+                    id="business_type"
+                    className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+                    placeholder="Gastronomía"
+                  />
+                </li>
+
+                <li className="flex gap-4">
+                  <label
+                    htmlFor="business_subtype"
+                    className="flex flex-col grow"
+                  >
+                    <span
+                      className={`${libre_franklin600.className} text-sm text-gray-900`}
+                    >
+                      Giro
+                    </span>
+                    <span className="text-xs font-regular">
+                      Giro del negocio
+                    </span>
+                  </label>
+
+                  <input
+                    maxLength={40}
+                    type="text"
+                    value={clientData.data?.attributes.business_subtype}
+                    onChange={formik.handleChange}
+                    id="business_subtype"
+                    className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+                    placeholder="Cevichería"
+                    required
+                  />
+                </li>
+
+                <li className="flex gap-4">
+                  <label
+                    htmlFor="business_document"
+                    className="flex flex-col grow"
+                  >
+                    <span
+                      className={`${libre_franklin600.className} text-sm text-gray-900`}
+                    >
+                      RUC
+                    </span>
+                    <span className="text-xs font-regular">
+                      Ruc del negocio
+                    </span>
+                  </label>
+
+                  <input
+                    maxLength={40}
+                    type="text"
+                    id="business_document"
+                    className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+                    placeholder="Gastronomía"
+                    required
+                  />
+                </li>
+
+                <li className="flex gap-4">
+                  <label htmlFor="business_name" className="flex flex-col grow">
+                    <span
+                      className={`${libre_franklin600.className} text-sm text-gray-900`}
+                    >
+                      Nombre del negocio
+                    </span>
+                    <span className="text-xs font-regular">Negocio</span>
+                  </label>
+
+                  <input
+                    maxLength={40}
+                    type="text"
+                    id="business_name"
+                    className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+                    placeholder="Gastronomía"
+                    required
+                  />
+                </li>
+
+                <li className="flex gap-4">
+                  <label
+                    htmlFor="business_owner"
+                    className="flex flex-col grow"
+                  >
+                    <span
+                      className={`${libre_franklin600.className} text-sm text-gray-900`}
+                    >
+                      Cliente
+                    </span>
+                    <span className="text-xs font-regular">
+                      titular del negocio
+                    </span>
+                  </label>
+
+                  <input
+                    maxLength={40}
+                    type="text"
+                    id="business_owner"
+                    className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+                    placeholder="Gastronomía"
+                    required
+                  />
+                </li>
+
+                <li className="flex gap-4">
+                  <label
+                    htmlFor="business_district"
+                    className="flex flex-col grow"
+                  >
+                    <span
+                      className={`${libre_franklin600.className} text-sm text-gray-900`}
+                    >
+                      Distrito
+                    </span>
+                    <span className="text-xs font-regular">
+                      Distrito del negocio
+                    </span>
+                  </label>
+
+                  <input
+                    maxLength={40}
+                    type="text"
+                    id="business_district"
+                    className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+                    placeholder="Callao"
+                    required
+                  />
+                </li>
+
+                <li className="flex gap-4">
+                  <label
+                    htmlFor="owner_cellphone"
+                    className="flex flex-col grow"
+                  >
+                    <span
+                      className={`${libre_franklin600.className} text-sm text-gray-900`}
+                    >
+                      Telefono
+                    </span>
+                    <span className="text-xs font-regular">
+                      Telefono del titular
+                    </span>
+                  </label>
+
+                  <input
+                    maxLength={40}
+                    type="text"
+                    id="owner_cellphone"
+                    className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+                    placeholder="946763098"
+                    required
+                  />
+                </li>
+
+                <li className="flex gap-4">
+                  <label
+                    htmlFor="owner_document_number"
+                    className="flex flex-col grow"
+                  >
+                    <span
+                      className={`${libre_franklin600.className} text-sm text-gray-900`}
+                    >
+                      DNI
+                    </span>
+                    <span className="text-xs font-regular">
+                      Documento del titular
+                    </span>
+                  </label>
+
+                  <input
+                    maxLength={40}
+                    type="text"
+                    id="owner_document_number"
+                    className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+                    placeholder="946763098"
+                    required
+                  />
+                </li>
+              </ul>
+            </form>
+          </div>
+        </section>
+      )}
     </section>
   );
 }
