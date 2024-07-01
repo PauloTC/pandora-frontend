@@ -81,14 +81,12 @@ const Form = () => {
     } catch (yupErrors) {
       if (yupErrors instanceof Yup.ValidationError) {
         yupErrors.inner.forEach((yupError) => {
-          if (yupError.path) {
-            errors[yupError.path] = yupError.message;
-          }
+          errors[yupError.path as keyof typeof errors] = yupError.message;
         });
       }
     }
 
-    // Verificar si el type es 'gastronomia' y si subtype no está presente
+    // Verificar si el type es 'Gastro', 'Pani' o 'Limpieza' y si subtype no está presente
     if (
       (values.type === "Gastronomía" ||
         values.type === "Panificación" ||
@@ -102,14 +100,17 @@ const Form = () => {
   };
 
   const validateStep2 = (values: Values) => {
-    let errors = {};
+    let errors = {
+      ruc: "",
+      cellphone: "",
+    };
 
     try {
       validationSchemaStepTwo.validateSync(values, { abortEarly: false });
     } catch (yupErrors) {
       if (yupErrors instanceof Yup.ValidationError) {
         yupErrors.inner.forEach((yupError) => {
-          errors[yupError.path] = yupError.message;
+          errors[yupError.path as keyof typeof errors] = yupError.message;
         });
       }
     }
@@ -153,15 +154,15 @@ const Form = () => {
     },
   });
 
-  const selectDepartment = (id_ubigeo: any) => {
+  const selectDepartment = (id_ubigeo: string) => {
     formik.handleChange;
-    const matchProvinces = provinces[id_ubigeo];
+    const matchProvinces = provinces[id_ubigeo as keyof typeof provinces];
 
     setListProvinces(matchProvinces);
   };
 
-  const selectProvince = (id_ubigeo: any) => {
-    const matchDistricts = districts[id_ubigeo];
+  const selectProvince = (id_ubigeo: string) => {
+    const matchDistricts = districts[id_ubigeo as keyof typeof districts];
 
     setListDistricts(matchDistricts);
   };
@@ -456,13 +457,19 @@ const Form = () => {
                             (department) =>
                               department.nombre_ubigeo === e.target.value
                           );
-                          formik.setFieldValue(
-                            "department",
-                            selectedDepartment?.id_ubigeo
-                          );
 
-                          formik.handleChange(e);
-                          selectDepartment(selectedDepartment?.id_ubigeo);
+                          if (
+                            selectedDepartment &&
+                            selectedDepartment.id_ubigeo
+                          ) {
+                            formik.setFieldValue(
+                              "department",
+                              selectedDepartment.id_ubigeo
+                            );
+
+                            formik.handleChange(e);
+                            selectDepartment(selectedDepartment.id_ubigeo);
+                          }
                         }}
                         className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-4 p-2.5"
                       >
@@ -518,13 +525,15 @@ const Form = () => {
                               province.nombre_ubigeo === e.target.value
                           );
 
-                          formik.setFieldValue(
-                            "province",
-                            selectedProvince?.id_ubigeo
-                          );
+                          if (selectedProvince && selectedProvince.id_ubigeo) {
+                            formik.setFieldValue(
+                              "province",
+                              selectedProvince.id_ubigeo
+                            );
 
-                          formik.handleChange(e);
-                          selectProvince(selectedProvince?.id_ubigeo);
+                            formik.handleChange(e);
+                            selectProvince(selectedProvince.id_ubigeo);
+                          }
                         }}
                         className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-4 p-2.5"
                       >
