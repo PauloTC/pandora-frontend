@@ -20,5 +20,9 @@ Por favor, mencione el problema que se está resolviendo.
 
 ### Checklist:
 
-- [ ] Mi código ha sido revisado por al menos un par de pares
+- [ ] Mi código ha sido revisado por al menos por otro dev
 - [ ] He hecho las correcciones necesarias en la documentación
+
+### Capturas de pantalla
+
+Por favor, agregue capturas de pantalla para ayudar a explicar los cambios que ha hecho. Recuerde que puede arrastrar y soltar imágenes directamente en el editor de texto de GitHub para agregarlas a su descripción.
