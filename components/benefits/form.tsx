@@ -93,7 +93,7 @@ const Form = () => {
         values.type === "Limpieza") &&
       !values.subtype
     ) {
-      errors.subtype = "El subtipo es requerido";
+      errors.subtype = "El giro del negocio es requerido";
     }
 
     return errors;
