@@ -88,8 +88,6 @@ export function MaterialsForm({ slug }) {
 
         setInvestigation(response);
 
-        console.log("response", response);
-
         setPublics(
           responsePublics.data.map((audience) => ({
             value: audience.id,

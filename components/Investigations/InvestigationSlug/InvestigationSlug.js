@@ -34,8 +34,6 @@ export function InvestigationSlugComponent({ params }) {
       (researcher) => researcher.attributes.role === "researcher"
     );
 
-    console.log("investigation", investigation);
-
     setResearchTeam(filterResearcherTeam);
     setServiceTeam(filterServiceTeam);
   }, [investigation]);
@@ -264,8 +262,6 @@ export function InvestigationSlugComponent({ params }) {
 
                   <ul className="text-sm  w-full gap-4 capitalize grid grid-cols-2">
                     {researchTeam?.map((researcher, index) => {
-                      console.log("researcher", researcher);
-
                       return (
                         <li className="flex gap-4 items-center" key={index}>
                           <Image

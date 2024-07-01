@@ -1,14 +1,27 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { initialValues, validationSchema } from "./BenefitsForm.form";
-import { useFormik, Field } from "formik";
+import React, { useState } from "react";
+import { initialValues } from "./BenefitsForm.form";
+import { useFormik } from "formik";
 import { Costumer } from "@/api";
 import ErrorFormMessage from "@/components/Common/ErrorFormMessage";
-import departaments from "../../public/address/departments.json";
+import departments from "../../public/address/departments.json";
 import provinces from "../../public/address/provinces.json";
 import districts from "../../public/address/districts.json";
+import * as Yup from "yup";
+import { sub } from "date-fns";
+
+interface Values {
+  [key: string]: any;
+}
+
+interface SelectOption {
+  id: string;
+  name: string;
+}
 
 const Form = () => {
+  const costumerCtrl = new Costumer();
+
   const [step, setStep] = useState(1);
   const [congrats, setCongrats] = useState(false);
   const [listProvinces, setListProvinces] = useState([
@@ -25,46 +38,89 @@ const Form = () => {
     },
   ]);
 
-  const costumerCtrl = new Costumer();
+  const validationSchemaStepOne = Yup.object({
+    name: Yup.string()
+      .min(2, "El nombre debe tener al menos 2 caracteres")
+      .required("El nombre es requerido"),
+    type: Yup.string().required("El tipo es requerido"),
+    department: Yup.string().required("El departamento es requerido"),
+    address: Yup.string().required("La dirección es requerida"),
+  });
 
-  useEffect(() => {
-    console.log("departaments", departaments);
-    console.log("provinces", provinces);
-  }, []);
+  const validationSchemaStepTwo = Yup.object({
+    ruc: Yup.string()
+      .notRequired()
+      .test(
+        "ruc-validation",
+        "El RUC debe tener exactamente 11 dígitos y solo puede contener números",
+        (value) => {
+          if (!value) {
+            return true; // Si el RUC no está presente, se considera válido
+          }
+          return /^[0-9]{11}$/.test(value);
+        }
+      ),
+    cellphone: Yup.string()
+      .required("El celular es requerido")
+      .matches(/^9/, "El celular debe comenzar con 9")
+      .matches(/^[0-9]*$/, "El celular solo puede contener números")
+      .length(9, "El celular debe tener exactamente 9 dígitos"),
+  });
 
-  const validateStep1 = (values) => {
-    let errors = {};
-    if (!values.name) {
-      errors.name = "El nombre es requerido";
+  const validateStep1 = (values: Values) => {
+    let errors = {
+      name: "",
+      type: "",
+      department: "",
+      address: "",
+      subtype: "",
+    };
+
+    try {
+      validationSchemaStepOne.validateSync(values, { abortEarly: false });
+    } catch (yupErrors) {
+      if (yupErrors instanceof Yup.ValidationError) {
+        yupErrors.inner.forEach((yupError) => {
+          if (yupError.path) {
+            errors[yupError.path] = yupError.message;
+          }
+        });
+      }
     }
-    if (!values.type) {
-      errors.type = "El tipo es requerido";
+
+    // Verificar si el type es 'gastronomia' y si subtype no está presente
+    if (
+      (values.type === "Gastronomía" ||
+        values.type === "Panificación" ||
+        values.type === "Limpieza") &&
+      !values.subtype
+    ) {
+      errors.subtype = "El subtipo es requerido";
     }
-    if (!values.subtype) {
-      errors.subtype = "El giro del negocio es requerido";
-    }
+
     return errors;
   };
 
-  const validateStep2 = (values) => {
+  const validateStep2 = (values: Values) => {
     let errors = {};
-    if (!values.social_reason) {
-      errors.social_reason = "La razón social es requerida";
+
+    try {
+      validationSchemaStepTwo.validateSync(values, { abortEarly: false });
+    } catch (yupErrors) {
+      if (yupErrors instanceof Yup.ValidationError) {
+        yupErrors.inner.forEach((yupError) => {
+          errors[yupError.path] = yupError.message;
+        });
+      }
     }
-    if (!values.ruc) {
-      errors.ruc = "El RUC es requerido";
-    }
-    if (!values.cellphone) {
-      errors.cellphone = "El celular es requerido";
-    }
+
     return errors;
   };
 
   const handleButtonClick = async () => {
-    console.log("step", step);
     if (step === 1) {
       const errors = validateStep1(formik.values);
-      console.log("errors", errors);
+
       if (Object.keys(errors).length === 0) {
         setStep(2);
       } else {
@@ -72,7 +128,7 @@ const Form = () => {
       }
     } else if (step === 2) {
       const errors = validateStep2(formik.values);
-      console.log("errors", errors);
+
       if (Object.keys(errors).length === 0) {
         // console.log("values", formik.values);
         formik.handleSubmit();
@@ -85,12 +141,11 @@ const Form = () => {
 
   const formik = useFormik({
     initialValues: initialValues(),
-    validationSchema: validationSchema(),
     validateOnChange: false,
     onSubmit: async (formValues: any) => {
       try {
-        const response = await costumerCtrl.createCostumer(formValues);
-        console.log("response", response);
+        costumerCtrl.createCostumer(formValues);
+
         formik.resetForm({ values: initialValues() });
       } catch (error) {
         console.error(error);
@@ -109,6 +164,150 @@ const Form = () => {
     const matchDistricts = districts[id_ubigeo];
 
     setListDistricts(matchDistricts);
+  };
+
+  const businessTypes = [
+    {
+      id: 1,
+      name: "Bodega",
+    },
+    {
+      id: 2,
+      name: "Puesto de mercado",
+    },
+    {
+      id: 3,
+      name: "Minimayorista",
+    },
+    {
+      id: 4,
+      name: "Mayorista",
+    },
+    {
+      id: 5,
+      name: "Gastronomía",
+    },
+    {
+      id: 6,
+      name: "Panificación",
+    },
+    {
+      id: 7,
+      name: "Limpieza",
+    },
+  ];
+
+  const GastroSubtypes = [
+    {
+      id: "1",
+      name: "Pollería",
+    },
+    {
+      id: "2",
+      name: "Menú",
+    },
+    {
+      id: "3",
+      name: "Chifa",
+    },
+    {
+      id: "4",
+      name: "Cevichería",
+    },
+    {
+      id: "5",
+      name: "Sanguichería",
+    },
+    {
+      id: "6",
+      name: "Catering",
+    },
+    {
+      id: "7",
+      name: "Hotel",
+    },
+  ];
+
+  const PaniSubtypes = [
+    {
+      id: "1",
+      name: "Panabodega",
+    },
+    {
+      id: "2",
+      name: "Panadería",
+    },
+    {
+      id: "3",
+      name: "Panificadora",
+    },
+    {
+      id: "4",
+      name: "Repostería",
+    },
+    {
+      id: "5",
+      name: "Pastelería",
+    },
+  ];
+
+  const LimSubtypes = [
+    {
+      id: "1",
+      name: "Industria",
+    },
+    {
+      id: "2",
+      name: "Services",
+    },
+    {
+      id: "3",
+      name: "Gastronomía",
+    },
+    {
+      id: "4",
+      name: "Panificación",
+    },
+  ];
+
+  const typeToSubtypes: { [key: string]: SelectOption[] } = {
+    Gastronomía: GastroSubtypes,
+    Panificación: PaniSubtypes,
+    Limpieza: LimSubtypes,
+  };
+
+  const SubtypesComponent = () => {
+    const subtypes = typeToSubtypes[formik.values.type] || [{}];
+
+    return (
+      <div className="w-full">
+        <label htmlFor="subtype" className="block mb-1.5 font-semibold">
+          Giro de negocio *
+        </label>
+        <select
+          name="subtype"
+          value={formik.values.subtype}
+          onChange={formik.handleChange}
+          className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+        >
+          <option value="" disabled>
+            Selecciona un giro de negocio
+          </option>
+          {subtypes.map((subtype, index) => (
+            <option key={index} value={subtype.name}>
+              {subtype.name}
+            </option>
+          ))}
+        </select>
+        <ErrorFormMessage
+          message={
+            typeof formik.errors.subtype === "string"
+              ? formik.errors.subtype
+              : undefined
+          }
+        />
+      </div>
+    );
   };
 
   return (
@@ -147,7 +346,7 @@ const Form = () => {
       ) : (
         <form
           onSubmit={formik.handleSubmit}
-          className="w-full bg-white py-12 px-2 rounded-3xl border border-neutral-medium lg:py-16 lg:px-12"
+          className="w-full bg-white py-12 px-4 rounded-3xl border border-neutral-medium lg:py-16 lg:px-12"
         >
           <div className="mb-2 flex justify-between items-center">
             <h3 className="font-bold text-2xl">Regístrate</h3>
@@ -159,82 +358,84 @@ const Form = () => {
           <div className="flex flex-col gap-5">
             {step === 1 && (
               <>
-                <div className="flex flex-col w-full gap-5">
-                  <div className="w-full">
-                    <label
-                      htmlFor="name"
-                      className="block mb-1.5 font-semibold"
-                    >
-                      Nombre de tu negocio *
-                    </label>
-                    <input
-                      value={formik.values.name}
-                      onChange={formik.handleChange}
-                      type="text"
-                      id="name"
-                      className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light"
-                      placeholder="Ingresa el nombre de tu negocio"
-                      required
-                    />
-                    <ErrorFormMessage
-                      message={
-                        typeof formik.errors.name === "string"
-                          ? formik.errors.name
-                          : undefined
-                      }
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <label
-                      htmlFor="type"
-                      className="block mb-1.5 font-semibold"
-                    >
-                      Tipo de Negocio *
-                    </label>
-                    <input
-                      value={formik.values.type}
-                      onChange={formik.handleChange}
-                      type="text"
-                      id="type"
-                      className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light"
-                      placeholder="Gastronomía"
-                      required
-                    />
-                    <ErrorFormMessage
-                      message={
-                        typeof formik.errors.type === "string"
-                          ? formik.errors.type
-                          : undefined
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="subtype"
-                    className="block mb-1.5 font-semibold"
-                  >
-                    Giro de negocio *
+                <div className="w-full">
+                  <label htmlFor="name" className="block mb-1.5 font-semibold">
+                    Nombre de tu negocio *
                   </label>
                   <input
-                    value={formik.values.subtype}
+                    value={formik.values.name}
                     onChange={formik.handleChange}
                     type="text"
-                    id="subtype"
-                    className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light"
-                    placeholder="Cevichería"
+                    id="name"
+                    className="text-sm border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light"
+                    placeholder="Ingresa el nombre de tu negocio"
                     required
                   />
                   <ErrorFormMessage
                     message={
-                      typeof formik.errors.subtype === "string"
-                        ? formik.errors.subtype
+                      typeof formik.errors.name === "string"
+                        ? formik.errors.name
                         : undefined
                     }
                   />
                 </div>
+
+                <div className="w-full">
+                  <label
+                    id="type"
+                    htmlFor="type"
+                    className="block mb-1.5 font-semibold"
+                  >
+                    Tipo de negocio *
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="type"
+                      value={formik.values.type}
+                      onChange={formik.handleChange}
+                      className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 px-4"
+                    >
+                      <option
+                        value=""
+                        disabled
+                        className="text-gray-100 "
+                        style={{ color: "red" }}
+                      >
+                        Selecciona un tipo de negocio
+                      </option>
+                      {businessTypes.map((businessType, index) => (
+                        <option key={index} value={businessType.name}>
+                          {businessType.name}
+                        </option>
+                      ))}
+                    </select>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-6 absolute top-3.5 text-red-500 right-2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                      />
+                    </svg>
+                  </div>
+                  <ErrorFormMessage
+                    message={
+                      typeof formik.errors.type === "string"
+                        ? formik.errors.type
+                        : undefined
+                    }
+                  />
+                </div>
+
+                {["Gastronomía", "Panificación", "Limpieza"].includes(
+                  formik.values.type
+                ) && <SubtypesComponent />}
 
                 <div className="flex flex-col xl:flex-row w-full gap-5">
                   <div className="w-full">
@@ -243,36 +444,59 @@ const Form = () => {
                       htmlFor="department"
                       className="block mb-1.5 font-semibold"
                     >
-                      Departamento
+                      Departamento *
                     </label>
-                    <select
-                      name="department"
-                      value={formik.values.department}
-                      defaultValue=""
-                      onChange={(e) => {
-                        const selectedDepartment = departaments.find(
-                          (department) =>
-                            department.nombre_ubigeo === e.target.value
-                        );
-                        formik.setFieldValue(
-                          "department",
-                          selectedDepartment?.id_ubigeo
-                        );
+                    <div className="relative">
+                      <select
+                        name="department"
+                        value={formik.values.department}
+                        defaultValue=""
+                        onChange={(e) => {
+                          const selectedDepartment = departments.find(
+                            (department) =>
+                              department.nombre_ubigeo === e.target.value
+                          );
+                          formik.setFieldValue(
+                            "department",
+                            selectedDepartment?.id_ubigeo
+                          );
 
-                        formik.handleChange(e);
-                        selectDepartment(selectedDepartment?.id_ubigeo);
-                      }}
-                      className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                    >
-                      <option value="" disabled>
-                        Selecciona un departamento
-                      </option>
-                      {departaments.map((department, index) => (
-                        <option key={index} value={department.nombre_ubigeo}>
-                          {department.nombre_ubigeo}
+                          formik.handleChange(e);
+                          selectDepartment(selectedDepartment?.id_ubigeo);
+                        }}
+                        className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-4 p-2.5"
+                      >
+                        <option value="" disabled>
+                          Selecciona una opcion
                         </option>
-                      ))}
-                    </select>
+                        {departments.map((department, index) => (
+                          <option key={index} value={department.nombre_ubigeo}>
+                            {department.nombre_ubigeo}
+                          </option>
+                        ))}
+                      </select>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6 absolute top-3.5 text-red-500 right-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                        />
+                      </svg>
+                    </div>
+                    <ErrorFormMessage
+                      message={
+                        typeof formik.errors.department === "string"
+                          ? formik.errors.department
+                          : undefined
+                      }
+                    />
                   </div>
 
                   <div className="w-full">
@@ -283,35 +507,51 @@ const Form = () => {
                     >
                       Provincia
                     </label>
-                    <select
-                      name="province"
-                      value={formik.values.province}
-                      defaultValue=""
-                      onChange={(e) => {
-                        const selectedProvince = listProvinces.find(
-                          (province) =>
-                            province.nombre_ubigeo === e.target.value
-                        );
+                    <div className="relative">
+                      <select
+                        name="province"
+                        value={formik.values.province}
+                        defaultValue=""
+                        onChange={(e) => {
+                          const selectedProvince = listProvinces.find(
+                            (province) =>
+                              province.nombre_ubigeo === e.target.value
+                          );
 
-                        formik.setFieldValue(
-                          "province",
-                          selectedProvince?.id_ubigeo
-                        );
+                          formik.setFieldValue(
+                            "province",
+                            selectedProvince?.id_ubigeo
+                          );
 
-                        formik.handleChange(e);
-                        selectProvince(selectedProvince?.id_ubigeo);
-                      }}
-                      className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                    >
-                      <option value="" disabled>
-                        Selecciona un provincia
-                      </option>
-                      {listProvinces.map((province, index) => (
-                        <option key={index} value={province.nombre_ubigeo}>
-                          {province.nombre_ubigeo}
+                          formik.handleChange(e);
+                          selectProvince(selectedProvince?.id_ubigeo);
+                        }}
+                        className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-4 p-2.5"
+                      >
+                        <option value="" disabled>
+                          Selecciona una opcion
                         </option>
-                      ))}
-                    </select>
+                        {listProvinces.map((province, index) => (
+                          <option key={index} value={province.nombre_ubigeo}>
+                            {province.nombre_ubigeo}
+                          </option>
+                        ))}
+                      </select>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6 absolute top-3.5 text-red-500 right-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
 
@@ -324,34 +564,50 @@ const Form = () => {
                     >
                       Distrito
                     </label>
-                    <select
-                      name="district"
-                      value={formik.values.district}
-                      defaultValue=""
-                      onChange={(e) => {
-                        const selectedDistrict = listDistricts.find(
-                          (district) =>
-                            district.nombre_ubigeo === e.target.value
-                        );
+                    <div className="relative">
+                      <select
+                        name="district"
+                        value={formik.values.district}
+                        defaultValue=""
+                        onChange={(e) => {
+                          const selectedDistrict = listDistricts.find(
+                            (district) =>
+                              district.nombre_ubigeo === e.target.value
+                          );
 
-                        formik.setFieldValue(
-                          "district",
-                          selectedDistrict?.id_ubigeo
-                        );
+                          formik.setFieldValue(
+                            "district",
+                            selectedDistrict?.id_ubigeo
+                          );
 
-                        formik.handleChange(e);
-                      }}
-                      className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                    >
-                      <option value="" disabled>
-                        Selecciona un distrito
-                      </option>
-                      {listDistricts.map((district, index) => (
-                        <option key={index} value={district.nombre_ubigeo}>
-                          {district.nombre_ubigeo}
+                          formik.handleChange(e);
+                        }}
+                        className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-4 p-2.5"
+                      >
+                        <option value="" disabled>
+                          Selecciona una opcion
                         </option>
-                      ))}
-                    </select>
+                        {listDistricts.map((district, index) => (
+                          <option key={index} value={district.nombre_ubigeo}>
+                            {district.nombre_ubigeo}
+                          </option>
+                        ))}
+                      </select>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6 absolute top-3.5 text-red-500 right-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
                 <div className="w-full">
@@ -359,15 +615,22 @@ const Form = () => {
                     htmlFor="address"
                     className="block mb-1.5 font-semibold"
                   >
-                    Dirección
+                    Dirección*
                   </label>
                   <input
                     value={formik.values.address}
                     onChange={formik.handleChange}
                     type="text"
                     id="address"
-                    className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light"
+                    className="text-sm border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light"
                     placeholder="Dirección"
+                  />
+                  <ErrorFormMessage
+                    message={
+                      typeof formik.errors.address === "string"
+                        ? formik.errors.address
+                        : undefined
+                    }
                   />
                 </div>
               </>
@@ -380,7 +643,7 @@ const Form = () => {
                     htmlFor="social_reason"
                     className="block mb-1.5 font-semibold"
                   >
-                    Razón Social *
+                    Razón Social
                   </label>
                   <input
                     value={formik.values.social_reason}
@@ -391,25 +654,19 @@ const Form = () => {
                     placeholder="Razón Social"
                     required
                   />
-                  <ErrorFormMessage
-                    message={
-                      typeof formik.errors.social_reason === "string"
-                        ? formik.errors.social_reason
-                        : undefined
-                    }
-                  />
                 </div>
 
                 <div>
                   <label htmlFor="ruc" className="block mb-1.5 font-semibold">
-                    RUC *
+                    RUC
                   </label>
                   <input
                     value={formik.values.ruc}
                     onChange={formik.handleChange}
+                    maxLength={11}
                     type="text"
                     id="ruc"
-                    className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light"
+                    className="appearance-none border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light"
                     placeholder="RUC"
                     required
                   />
@@ -432,6 +689,7 @@ const Form = () => {
                   <input
                     value={formik.values.cellphone}
                     onChange={formik.handleChange}
+                    maxLength={9}
                     type="text"
                     id="cellphone"
                     className="border border-neutral-medium rounded-lg block w-full h-12 px-4 placeholder-gray-400 bg-neutral-light"

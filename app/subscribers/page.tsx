@@ -27,7 +27,7 @@ export default function Subscribers() {
       owner_document_number: "",
     },
     onSubmit: async (values) => {
-      console.log("values", values);
+      // console.log("values", values);
       // try {
       //   const response = await costumerCtrl.createCostumer(values);
       //   console.log("response", response);
@@ -47,7 +47,7 @@ export default function Subscribers() {
           giro: costumer.attributes.subtype,
           ruc: costumer.attributes.ruc,
           nombre_negocio: costumer.attributes.name,
-          cliente: costumer.attributes.social_reason,
+          razon_social: costumer.attributes.social_reason,
           departamento: costumer.attributes.department,
           provincia: costumer.attributes.province,
           distrito: costumer.attributes.district,
@@ -62,23 +62,15 @@ export default function Subscribers() {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log("costumers", costumers);
-  }, [costumers]);
-
   const downloadExcel = () => {
     const ws = XLSX.utils.json_to_sheet(costumers);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Costumers");
-    XLSX.writeFile(wb, "clientes.xlsx");
+    XLSX.writeFile(wb, "base_clientes.xlsx");
   };
 
   const openEditModal = async (costumer: any) => {
-    console.log("costumer", costumer);
-
     const clientData = await costumerCtrl.getCostumerById(costumer.id);
-
-    console.log("clientData", clientData);
 
     setClientData(clientData);
 
@@ -112,39 +104,39 @@ export default function Subscribers() {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead className="text-xs text-gray-700 bg-gray-50">
             <tr>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="px-2 py-3 min-w-36">
                 Negocio
               </th>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="px-2 py-3 min-w-32">
                 Giro
               </th>
               <th scope="col" className="px-2 py-3">
                 RUC
               </th>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="min-w-72 px-2 py-3">
                 Razon Social
               </th>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="min-w-52 px-2 py-3">
                 Nombre del Negocio
               </th>
               <th scope="col" className="px-2 py-3">
                 Departamento
               </th>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="min-w-40 px-2 py-3">
                 Provincia
               </th>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="min-w-48 min-w-48 px-2 py-3">
                 Distrito
               </th>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="min-w-80 px-2 py-3">
                 Dirección
               </th>
               <th scope="col" className="px-2 py-3">
                 Telefono
               </th>
-              <th scope="col" className="px-2 py-3">
+              {/* <th scope="col" className="px-2 py-3">
                 Acciones
-              </th>
+              </th> */}
             </tr>
           </thead>
           <tbody>
@@ -156,7 +148,7 @@ export default function Subscribers() {
                     <td className="px-2 py-2 capitalize">{costumer.giro}</td>
                     <td className="px-2 py-2 capitalize">{costumer.ruc}</td>
                     <td className="px-2 py-2 font-medium text-gray-900">
-                      {costumer.cliente}
+                      {costumer.razon_social}
                     </td>
                     <td className="px-2 py-2 capitalize font-medium text-gray-900">
                       {costumer.nombre_negocio}
@@ -174,7 +166,7 @@ export default function Subscribers() {
                       {costumer.direccion}
                     </td>
                     <td className="px-2 py-2">{costumer.celular}</td>
-                    <td className="px-2 py-2 text-center">
+                    {/* <td className="px-2 py-2 text-center">
                       <button onClick={() => openEditModal(costumer)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -191,7 +183,7 @@ export default function Subscribers() {
                           />
                         </svg>
                       </button>
-                    </td>
+                    </td> */}
                   </tr>
                 );
               })}

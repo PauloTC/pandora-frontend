@@ -139,10 +139,6 @@ export default function InvestigationsComponent() {
     })();
   }, [filters]);
 
-  useEffect(() => {
-    console.log("investigations", investigations);
-  }, [investigations]);
-
   //Setea la pagina a 1 cuando se cambia el proyecto o el publico objetivo
   useEffect(() => {
     setFilters((prevFilters) => ({
