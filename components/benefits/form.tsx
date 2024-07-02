@@ -396,12 +396,7 @@ const Form = () => {
                       onChange={formik.handleChange}
                       className="appearance-none h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 px-4"
                     >
-                      <option
-                        value=""
-                        disabled
-                        className="text-gray-100 "
-                        style={{ color: "red" }}
-                      >
+                      <option value="" disabled>
                         Selecciona un tipo de negocio
                       </option>
                       {businessTypes.map((businessType, index) => (
@@ -717,7 +712,22 @@ const Form = () => {
             )}
           </div>
 
-          <div className="my-8">
+          <div className="my-8 flex gap-1 items-start">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-10 text-red-500 h-full"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+              />
+            </svg>
+
             <p className="font-light text-xs">
               Priorizamos tu seguridad y la confidencialidad de la información
               que compartes con nosotros. En Alicorp, la seguridad de tu
