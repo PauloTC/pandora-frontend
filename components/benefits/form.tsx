@@ -68,13 +68,7 @@ const Form = () => {
   });
 
   const validateStep1 = (values: Values) => {
-    let errors = {
-      name: "",
-      type: "",
-      department: "",
-      address: "",
-      subtype: "",
-    };
+    let errors: any = {};
 
     try {
       validationSchemaStepOne.validateSync(values, { abortEarly: false });
@@ -100,10 +94,7 @@ const Form = () => {
   };
 
   const validateStep2 = (values: Values) => {
-    let errors = {
-      ruc: "",
-      cellphone: "",
-    };
+    let errors: any = {};
 
     try {
       validationSchemaStepTwo.validateSync(values, { abortEarly: false });
@@ -131,7 +122,6 @@ const Form = () => {
       const errors = validateStep2(formik.values);
 
       if (Object.keys(errors).length === 0) {
-        // console.log("values", formik.values);
         formik.handleSubmit();
         setCongrats(true);
       } else {
