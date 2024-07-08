@@ -46,12 +46,12 @@ const Form = () => {
 
   const validationSchemaStepOne = Yup.object({
     name: Yup.string()
-      .min(2, "El nombre debe tener al menos 2 carácteres")
+      .min(2, "El nombre debe tener al menos 2 caracteres")
       .required("El nombre es requerido"),
     type: Yup.string().required("El tipo es requerido"),
     department: Yup.string().required("El departamento es requerido"),
     address: Yup.string()
-      .min(5, "La dirección debe tener al menos 5 carácteres")
+      .min(5, "La dirección debe tener al menos 5 caracteres")
       .required("La dirección es requerida"),
   });
 
