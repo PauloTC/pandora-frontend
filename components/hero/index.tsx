@@ -26,7 +26,7 @@ const Hero = () => {
     >
       <div className="xl:max-w-screen-md">
         <div className="relative w-full max-w-28 h-10 xl:max-w-56 xl:h-20">
-          <Image alt="conecta" src="/conecta.svg" fill sizes="100vw" />
+          <Image alt="comunidad" src="/comunidad.svg" fill sizes="100vw" />
         </div>
         <p
           className="
