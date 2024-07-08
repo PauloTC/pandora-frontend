@@ -114,7 +114,7 @@ export default function Subscribers() {
                 RUC
               </th>
               <th scope="col" className="min-w-72 px-2 py-3">
-                Razon Social
+                Razón Social
               </th>
               <th scope="col" className="min-w-52 px-2 py-3">
                 Nombre del Negocio
@@ -132,11 +132,11 @@ export default function Subscribers() {
                 Dirección
               </th>
               <th scope="col" className="px-2 py-3">
-                Telefono
+                Teléfono
               </th>
-              {/* <th scope="col" className="px-2 py-3">
+              <th scope="col" className="px-2 py-3">
                 Acciones
-              </th> */}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -166,9 +166,10 @@ export default function Subscribers() {
                       {costumer.direccion}
                     </td>
                     <td className="px-2 py-2">{costumer.celular}</td>
-                    {/* <td className="px-2 py-2 text-center">
+                    <td className="px-2 py-2 text-center">
                       <button onClick={() => openEditModal(costumer)}>
-                        <svg
+                        editar
+                        {/* <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
@@ -181,9 +182,9 @@ export default function Subscribers() {
                             strokeLinejoin="round"
                             d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
                           />
-                        </svg>
+                        </svg> */}
                       </button>
-                    </td> */}
+                    </td>
                   </tr>
                 );
               })}
@@ -373,10 +374,10 @@ export default function Subscribers() {
                     <span
                       className={`${libre_franklin600.className} text-sm text-gray-900`}
                     >
-                      Telefono
+                      Teléfono
                     </span>
                     <span className="text-xs font-regular">
-                      Telefono del titular
+                      Teléfono del titular
                     </span>
                   </label>
 
