@@ -2320,10 +2320,10 @@
     },
     {
       "id_ubigeo": "2788",
-      "nombre_ubigeo": "Nepeqa",
+      "nombre_ubigeo": "Nepeña",
       "codigo_ubigeo": "06",
-      "etiqueta_ubigeo": "Nepeqa, Santa",
-      "buscador_ubigeo": "nepeqa santa",
+      "etiqueta_ubigeo": "Nepeña, Santa",
+      "buscador_ubigeo": "nepeña santa",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "2782"
@@ -3002,20 +3002,20 @@
     },
     {
       "id_ubigeo": "2862",
-      "nombre_ubigeo": "San Juan de Chacqa",
+      "nombre_ubigeo": "San Juan de Chacña",
       "codigo_ubigeo": "11",
-      "etiqueta_ubigeo": "San Juan de Chacqa, Aymaraes",
-      "buscador_ubigeo": "san juan de chacqa aymaraes",
+      "etiqueta_ubigeo": "San Juan de Chacña, Aymaraes",
+      "buscador_ubigeo": "san juan de chacña aymaraes",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "2851"
     },
     {
       "id_ubigeo": "2863",
-      "nombre_ubigeo": "Saqayca",
+      "nombre_ubigeo": "Sañayca",
       "codigo_ubigeo": "12",
-      "etiqueta_ubigeo": "Saqayca, Aymaraes",
-      "buscador_ubigeo": "saqayca aymaraes",
+      "etiqueta_ubigeo": "Sañayca, Aymaraes",
+      "buscador_ubigeo": "sañayca aymaraes",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "2851"
@@ -3510,10 +3510,10 @@
     },
     {
       "id_ubigeo": "2916",
-      "nombre_ubigeo": "Quequeqa",
+      "nombre_ubigeo": "Quequeña",
       "codigo_ubigeo": "15",
-      "etiqueta_ubigeo": "Quequeqa, Arequipa",
-      "buscador_ubigeo": "quequeqa arequipa",
+      "etiqueta_ubigeo": "Quequeña, Arequipa",
+      "buscador_ubigeo": "quequeña arequipa",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "2901"
@@ -3702,10 +3702,10 @@
     },
     {
       "id_ubigeo": "2937",
-      "nombre_ubigeo": "Ocoqa",
+      "nombre_ubigeo": "Ocoña",
       "codigo_ubigeo": "06",
-      "etiqueta_ubigeo": "Ocoqa, Camana",
-      "buscador_ubigeo": "ocoqa camana",
+      "etiqueta_ubigeo": "Ocoña, Camana",
+      "buscador_ubigeo": "ocoña camana",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "2931"
@@ -4936,10 +4936,10 @@
     },
     {
       "id_ubigeo": "3072",
-      "nombre_ubigeo": "Chaviqa",
+      "nombre_ubigeo": "Chaviña",
       "codigo_ubigeo": "05",
-      "etiqueta_ubigeo": "Chaviqa, Lucanas",
-      "buscador_ubigeo": "chaviqa lucanas",
+      "etiqueta_ubigeo": "Chaviña, Lucanas",
+      "buscador_ubigeo": "chaviña lucanas",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3067"
@@ -5006,10 +5006,10 @@
     },
     {
       "id_ubigeo": "3079",
-      "nombre_ubigeo": "Ocaqa",
+      "nombre_ubigeo": "Ocaña",
       "codigo_ubigeo": "12",
-      "etiqueta_ubigeo": "Ocaqa, Lucanas",
-      "buscador_ubigeo": "ocaqa lucanas",
+      "etiqueta_ubigeo": "Ocaña, Lucanas",
+      "buscador_ubigeo": "ocaña lucanas",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3067"
@@ -5332,10 +5332,10 @@
     },
     {
       "id_ubigeo": "3114",
-      "nombre_ubigeo": "Huacaqa",
+      "nombre_ubigeo": "Huacaña",
       "codigo_ubigeo": "05",
-      "etiqueta_ubigeo": "Huacaqa, Sucre",
-      "buscador_ubigeo": "huacaqa sucre",
+      "etiqueta_ubigeo": "Huacaña, Sucre",
+      "buscador_ubigeo": "huacaña sucre",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3109"
@@ -5700,10 +5700,10 @@
     },
     {
       "id_ubigeo": "3149",
-      "nombre_ubigeo": "Encaqada",
+      "nombre_ubigeo": "Encañada",
       "codigo_ubigeo": "05",
-      "etiqueta_ubigeo": "Encaqada, Cajamarca",
-      "buscador_ubigeo": "encaqada cajamarca",
+      "etiqueta_ubigeo": "Encañada, Cajamarca",
+      "buscador_ubigeo": "encañada cajamarca",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3144"
@@ -8922,10 +8922,10 @@
     },
     {
       "id_ubigeo": "3509",
-      "nombre_ubigeo": "Qahuimpuquio",
+      "nombre_ubigeo": "Ñahuimpuquio",
       "codigo_ubigeo": "10",
-      "etiqueta_ubigeo": "Qahuimpuquio, Tayacaja",
-      "buscador_ubigeo": "qahuimpuquio tayacaja",
+      "etiqueta_ubigeo": "Ñahuimpuquio, Tayacaja",
+      "buscador_ubigeo": "ñahuimpuquio tayacaja",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3499"
@@ -9898,10 +9898,10 @@
     },
     {
       "id_ubigeo": "3609",
-      "nombre_ubigeo": "La Tinguiqa",
+      "nombre_ubigeo": "La Tinguiña",
       "codigo_ubigeo": "02",
-      "etiqueta_ubigeo": "La Tinguiqa, Ica",
-      "buscador_ubigeo": "la tinguiqa ica",
+      "etiqueta_ubigeo": "La Tinguiña, Ica",
+      "buscador_ubigeo": "la tinguiña ica",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3607"
@@ -12520,10 +12520,10 @@
   "3906": [
     {
       "id_ubigeo": "3908",
-      "nombre_ubigeo": "Caqaris",
+      "nombre_ubigeo": "Cañaris",
       "codigo_ubigeo": "02",
-      "etiqueta_ubigeo": "Caqaris, Ferreñafe",
-      "buscador_ubigeo": "caqaris ferreñafe",
+      "etiqueta_ubigeo": "Cañaris, Ferreñafe",
+      "buscador_ubigeo": "cañaris ferreñafe",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3906"
@@ -12872,8 +12872,8 @@
       "id_ubigeo": "3993",
       "nombre_ubigeo": "Asia",
       "codigo_ubigeo": "02",
-      "etiqueta_ubigeo": "Asia, Caqete",
-      "buscador_ubigeo": "asia caqete",
+      "etiqueta_ubigeo": "Asia, Cañete",
+      "buscador_ubigeo": "asia cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12882,8 +12882,8 @@
       "id_ubigeo": "3994",
       "nombre_ubigeo": "Calango",
       "codigo_ubigeo": "03",
-      "etiqueta_ubigeo": "Calango, Caqete",
-      "buscador_ubigeo": "calango caqete",
+      "etiqueta_ubigeo": "Calango, Cañete",
+      "buscador_ubigeo": "calango cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12892,8 +12892,8 @@
       "id_ubigeo": "3995",
       "nombre_ubigeo": "Cerro Azul",
       "codigo_ubigeo": "04",
-      "etiqueta_ubigeo": "Cerro Azul, Caqete",
-      "buscador_ubigeo": "cerro azul caqete",
+      "etiqueta_ubigeo": "Cerro Azul, Cañete",
+      "buscador_ubigeo": "cerro azul cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12902,8 +12902,8 @@
       "id_ubigeo": "3996",
       "nombre_ubigeo": "Chilca",
       "codigo_ubigeo": "05",
-      "etiqueta_ubigeo": "Chilca, Caqete",
-      "buscador_ubigeo": "chilca caqete",
+      "etiqueta_ubigeo": "Chilca, Cañete",
+      "buscador_ubigeo": "chilca cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12912,8 +12912,8 @@
       "id_ubigeo": "3997",
       "nombre_ubigeo": "Coayllo",
       "codigo_ubigeo": "06",
-      "etiqueta_ubigeo": "Coayllo, Caqete",
-      "buscador_ubigeo": "coayllo caqete",
+      "etiqueta_ubigeo": "Coayllo, Cañete",
+      "buscador_ubigeo": "coayllo cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12922,8 +12922,8 @@
       "id_ubigeo": "3998",
       "nombre_ubigeo": "Imperial",
       "codigo_ubigeo": "07",
-      "etiqueta_ubigeo": "Imperial, Caqete",
-      "buscador_ubigeo": "imperial caqete",
+      "etiqueta_ubigeo": "Imperial, Cañete",
+      "buscador_ubigeo": "imperial cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12932,8 +12932,8 @@
       "id_ubigeo": "3999",
       "nombre_ubigeo": "Lunahuana",
       "codigo_ubigeo": "08",
-      "etiqueta_ubigeo": "Lunahuana, Caqete",
-      "buscador_ubigeo": "lunahuana caqete",
+      "etiqueta_ubigeo": "Lunahuana, Cañete",
+      "buscador_ubigeo": "lunahuana cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12942,8 +12942,8 @@
       "id_ubigeo": "4000",
       "nombre_ubigeo": "Mala",
       "codigo_ubigeo": "09",
-      "etiqueta_ubigeo": "Mala, Caqete",
-      "buscador_ubigeo": "mala caqete",
+      "etiqueta_ubigeo": "Mala, Cañete",
+      "buscador_ubigeo": "mala cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12952,8 +12952,8 @@
       "id_ubigeo": "4001",
       "nombre_ubigeo": "Nuevo Imperial",
       "codigo_ubigeo": "10",
-      "etiqueta_ubigeo": "Nuevo Imperial, Caqete",
-      "buscador_ubigeo": "nuevo imperial caqete",
+      "etiqueta_ubigeo": "Nuevo Imperial, Cañete",
+      "buscador_ubigeo": "nuevo imperial cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12962,8 +12962,8 @@
       "id_ubigeo": "4002",
       "nombre_ubigeo": "Pacaran",
       "codigo_ubigeo": "11",
-      "etiqueta_ubigeo": "Pacaran, Caqete",
-      "buscador_ubigeo": "pacaran caqete",
+      "etiqueta_ubigeo": "Pacaran, Cañete",
+      "buscador_ubigeo": "pacaran cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12972,8 +12972,8 @@
       "id_ubigeo": "4003",
       "nombre_ubigeo": "Quilmana",
       "codigo_ubigeo": "12",
-      "etiqueta_ubigeo": "Quilmana, Caqete",
-      "buscador_ubigeo": "quilmana caqete",
+      "etiqueta_ubigeo": "Quilmana, Cañete",
+      "buscador_ubigeo": "quilmana cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12982,8 +12982,8 @@
       "id_ubigeo": "4004",
       "nombre_ubigeo": "San Antonio",
       "codigo_ubigeo": "13",
-      "etiqueta_ubigeo": "San Antonio, Caqete",
-      "buscador_ubigeo": "san antonio caqete",
+      "etiqueta_ubigeo": "San Antonio, Cañete",
+      "buscador_ubigeo": "san antonio cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -12992,8 +12992,8 @@
       "id_ubigeo": "4005",
       "nombre_ubigeo": "San Luis",
       "codigo_ubigeo": "14",
-      "etiqueta_ubigeo": "San Luis, Caqete",
-      "buscador_ubigeo": "san luis caqete",
+      "etiqueta_ubigeo": "San Luis, Cañete",
+      "buscador_ubigeo": "san luis cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -13012,8 +13012,8 @@
       "id_ubigeo": "4006",
       "nombre_ubigeo": "Santa Cruz de Flores",
       "codigo_ubigeo": "15",
-      "etiqueta_ubigeo": "Santa Cruz de Flores, Caqete",
-      "buscador_ubigeo": "santa cruz de flores caqete",
+      "etiqueta_ubigeo": "Santa Cruz de Flores, Cañete",
+      "buscador_ubigeo": "santa cruz de flores cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -13022,8 +13022,8 @@
       "id_ubigeo": "4007",
       "nombre_ubigeo": "Zuqiga",
       "codigo_ubigeo": "16",
-      "etiqueta_ubigeo": "Zuqiga, Caqete",
-      "buscador_ubigeo": "zuqiga caqete",
+      "etiqueta_ubigeo": "Zuqiga, Cañete",
+      "buscador_ubigeo": "zuqiga cañete",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "3991"
@@ -14464,10 +14464,10 @@
     },
     {
       "id_ubigeo": "4106",
-      "nombre_ubigeo": "Viqac",
+      "nombre_ubigeo": "Viñac",
       "codigo_ubigeo": "32",
-      "etiqueta_ubigeo": "Viqac, Yauyos",
-      "buscador_ubigeo": "viqac yauyos",
+      "etiqueta_ubigeo": "Viñac, Yauyos",
+      "buscador_ubigeo": "viñac yauyos",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "4074"
@@ -15060,10 +15060,10 @@
     },
     {
       "id_ubigeo": "4177",
-      "nombre_ubigeo": "Iqapari",
+      "nombre_ubigeo": "Iñapari",
       "codigo_ubigeo": "01",
-      "etiqueta_ubigeo": "Iqapari, Tahuamanu",
-      "buscador_ubigeo": "iqapari tahuamanu",
+      "etiqueta_ubigeo": "Iñapari, Tahuamanu",
+      "buscador_ubigeo": "iñapari tahuamanu",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "4176"
@@ -15144,10 +15144,10 @@
     },
     {
       "id_ubigeo": "4192",
-      "nombre_ubigeo": "Ichuqa",
+      "nombre_ubigeo": "Ichuña",
       "codigo_ubigeo": "04",
-      "etiqueta_ubigeo": "Ichuqa, General Sanchez Cerro",
-      "buscador_ubigeo": "ichuqa general sanchez cerro",
+      "etiqueta_ubigeo": "Ichuña, General Sanchez Cerro",
+      "buscador_ubigeo": "ichuña general sanchez cerro",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "4188"
@@ -16260,10 +16260,10 @@
     },
     {
       "id_ubigeo": "4296",
-      "nombre_ubigeo": "Pariqas",
+      "nombre_ubigeo": "Pariñas",
       "codigo_ubigeo": "01",
-      "etiqueta_ubigeo": "Pariqas, Talara",
-      "buscador_ubigeo": "pariqas talara",
+      "etiqueta_ubigeo": "Pariñas, Talara",
+      "buscador_ubigeo": "pariñas talara",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "4295"
@@ -16342,10 +16342,10 @@
     },
     {
       "id_ubigeo": "4334",
-      "nombre_ubigeo": "Muqani",
+      "nombre_ubigeo": "Muñani",
       "codigo_ubigeo": "08",
-      "etiqueta_ubigeo": "Muqani, Azangaro",
-      "buscador_ubigeo": "muqani azangaro",
+      "etiqueta_ubigeo": "Muñani, Azangaro",
+      "buscador_ubigeo": "muñani azangaro",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "4326"
@@ -17038,10 +17038,10 @@
     },
     {
       "id_ubigeo": "4319",
-      "nombre_ubigeo": "Maqazo",
+      "nombre_ubigeo": "Mañazo",
       "codigo_ubigeo": "09",
-      "etiqueta_ubigeo": "Maqazo, Puno",
-      "buscador_ubigeo": "maqazo puno",
+      "etiqueta_ubigeo": "Mañazo, Puno",
+      "buscador_ubigeo": "mañazo puno",
       "numero_hijos_ubigeo": "0",
       "nivel_ubigeo": "3",
       "id_padre_ubigeo": "4310"
