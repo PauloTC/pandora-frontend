@@ -14,7 +14,7 @@ export default function SidebarComponent() {
   const links = [
     {
       name: "Investigaciones",
-      href: "/investigations",
+      href: "/investigaciones",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@ export default function SidebarComponent() {
     },
     {
       name: "Comunidad Alicorp",
-      href: "/subscribers",
+      href: "/comunidad-alicorp",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"

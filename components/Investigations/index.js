@@ -184,7 +184,7 @@ export default function InvestigationsComponent() {
         </div>
         <div>
           <Link
-            href={"/investigations/create"}
+            href={"/investigaciones/create"}
             className="
               text-white flex 
               items-center gap-1 
@@ -240,7 +240,7 @@ export default function InvestigationsComponent() {
                 >
                   <Link
                     className="divide-y divide-gray-300 "
-                    href={`/investigations/${investigation?.attributes?.slug}`}
+                    href={`/investigaciones/${investigation?.attributes?.slug}`}
                   >
                     <div>
                       <div className="mb-3">

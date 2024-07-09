@@ -214,7 +214,7 @@ export function InvestigationForm({ params, title }) {
           setInvestigationResult(result);
 
           if (formValues.investigation_types.length === 0) {
-            router.push("/investigations", { scroll: false });
+            router.push("/investigaciones", { scroll: false });
           } else {
             setStep(2);
           }
@@ -230,7 +230,7 @@ export function InvestigationForm({ params, title }) {
 
           investigationCreated.attributes.investigation_types.data.length !== 0
             ? setStep(2)
-            : router.push("/investigations", { scroll: false });
+            : router.push("/investigaciones", { scroll: false });
         }
       } catch (error) {
         console.error(error);
@@ -362,7 +362,7 @@ export function InvestigationForm({ params, title }) {
             <div className="flex items-center">
               <Link
                 className="text-blue-700 hover:text-blue-800"
-                href="/investigations"
+                href="/investigaciones"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

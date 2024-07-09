@@ -102,7 +102,7 @@ export function InvestigationSlugComponent({ params }) {
         <div className="flex">
           <Link
             className="text-blue-700 hover:text-blue-800"
-            href="/investigations"
+            href="/investigaciones"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +125,7 @@ export function InvestigationSlugComponent({ params }) {
         </div>
 
         <Link
-          href={`/investigations/${params.slug}/edit`}
+          href={`/investigaciones/${params.slug}/edit`}
           className="
             text-white 
             bg-blue-700 

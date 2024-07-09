@@ -22,7 +22,7 @@ export default function HeaderComponent() {
     validateOnChange: false,
     onSubmit: async (values) => {
       try {
-        router.push("/investigations");
+        router.push("/investigaciones");
         await filterInvestigations({
           project: "",
           objectivePublic: "",

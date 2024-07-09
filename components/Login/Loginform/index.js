@@ -24,7 +24,7 @@ export default function LoginForm() {
       try {
         const response = await authCtrl.login(values);
         login(response.jwt);
-        router.push("/investigations", { scroll: false });
+        router.push("/investigaciones", { scroll: false });
       } catch (error) {
         console.log("error", error);
         setLoading(false);

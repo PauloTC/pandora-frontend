@@ -69,7 +69,7 @@ export function MaterialsForm({ slug }) {
 
           await materialCtrl.updateMaterial(material.id, materialData);
 
-          router.push("/investigations", { scroll: false });
+          router.push("/investigaciones", { scroll: false });
         }
       } catch (error) {
         console.error(error);
@@ -154,7 +154,7 @@ export function MaterialsForm({ slug }) {
         <div className="flex items-center">
           <Link
             className="text-blue-700 hover:text-blue-800"
-            href="/investigations"
+            href="/investigaciones"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
