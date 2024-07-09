@@ -36,7 +36,7 @@ export default function SidebarComponent() {
       ),
     },
     {
-      name: "Clientes Amigos",
+      name: "Comunidad Alicorp",
       href: "/subscribers",
       icon: (
         <svg

@@ -81,7 +81,7 @@ export default function Subscribers() {
     <section>
       <div className="flex items-center justify-between mb-6">
         <h4 className="font-semibold text-slate-700 capitalize text-3xl">
-          Clientes Amigos
+          Comunidad Alicorp
         </h4>
         <button
           onClick={downloadExcel}
@@ -98,7 +98,7 @@ export default function Subscribers() {
       <p className="tex-sm mb-6 text-sm">
         Aquí encontrarás la Base de Datos de clientes suscritos de forma
         voluntaria a nuestro panel de investigación a través de la landing de{" "}
-        <span className="font-bold">Conecta Alicorp.</span>
+        <span className="font-bold">Comunidad Alicorp</span>
       </p>
       <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
