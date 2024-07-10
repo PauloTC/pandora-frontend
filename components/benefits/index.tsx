@@ -29,7 +29,7 @@ const Benefits = () => {
         <div className="h-fit lg:sticky top-10">
           <h2 className="text-2xl mb-8 xl:text-4.5xl xl:leading-10 xl:mb-14">
             Beneficios de ser parte de <br />{" "}
-            <span className="font-bold italic">Conecta Alicorp</span>
+            <span className="font-bold italic">Comunidad Alicorp</span>
           </h2>
           <div className="flex flex-col gap-10">
             {benefits.map((benefit, index) => {

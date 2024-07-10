@@ -89,7 +89,7 @@ export default function HeaderComponent() {
             bg-transparent
             outline-0
             grow"
-          placeholder="Busca por nombre de investigación ..."
+          placeholder="Buscar investigaciones por nombre"
         />
 
         <div className="relative">
