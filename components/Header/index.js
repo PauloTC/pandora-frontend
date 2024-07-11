@@ -28,7 +28,7 @@ export default function HeaderComponent() {
           objectivePublic: "",
           sort: "desc",
           pagination: { page: 1 },
-          search: values.search.toLowerCase(),
+          search: values.search,
         });
       } catch (error) {
         console.error(error);

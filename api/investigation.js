@@ -135,7 +135,7 @@ export class Investigation {
     }
 
     if (search) {
-      filter += `&filters[name][$contains]=${search}`;
+      filter += `&filters[name][$containsi]=${search}`;
     }
 
     try {
