@@ -42,7 +42,7 @@ const Hero = () => {
           Comunidad Alicorp
         </p>
         <div className="text-4xl font-bold mb-8 xl:text-7xl xl:mb-14">
-          <h2>Una iniciativa del equipo de diseño</h2>
+          <h2>Una iniciativa del equipo de Diseño</h2>
         </div>
         <p className="text-xs xl:text-2xl">
           En Alicorp queremos mejorar la forma en que interactuamos con los

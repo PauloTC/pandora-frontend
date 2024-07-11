@@ -3,19 +3,19 @@ import Form from "./form";
 
 const benefits = [
   {
-    title: "Sé escuchado",
+    title: "Exprésate y sé escuchado",
     description:
-      "Tus ideas y opiniones pueden marcar la diferencia en el desarrollo de nuevos productos y estrategias.",
+      "Tus ideas y opiniones serán valoradas, influyendo en la creación de nuevos productos y estrategias.",
   },
   {
-    title: "Recibe recompensas",
+    title: "Obtén recompensas",
     description:
-      "Por compartir tus experiencias y tiempo, te ofrecemos incentivos, merchandising, entre otros.",
+      "A cambio de tu tiempo y experiencias, recibirás incentivos, productos exclusivos, merchandising y más.",
   },
   {
-    title: "Construye red",
+    title: "Amplía tu red",
     description:
-      "Conecta con otros bodegueros y restauranteros, expandiendo tu red de contactos y oportunidades de negocio.",
+      "Conecta con otros bodegueros y restauranteros ampliando tus contactos y descubriendo nuevas oportunidades de negocio.",
   },
 ];
 
