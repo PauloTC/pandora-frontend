@@ -194,10 +194,6 @@ export function InvestigationForm({ params, title }) {
                     slug.includes(type.label.toLowerCase().replace(/ /g, "-"))
                   )
               );
-            console.log(
-              "Investigation types not in materials:",
-              unselectedInvestigationTypes
-            );
 
             updateMaterials(unselectedInvestigationTypes, result.id);
 
@@ -331,7 +327,15 @@ export function InvestigationForm({ params, title }) {
       if (investigation?.attributes?.presented_date) {
         setPresentedDate(parseISO(investigation?.attributes?.presented_date));
       }
+      const defaultProject = {
+        value: investigation?.attributes?.project?.data?.id,
+        label: investigation?.attributes?.project?.data?.attributes?.name,
+      };
+
+      formik.setFieldValue("project", defaultProject);
     }
+    console.log("projects", projects);
+    console.log("investigation", investigation);
   }, [investigation]);
 
   const status = [
@@ -340,6 +344,39 @@ export function InvestigationForm({ params, title }) {
     { value: "por iniciar", label: "Por iniciar" },
     { value: "bloqueado", label: "Bloqueado" },
   ];
+
+  const selectStyles = {
+    dropdownIndicator: (defaultStyles) => {
+      return {
+        ...defaultStyles,
+        color: "#EF4444",
+        "&:hover": {
+          color: "#EF4444",
+        },
+      };
+    },
+    control: (defaultStyles) => {
+      return {
+        ...defaultStyles,
+        borderColor: "#D1D5DB",
+        borderRadius: "0.25rem",
+        borderColor: "#E5E7EB",
+        hegiht: "2.5rem",
+        "&:hover": {
+          borderColor: "#D1D5DB",
+        },
+      };
+    },
+    placeholder: (defaultStyles) => {
+      return {
+        ...defaultStyles,
+        fontSize: "0.875rem",
+      };
+    },
+    indicatorSeparator: () => ({
+      display: "none",
+    }),
+  };
 
   return (
     <div>
@@ -422,10 +459,17 @@ export function InvestigationForm({ params, title }) {
                         maxLength={40}
                         type="text"
                         id="name"
-                        className="
+                        className={`
                           self-start h-10 border border-gray-300 
                           text-gray-900 text-sm rounded
-                          outline-blue-500 block w-64 p-2.5"
+                          outline-blue-500 block w-64 p-2.5
+                          ${
+                            formik.values.name === ""
+                              ? "opacity-50"
+                              : "opacity-100"
+                          }
+                          
+                        `}
                         placeholder="Titulo de la investigación"
                         required
                       />
@@ -449,11 +493,17 @@ export function InvestigationForm({ params, title }) {
                         id="description"
                         rows="5"
                         maxLength={200}
-                        className="
+                        className={`
                           w-64 text-sm text-gray-900 
-                          bg-white border border-gray-200 p-2.5 
-                          rounded outline-blue-500"
-                        placeholder="Escribir la descripción..."
+                          bg-white border border-gray-300 p-2.5 
+                          rounded outline-blue-500
+                           ${
+                             formik.values.description === ""
+                               ? "opacity-50"
+                               : "opacity-100"
+                           }
+                        `}
+                        placeholder="Escribir el contexto de la investigación"
                         value={formik.values.description}
                         onChange={formik.handleChange}
                         error={formik.errors.description}
@@ -471,35 +521,56 @@ export function InvestigationForm({ params, title }) {
                           Proyecto de la investigación
                         </span>
                       </label>
-                      <select
-                        value={formik.values.project}
-                        onChange={formik.handleChange}
-                        error={formik.errors.project}
-                        required
-                        name="project"
-                        id="project"
-                        className={`
-                          appearance-none
-                          text-gray-900 text-sm 
-                          rounded block 
-                          w-64 p-2.5
-                          border border-gray-300
-                          outline-blue-500
-                          ${
-                            formik.values.project === ""
-                              ? "text-gray-400"
-                              : "text-gray-900"
-                          }
-                        
-                        `}
-                      >
-                        <option value="">Seleccionar proyecto</option>
-                        {projects.map((project) => (
-                          <option key={project.value} value={project.value}>
-                            {project.label}
-                          </option>
-                        ))}
-                      </select>
+
+                      <div className="relative">
+                        <select
+                          value={formik.values.project}
+                          onChange={formik.handleChange}
+                          error={formik.errors.project}
+                          required
+                          name="project"
+                          id="project"
+                          className={`
+                            appearance-none
+                            text-sm 
+                            rounded block 
+                            w-64 p-2.5
+                            border border-gray-300
+                            outline-blue-500
+                            ${
+                              formik.values.project === ""
+                                ? "text-gray-400"
+                                : "text-gray-900"
+                            }
+                            ${
+                              formik.values.project === ""
+                                ? "opacity-50"
+                                : "opacity-100"
+                            }
+                          `}
+                        >
+                          <option value="">Selecciona un proyecto</option>
+                          {projects.map((project) => (
+                            <option key={project.value} value={project.value}>
+                              {project.label}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-5 pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                          />
+                        </svg>
+                      </div>
                     </li>
 
                     <li className="flex items-center">
@@ -519,7 +590,13 @@ export function InvestigationForm({ params, title }) {
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha inicial"
-                        className="border text-sm block p-2 w-64 rounded h-10 outline-blue-500"
+                        className={`
+                          placeholder-gray-150
+                          border border-gray-300 
+                          text-sm block p-2 w-64 
+                          rounded h-10 outline-blue-500
+                          ${startDate ? "opacity-100" : "opacity-50"}
+                        `}
                         selected={startDate}
                         required
                         onChange={(date) => setStartDate(date)}
@@ -540,7 +617,10 @@ export function InvestigationForm({ params, title }) {
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha final"
-                        className="border text-sm block p-2 w-64 rounded h-10 outline-blue-500"
+                        className={`
+                          border border-gray-300 text-sm block p-2 w-64 rounded h-10 outline-blue-500
+                          ${endDate ? "opacity-100" : "opacity-50"}
+                        `}
                         selected={endDate}
                         onChange={(date) => setEndDate(date)}
                       />
@@ -560,7 +640,9 @@ export function InvestigationForm({ params, title }) {
                       </label>
 
                       <MultiSelect
-                        className="w-64 text-sm"
+                        className={`
+                          w-64 text-sm border-gray-300
+                        `}
                         options={teams}
                         placeholder="Seleccionar equipos"
                         value={formik.values.teams}
@@ -569,6 +651,22 @@ export function InvestigationForm({ params, title }) {
                         }
                         error={formik.errors.teams}
                         labelledBy="Select"
+                        overrideStrings={{
+                          selectSomeItems: (
+                            <span
+                              className={
+                                formik.values.teams.length
+                                  ? "opacity-100"
+                                  : "opacity-50"
+                              }
+                            >
+                              Seleccionar áreas
+                            </span>
+                          ),
+                          search: "Buscar área",
+                          selectAll: "Todas las áreas",
+                          allItemsAreSelected: "Todas fueron seleccionadas",
+                        }}
                       />
                     </li>
 
@@ -583,26 +681,42 @@ export function InvestigationForm({ params, title }) {
                           Estado de la investigación
                         </span>
                       </label>
-                      <select
-                        value={formik.values.status}
-                        onChange={formik.handleChange}
-                        error={formik.errors.status}
-                        required
-                        id="status"
-                        className="
-                          border appearance-none
-                          border-gray-300 
-                          text-gray-900 
-                          text-sm rounded
-                          block w-64 p-2.5 h-10
-                          outline-blue-500"
-                      >
-                        {status.map((state) => (
-                          <option key={state.value} value={state.value}>
-                            {state.label}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="relative">
+                        <select
+                          value={formik.values.status}
+                          onChange={formik.handleChange}
+                          error={formik.errors.status}
+                          required
+                          id="status"
+                          className="
+                            border appearance-none
+                            border-gray-300 
+                            text-gray-900 
+                            text-sm rounded
+                            block w-64 p-2.5 h-10
+                            outline-blue-500"
+                        >
+                          {status.map((state) => (
+                            <option key={state.value} value={state.value}>
+                              {state.label}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-5 pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                          />
+                        </svg>
+                      </div>
                     </li>
 
                     <li className="flex gap-4">
@@ -620,7 +734,7 @@ export function InvestigationForm({ params, title }) {
                         </span>
                       </label>
                       <MultiSelect
-                        className="w-64 text-sm "
+                        className="w-64 text-sm"
                         options={investigationTypes}
                         value={formik.values.investigation_types}
                         onChange={(value) =>
@@ -628,6 +742,22 @@ export function InvestigationForm({ params, title }) {
                         }
                         error={formik.errors.investigation_types}
                         labelledBy="Select"
+                        overrideStrings={{
+                          selectSomeItems: (
+                            <span
+                              className={
+                                formik.values.teams.length
+                                  ? "opacity-100"
+                                  : "opacity-50"
+                              }
+                            >
+                              Seleccionar metodologías
+                            </span>
+                          ),
+                          search: "Buscar metodología",
+                          selectAll: "Todas las metodologías",
+                          allItemsAreSelected: "Todas fueron seleccionadas",
+                        }}
                       />
                     </li>
 
@@ -639,7 +769,7 @@ export function InvestigationForm({ params, title }) {
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Equipo Research
+                          Equipo research
                         </span>
                         <span className="text-xs font-regular">
                           Researchers involucrados
@@ -654,6 +784,22 @@ export function InvestigationForm({ params, title }) {
                         }
                         error={formik.errors.researchers}
                         labelledBy="Select"
+                        overrideStrings={{
+                          selectSomeItems: (
+                            <span
+                              className={
+                                formik.values.teams.length
+                                  ? "opacity-100"
+                                  : "opacity-50"
+                              }
+                            >
+                              Seleccionar researcher
+                            </span>
+                          ),
+                          search: "Buscar researcher",
+                          selectAll: "Todo el equipo participa",
+                          allItemsAreSelected: "Todo el equipo participa",
+                        }}
                       />
                     </li>
 
@@ -677,6 +823,22 @@ export function InvestigationForm({ params, title }) {
                         }
                         error={formik.errors.service_team}
                         labelledBy="Select"
+                        overrideStrings={{
+                          selectSomeItems: (
+                            <span
+                              className={
+                                formik.values.teams.length
+                                  ? "opacity-100"
+                                  : "opacity-50"
+                              }
+                            >
+                              Seleccionar service
+                            </span>
+                          ),
+                          search: "Buscar service",
+                          selectAll: "Todo el equipo participa",
+                          allItemsAreSelected: "Todo el equipo participa",
+                        }}
                       />
                     </li>
 
@@ -703,6 +865,22 @@ export function InvestigationForm({ params, title }) {
                         }
                         error={formik.errors.team_extended}
                         labelledBy="Select"
+                        overrideStrings={{
+                          selectSomeItems: (
+                            <span
+                              className={
+                                formik.values.teams.length
+                                  ? "opacity-100"
+                                  : "opacity-50"
+                              }
+                            >
+                              Seleccionar integrante
+                            </span>
+                          ),
+                          search: "Buscar integrante",
+                          selectAll: "Todo el equipo participa",
+                          allItemsAreSelected: "Todo el equipo participa",
+                        }}
                       />
                     </li>
                   </ul>
@@ -722,7 +900,7 @@ export function InvestigationForm({ params, title }) {
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Objetivo Principal:
+                          Objetivo principal
                         </span>
                         <span className="text-xs font-regular">
                           Máximo 40 caracteres
@@ -737,12 +915,18 @@ export function InvestigationForm({ params, title }) {
                         maxLength={40}
                         type="text"
                         id="goal"
-                        className="
-                              self-start 
-                              border border-gray-300 
-                              text-gray-900 text-sm rounded 
-                              outline-blue-500 h-10
-                              block w-64 p-2.5"
+                        className={`
+                          self-start 
+                          border border-gray-300 
+                          text-gray-900 text-sm rounded 
+                          outline-blue-500 h-10
+                          block w-64 p-2.5
+                          ${
+                            formik.values.goal === ""
+                              ? "opacity-50"
+                              : "opacity-100"
+                          }
+                        `}
                         placeholder="Principal objetivo"
                       />
                     </li>
@@ -755,7 +939,7 @@ export function InvestigationForm({ params, title }) {
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Objetivos Especificos:
+                          Objetivos específicos
                         </span>
                         <span className="text-xs font-regular">
                           Máximo 200 caracteres
@@ -764,8 +948,16 @@ export function InvestigationForm({ params, title }) {
                       <textarea
                         id="specific_goals"
                         rows="5"
-                        className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-2.5 rounded outline-blue-500"
-                        placeholder="Objetivos especificos..."
+                        maxLength={200}
+                        className={`
+                            w-64 text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500
+                            ${
+                              formik.values.specific_goals === ""
+                                ? "opacity-50"
+                                : "opacity-100"
+                            }
+                          `}
+                        placeholder="Objetivos específicos"
                         defaultValue={investigation?.specific_goals}
                         value={formik.values.specific_goals}
                         onChange={formik.handleChange}
@@ -792,7 +984,7 @@ export function InvestigationForm({ params, title }) {
                           Adjuntar archivo
                         </span>
                         <span className="text-xs font-regular">
-                          (Jpg,Png, Pdf, Docx, Xlsx, Pptx)
+                          (JPG,PNG,PDF,DOCX,XLSX,PPTX)
                         </span>
                       </label>
 
@@ -820,6 +1012,7 @@ export function InvestigationForm({ params, title }) {
                           )}
                       </div>
                     </li>
+
                     <li className="flex gap-4">
                       <label
                         htmlFor="presented_to"
@@ -840,12 +1033,18 @@ export function InvestigationForm({ params, title }) {
                         value={formik.values.presented_to}
                         onChange={formik.handleChange}
                         error={formik.errors.presented_to}
-                        className="
-                              self-start 
-                              border border-gray-300 
-                              text-gray-900 text-sm rounded
-                              outline-blue-500
-                              w-64 block p-2.5 h-10"
+                        className={`
+                          self-start 
+                          border border-gray-300 
+                          text-gray-900 text-sm rounded
+                          outline-blue-500
+                          w-64 block p-2.5 h-10
+                          ${
+                            formik.values.goal === ""
+                              ? "opacity-50"
+                              : "opacity-100"
+                          }
+                        `}
                         placeholder="Listado de personas"
                       />
                     </li>
@@ -857,7 +1056,7 @@ export function InvestigationForm({ params, title }) {
                         <span
                           className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                         >
-                          Fecha de Presentación
+                          Fecha de presentación
                         </span>
                         <span className="text-xs font-regular">
                           Cuando se presentó
@@ -866,7 +1065,10 @@ export function InvestigationForm({ params, title }) {
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha"
-                        className="border text-sm block p-2 w-64 rounded h-10 outline-blue-500"
+                        className={`
+                          border border-gray-300 text-sm block p-2 w-64 rounded h-10 outline-blue-500
+                          ${endDate ? "opacity-100" : "opacity-50"}
+                        `}
                         selected={presentedDate}
                         onChange={(date) => setPresentedDate(date)}
                       />

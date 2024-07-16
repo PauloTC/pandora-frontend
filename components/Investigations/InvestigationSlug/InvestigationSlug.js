@@ -256,7 +256,7 @@ export function InvestigationSlugComponent({ params }) {
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
-                      Equipo Research:
+                      Equipo research:
                     </span>
                   </label>
 
@@ -464,7 +464,7 @@ export function InvestigationSlugComponent({ params }) {
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
-                      Objetivo Principal:
+                      Objetivo principal:
                     </span>
                   </label>
 
@@ -477,7 +477,7 @@ export function InvestigationSlugComponent({ params }) {
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
-                      Objetivos Especificos:
+                      Objetivos específicos:
                     </span>
                   </label>
                   <p className="text-sm w-full">
