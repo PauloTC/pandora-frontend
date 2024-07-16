@@ -4,6 +4,7 @@ import Link from "next/link";
 import { libre_franklin700, libre_franklin600 } from "@/app/fonts";
 import { useRef, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
+import Swal from "sweetalert2";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { MultiSelect } from "react-multi-select-component";
@@ -136,7 +137,22 @@ export function InvestigationForm({ params, title }) {
           investigation?.attributes?.guide_media_link || "";
 
         if (file instanceof File) {
-          guide_media_link = await uploadToS3(file, setIsUploading);
+          try {
+            guide_media_link = await uploadToS3(
+              file,
+              setIsUploading,
+              (errorMessage) => {
+                throw new Error(errorMessage);
+              }
+            );
+          } catch (error) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Error al subir el archivo: " + error.message,
+            });
+            return; // Si hay un error, salir de la función
+          }
         }
 
         let investigationData = {
@@ -334,8 +350,6 @@ export function InvestigationForm({ params, title }) {
 
       formik.setFieldValue("project", defaultProject);
     }
-    console.log("projects", projects);
-    console.log("investigation", investigation);
   }, [investigation]);
 
   const status = [
@@ -344,39 +358,6 @@ export function InvestigationForm({ params, title }) {
     { value: "por iniciar", label: "Por iniciar" },
     { value: "bloqueado", label: "Bloqueado" },
   ];
-
-  const selectStyles = {
-    dropdownIndicator: (defaultStyles) => {
-      return {
-        ...defaultStyles,
-        color: "#EF4444",
-        "&:hover": {
-          color: "#EF4444",
-        },
-      };
-    },
-    control: (defaultStyles) => {
-      return {
-        ...defaultStyles,
-        borderColor: "#D1D5DB",
-        borderRadius: "0.25rem",
-        borderColor: "#E5E7EB",
-        hegiht: "2.5rem",
-        "&:hover": {
-          borderColor: "#D1D5DB",
-        },
-      };
-    },
-    placeholder: (defaultStyles) => {
-      return {
-        ...defaultStyles,
-        fontSize: "0.875rem",
-      };
-    },
-    indicatorSeparator: () => ({
-      display: "none",
-    }),
-  };
 
   return (
     <div>
@@ -984,7 +965,7 @@ export function InvestigationForm({ params, title }) {
                           Adjuntar archivo
                         </span>
                         <span className="text-xs font-regular">
-                          (JPG,PNG,PDF,DOCX,XLSX,PPTX)
+                          (JPG,PNG,PDF,DOC,XLSX,PPTX)
                         </span>
                       </label>
 
