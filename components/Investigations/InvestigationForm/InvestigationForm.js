@@ -446,7 +446,7 @@ export function InvestigationForm({ params, title }) {
                           outline-blue-500 block w-64 p-2.5
                           ${
                             formik.values.name === ""
-                              ? "opacity-50"
+                              ? "opacity-90"
                               : "opacity-100"
                           }
                           
@@ -480,7 +480,7 @@ export function InvestigationForm({ params, title }) {
                           rounded outline-blue-500
                            ${
                              formik.values.description === ""
-                               ? "opacity-50"
+                               ? "opacity-90"
                                : "opacity-100"
                            }
                         `}
@@ -525,7 +525,7 @@ export function InvestigationForm({ params, title }) {
                             }
                             ${
                               formik.values.project === ""
-                                ? "opacity-50"
+                                ? "opacity-90"
                                 : "opacity-100"
                             }
                           `}
@@ -576,7 +576,7 @@ export function InvestigationForm({ params, title }) {
                           border border-gray-300 
                           text-sm block p-2 w-64 
                           rounded h-10 outline-blue-500
-                          ${startDate ? "opacity-100" : "opacity-50"}
+                          ${startDate ? "opacity-100" : "opacity-90"}
                         `}
                         selected={startDate}
                         required
@@ -600,7 +600,7 @@ export function InvestigationForm({ params, title }) {
                         placeholderText="Selecciona una fecha final"
                         className={`
                           border border-gray-300 text-sm block p-2 w-64 rounded h-10 outline-blue-500
-                          ${endDate ? "opacity-100" : "opacity-50"}
+                          ${endDate ? "opacity-100" : "opacity-90"}
                         `}
                         selected={endDate}
                         onChange={(date) => setEndDate(date)}
@@ -638,7 +638,7 @@ export function InvestigationForm({ params, title }) {
                               className={
                                 formik.values.teams.length
                                   ? "opacity-100"
-                                  : "opacity-50"
+                                  : "opacity-90"
                               }
                             >
                               Seleccionar áreas
@@ -729,7 +729,7 @@ export function InvestigationForm({ params, title }) {
                               className={
                                 formik.values.teams.length
                                   ? "opacity-100"
-                                  : "opacity-50"
+                                  : "opacity-90"
                               }
                             >
                               Seleccionar metodologías
@@ -771,7 +771,7 @@ export function InvestigationForm({ params, title }) {
                               className={
                                 formik.values.teams.length
                                   ? "opacity-100"
-                                  : "opacity-50"
+                                  : "opacity-90"
                               }
                             >
                               Seleccionar researcher
@@ -810,7 +810,7 @@ export function InvestigationForm({ params, title }) {
                               className={
                                 formik.values.teams.length
                                   ? "opacity-100"
-                                  : "opacity-50"
+                                  : "opacity-90"
                               }
                             >
                               Seleccionar service
@@ -852,7 +852,7 @@ export function InvestigationForm({ params, title }) {
                               className={
                                 formik.values.teams.length
                                   ? "opacity-100"
-                                  : "opacity-50"
+                                  : "opacity-90"
                               }
                             >
                               Seleccionar integrante
@@ -904,7 +904,7 @@ export function InvestigationForm({ params, title }) {
                           block w-64 p-2.5
                           ${
                             formik.values.goal === ""
-                              ? "opacity-50"
+                              ? "opacity-90"
                               : "opacity-100"
                           }
                         `}
@@ -934,7 +934,7 @@ export function InvestigationForm({ params, title }) {
                             w-64 text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500
                             ${
                               formik.values.specific_goals === ""
-                                ? "opacity-50"
+                                ? "opacity-90"
                                 : "opacity-100"
                             }
                           `}
@@ -1022,7 +1022,7 @@ export function InvestigationForm({ params, title }) {
                           w-64 block p-2.5 h-10
                           ${
                             formik.values.goal === ""
-                              ? "opacity-50"
+                              ? "opacity-90"
                               : "opacity-100"
                           }
                         `}
@@ -1048,7 +1048,7 @@ export function InvestigationForm({ params, title }) {
                         placeholderText="Selecciona una fecha"
                         className={`
                           border border-gray-300 text-sm block p-2 w-64 rounded h-10 outline-blue-500
-                          ${endDate ? "opacity-100" : "opacity-50"}
+                          ${endDate ? "opacity-100" : "opacity-90"}
                         `}
                         selected={presentedDate}
                         onChange={(date) => setPresentedDate(date)}
