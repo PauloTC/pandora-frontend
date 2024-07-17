@@ -154,7 +154,7 @@ export function MaterialsForm({ slug }) {
         <div className="flex items-center">
           <Link
             className="text-blue-700 hover:text-blue-800"
-            href="/investigaciones"
+            href={`/investigaciones/${investigation?.attributes?.slug}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -287,6 +287,7 @@ export function MaterialsForm({ slug }) {
                     <input
                       type="text"
                       id="tool"
+                      maxLength={10}
                       className="
                       self-start border border-gray-300 
                       text-gray-900 text-sm rounded

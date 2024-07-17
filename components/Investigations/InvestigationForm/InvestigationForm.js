@@ -343,12 +343,6 @@ export function InvestigationForm({ params, title }) {
       if (investigation?.attributes?.presented_date) {
         setPresentedDate(parseISO(investigation?.attributes?.presented_date));
       }
-      const defaultProject = {
-        value: investigation?.attributes?.project?.data?.id,
-        label: investigation?.attributes?.project?.data?.attributes?.name,
-      };
-
-      formik.setFieldValue("project", defaultProject);
     }
   }, [investigation]);
 
