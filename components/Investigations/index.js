@@ -27,7 +27,13 @@ export default function InvestigationsComponent() {
   } = useContext(InvestigationsContext);
 
   const [projects, setProjects] = useState([]);
-  const [status, setStatus] = useState([]);
+  const [status, setStatus] = useState([
+    { attributes: { name: "Todos", value: "Todos" } },
+    { attributes: { name: "Por Iniciar", value: "por iniciar" } },
+    { attributes: { name: "En Curso", value: "en curso" } },
+    { attributes: { name: "Finalizado", value: "finalizado" } },
+    { attributes: { name: "Bloqueado", value: "bloqueado" } },
+  ]);
   const [filterPublics, setFilterPublics] = useState([]);
   const [filterResearchers, setFilterResearchers] = useState([]);
   const [filters, setFilters] = useState({
@@ -101,7 +107,6 @@ export default function InvestigationsComponent() {
         ];
 
         setProjects(projectsWithAllOption);
-        setStatus(responseStatus);
         setFilterPublics(publicsWithAllOption);
         setFilterResearchers(researchersWithAllOption);
       } catch (error) {
@@ -169,17 +174,17 @@ export default function InvestigationsComponent() {
             Investigaciones
           </h4>
           <ul className="flex flex-wrap gap-1">
-            {/* {status.map((state, index) => (
+            {status.map((state, index) => (
               <li key={index}>
                 <button
                   onClick={() =>
                     handleFilterClick("status", state.attributes.value)
                   }
                   className={classNames(
-                    filters.objetiveResearcher === state.attributes.value
+                    filters.status === state.attributes.value
                       ? "bg-blue-100"
                       : "bg-gray-100",
-                    filters.objetiveResearcher === state.attributes.value
+                    filters.status === state.attributes.value
                       ? "text-blue-800"
                       : "text-gray-800",
                     "text-xs",
@@ -190,36 +195,10 @@ export default function InvestigationsComponent() {
                     "rounded-full"
                   )}
                 >
-                  {state.attributes.alias}
+                  {state.attributes.name}
                 </button>
               </li>
-            ))} */}
-
-            {/* <li>
-              <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Todos
-              </span>
-            </li>
-            <li>
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Por iniciar
-              </span>
-            </li>
-            <li>
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                En curso
-              </span>
-            </li>
-            <li>
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Finalizado
-              </span>
-            </li>
-            <li>
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Bloqueado
-              </span>
-            </li> */}
+            ))}
           </ul>
         </div>
         <div>

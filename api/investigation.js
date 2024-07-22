@@ -118,7 +118,7 @@ export class Investigation {
 
     // Si objectivePublic existe, agregarlo al filtro
     if (objectivePublic) {
-      filter += `filters[materials][publics][name][$in][0]=${objectivePublic}`;
+      filter += `&filters[materials][publics][name][$in][0]=${objectivePublic}`;
     }
 
     if (status) {
@@ -138,7 +138,7 @@ export class Investigation {
     }
 
     if (search) {
-      filter += `&filters[name][$containsi]=${search}`;
+      filter += `&filters[name][$contains]=${search}`;
     }
 
     try {
