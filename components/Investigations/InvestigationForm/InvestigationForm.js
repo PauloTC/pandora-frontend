@@ -537,7 +537,7 @@ export function InvestigationForm({ params, title }) {
                           height="24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="2"
+                          strokeWidth="2"
                           class="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
                         >
                           <path d="M6 9L12 15 18 9"></path>
@@ -679,7 +679,7 @@ export function InvestigationForm({ params, title }) {
                           height="24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="2"
+                          strokeWidth="2"
                           class="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
                         >
                           <path d="M6 9L12 15 18 9"></path>

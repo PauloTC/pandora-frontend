@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import classNames from "classnames";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import { InvestigationsContext } from "@/contexts";
 
 const projectCtrl = new Project();
@@ -169,7 +169,7 @@ export default function InvestigationsComponent() {
             Investigaciones
           </h4>
           <ul className="flex flex-wrap gap-1">
-            {status.map((state, index) => (
+            {/* {status.map((state, index) => (
               <li key={index}>
                 <button
                   onClick={() =>
@@ -193,7 +193,7 @@ export default function InvestigationsComponent() {
                   {state.attributes.alias}
                 </button>
               </li>
-            ))}
+            ))} */}
 
             {/* <li>
               <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
@@ -351,7 +351,12 @@ export default function InvestigationsComponent() {
                           <strong>Inicio:{"  "}</strong>
                           {investigation?.attributes?.initial_date &&
                             format(
-                              new Date(investigation?.attributes?.initial_date),
+                              addDays(
+                                new Date(
+                                  investigation?.attributes?.initial_date
+                                ),
+                                1
+                              ),
                               "dd/MM/yy"
                             )}
                         </span>
