@@ -46,7 +46,7 @@ export default function RootLayout({
       </head>
       <body className="overflow-x-hidden">
         <AuthProvider>
-          <NextTopLoader />
+          <NextTopLoader showSpinner={false} />
           {children}
         </AuthProvider>
       </body>

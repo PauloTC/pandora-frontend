@@ -113,13 +113,18 @@ export class Investigation {
       sort,
       pagination,
       search,
+      status,
     } = filters;
 
     let filter = ``;
 
     // Si objectivePublic existe, agregarlo al filtro
     if (objectivePublic) {
-      filter += `&filters[materials][publics][name][$in][0]=${objectivePublic}`;
+      filter += `filters[materials][publics][name][$in][0]=${objectivePublic}`;
+    }
+
+    if (status) {
+      filter += `filters[status][$eq]=${status}`;
     }
 
     if (objetiveResearcher) {
@@ -145,6 +150,8 @@ export class Investigation {
       const sortInvestigation = `sort[0]=id:${sort}`;
 
       const url = `${ENV.API_URL}${ENV.ENDPOINTS.INVESTIGATIONS}?${filter}&${populateInvestigation}&${sortInvestigation}`;
+
+      console.log("url", url);
 
       const response = await fetch(url);
       const result = await response.json();

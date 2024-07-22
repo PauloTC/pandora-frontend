@@ -27,10 +27,12 @@ export default function InvestigationsComponent() {
   } = useContext(InvestigationsContext);
 
   const [projects, setProjects] = useState([]);
+  const [status, setStatus] = useState([]);
   const [filterPublics, setFilterPublics] = useState([]);
   const [filterResearchers, setFilterResearchers] = useState([]);
   const [filters, setFilters] = useState({
     project: "Todos",
+    status: "Todos",
     objectivePublic: "Todos",
     objetiveResearcher: "Todos",
     sort: "desc",
@@ -48,6 +50,7 @@ export default function InvestigationsComponent() {
     if (type === "reset") {
       setFilters({
         project: "Todos",
+        status: "Todos",
         objectivePublic: "Todos",
         objetiveResearcher: "Todos",
         sort: "desc",
@@ -63,6 +66,13 @@ export default function InvestigationsComponent() {
         const responseProjects = await projectCtrl.getProjects();
         const responsePublics = await publicCtrl.getPublics();
         const responseResearchers = await researcherCtrl.getAllParticipants();
+        const responseStatus = [
+          { attributes: { name: "Todos", alias: "Todos" }, id: 1 },
+          { attributes: { name: "por iniciar", alias: "por iniciar" }, id: 2 },
+          { attributes: { name: "en curso", alias: "en curso" }, id: 3 },
+          { attributes: { name: "finalizado", alias: "finalizado" }, id: 4 },
+          { attributes: { name: "bloqueado", alias: "bloqueado" }, id: 5 },
+        ];
 
         // Agregar la opción "Todos" al inicio del array de proyectos
         const projectsWithAllOption = [
@@ -91,6 +101,7 @@ export default function InvestigationsComponent() {
         ];
 
         setProjects(projectsWithAllOption);
+        setStatus(responseStatus);
         setFilterPublics(publicsWithAllOption);
         setFilterResearchers(researchersWithAllOption);
       } catch (error) {
@@ -103,6 +114,7 @@ export default function InvestigationsComponent() {
     (async () => {
       if (
         filters.project ||
+        filters.status ||
         filters.objectivePublic ||
         filters.objetiveResearcher ||
         filters.sort ||
@@ -111,6 +123,7 @@ export default function InvestigationsComponent() {
         try {
           if (
             filters.project === "Todos" &&
+            filters.status === "Todos" &&
             filters.objectivePublic === "Todos" &&
             filters.objetiveResearcher === "Todos" &&
             filters.sort === "desc" &&
@@ -120,6 +133,7 @@ export default function InvestigationsComponent() {
           } else {
             const investigations = await filterInvestigations({
               project: filters.project === "Todos" ? "" : filters.project,
+              status: filters.status === "Todos" ? "" : filters.status,
               objectivePublic:
                 filters.objectivePublic === "Todos"
                   ? ""
@@ -150,37 +164,63 @@ export default function InvestigationsComponent() {
   return (
     <section>
       <div className="flex justify-between">
-        <div className="flex items-center">
-          <h4 className="font-semibold text-slate-700 capitalize text-3xl mb-6">
+        <div className="flex items-center gap-6 mb-6">
+          <h4 className="font-semibold text-slate-700 capitalize text-3xl">
             Investigaciones
           </h4>
-          {/* <ul className="flex flex-wrap gap-1 mb-6 ml-6">
-            <li>
+          <ul className="flex flex-wrap gap-1">
+            {status.map((state, index) => (
+              <li key={index}>
+                <button
+                  onClick={() =>
+                    handleFilterClick("status", state.attributes.value)
+                  }
+                  className={classNames(
+                    filters.objetiveResearcher === state.attributes.value
+                      ? "bg-blue-100"
+                      : "bg-gray-100",
+                    filters.objetiveResearcher === state.attributes.value
+                      ? "text-blue-800"
+                      : "text-gray-800",
+                    "text-xs",
+                    "font-medium",
+                    "me-2",
+                    "px-3",
+                    "py-1",
+                    "rounded-full"
+                  )}
+                >
+                  {state.attributes.alias}
+                </button>
+              </li>
+            ))}
+
+            {/* <li>
               <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
                 Todos
               </span>
             </li>
             <li>
               <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Dexarrollate
+                Por iniciar
               </span>
             </li>
             <li>
               <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                DiaDia Dex
+                En curso
               </span>
             </li>
             <li>
               <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Insuma
+                Finalizado
               </span>
             </li>
             <li>
               <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Web de clientes
+                Bloqueado
               </span>
-            </li>
-          </ul> */}
+            </li> */}
+          </ul>
         </div>
         <div>
           <Link

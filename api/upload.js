@@ -28,7 +28,7 @@ function validarExtension(file) {
     // Si la extensión del archivo no está en la lista de extensiones permitidas, lanzar un error
     throw new Error(
       "La extensión del archivo no está permitida. Las extensiones permitidas son " +
-        extensionesPermitidas.join(", ")
+        extensionesPermitidas.map((ext) => ext.toUpperCase()).join(", ")
     );
   }
 }
