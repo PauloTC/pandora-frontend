@@ -234,6 +234,7 @@ export function MaterialsForm({ slug }) {
                     <textarea
                       id="sample"
                       rows="5"
+                      maxLength={200}
                       className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-2.5 rounded outline-blue-500"
                       placeholder="Escribir la muestra..."
                       value={formik.values[material.id]?.sample || ""}

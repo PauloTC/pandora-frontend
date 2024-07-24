@@ -41,6 +41,7 @@ export function InvestigationForm({ params, title }) {
   const [serviceTeam, setServiceTeam] = useState([]);
   const [extendedTeam, setExtendedTeam] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [researchPlan, setResearchPlan] = useState(false);
 
   //Estado de las fechas
   const [startDate, setStartDate] = useState(null);
@@ -132,9 +133,32 @@ export function InvestigationForm({ params, title }) {
 
         const initial_date = format(startDate, "yyyy-MM-dd");
 
+        //Si el archivo es un objeto, se sube a S3
         const file = formValues.guide_media_link;
+        const fileResearchPlan = formValues.research_plan;
+
         let guide_media_link =
           investigation?.attributes?.guide_media_link || "";
+        let research_plan = investigation?.attributes?.research_plan || "";
+
+        if (fileResearchPlan instanceof File) {
+          try {
+            research_plan = await uploadToS3(
+              fileResearchPlan,
+              setIsUploading,
+              (errorMessage) => {
+                throw new Error(errorMessage);
+              }
+            );
+          } catch (error) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Error al subir el archivo: " + error.message,
+            });
+            return; // Si hay un error, salir de la función
+          }
+        }
 
         if (file instanceof File) {
           try {
@@ -164,6 +188,7 @@ export function InvestigationForm({ params, title }) {
           investigation_types,
           guide_media_link,
           initial_date,
+          research_plan,
         };
 
         if (presentedDate) {
@@ -353,6 +378,12 @@ export function InvestigationForm({ params, title }) {
     { value: "bloqueado", label: "Bloqueado" },
   ];
 
+  const handleFileUpload = (event) => {
+    formik.setFieldValue("research_plan", event.target.files[0]);
+
+    setResearchPlan(event.target.files[0].name);
+  };
+
   return (
     <div>
       {isUploading && (
@@ -405,14 +436,36 @@ export function InvestigationForm({ params, title }) {
           <div>
             <div className="flex flex-col gap-4">
               <div className="border border-gray-200 rounded-xl p-6">
-                <h4
-                  className={`${libre_franklin700.className} text-xl mb-4 flex items-center justify-between`}
-                >
-                  Ficha Técnica
-                  <span className="text-xs text-red-500 font-regular">
-                    (*) Campos requeridos
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-xl font-bold">Ficha Técnica</h4>
+                  <span className="cursor-pointer text-xs font-medium gap-1 flex items-center relative text-blue-800">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                      />
+                    </svg>
+                    <input
+                      type="file"
+                      id="research_plan"
+                      className="absolute opacity-0"
+                      onChange={handleFileUpload}
+                    />
+                    <em className="not-italic">
+                      {researchPlan
+                        ? `Research Plan: ${researchPlan}`
+                        : "Agregar Research Plan"}
+                    </em>
                   </span>
-                </h4>
+                </div>
                 <div className="divide-x divide-gray-200 grid grid-cols-2 gap-y-6">
                   <ul className="flex flex-col gap-6 pr-6">
                     <li className="flex gap-4">
@@ -538,7 +591,7 @@ export function InvestigationForm({ params, title }) {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          class="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                          className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
                         >
                           <path d="M6 9L12 15 18 9"></path>
                         </svg>
@@ -680,7 +733,7 @@ export function InvestigationForm({ params, title }) {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          class="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                          className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
                         >
                           <path d="M6 9L12 15 18 9"></path>
                         </svg>

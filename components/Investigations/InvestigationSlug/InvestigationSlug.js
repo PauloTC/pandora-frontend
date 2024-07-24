@@ -139,9 +139,32 @@ export function InvestigationSlugComponent({ params }) {
       <div>
         <div className="flex flex-col gap-4">
           <div className="border border-gray-200 rounded-xl p-6">
-            <h4 className={`${libre_franklin700.className} text-xl mb-4 flex`}>
-              Ficha Técnica
-            </h4>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-xl font-bold">Ficha Técnica</h4>
+              {investigation?.research_plan && (
+                <a
+                  href={investigation?.research_plan}
+                  className="text-blue-800 text-xs flex font-medium gap-1"
+                  target="_blank"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                    />
+                  </svg>
+                  Ver Research Plan
+                </a>
+              )}
+            </div>
             <div className="divide-x divide-gray-200 grid grid-cols-2">
               <ul className="flex flex-col gap-6 pr-6">
                 <li className="flex gap-4">
