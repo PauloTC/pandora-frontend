@@ -39,7 +39,9 @@ export class Investigation {
 
       const sortInvestigation = "sort[0]=initial_date:desc";
 
-      const url = `${ENV.API_URL}${ENV.ENDPOINTS.INVESTIGATIONS}?${sortInvestigation}${populateInvestigation}`;
+      const pagination = `&pagination[page]=1&pagination[pageSize]=9`;
+
+      const url = `${ENV.API_URL}${ENV.ENDPOINTS.INVESTIGATIONS}?${sortInvestigation}${populateInvestigation}${pagination}`;
 
       const response = await fetch(url);
       const result = await response.json();
@@ -122,7 +124,7 @@ export class Investigation {
     }
 
     if (status) {
-      filter += `filters[status][$eq]=${status}`;
+      filter += `&filters[status][$eq]=${status}`;
     }
 
     if (objetiveResearcher) {
