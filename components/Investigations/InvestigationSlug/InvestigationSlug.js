@@ -300,6 +300,7 @@ export function InvestigationSlugComponent({ params }) {
                       return (
                         <li className="flex gap-4 items-center" key={index}>
                           <Image
+                            className="rounded-full"
                             alt={
                               researcher.attributes.photo.data.attributes
                                 .formats.thumbnail.name
@@ -343,6 +344,7 @@ export function InvestigationSlugComponent({ params }) {
                               service.attributes.photo.data.attributes.formats
                                 .thumbnail.name
                             }
+                            className="rounded-full"
                             src={service.attributes.photo.data.attributes.url}
                             width={30}
                             height={30}
