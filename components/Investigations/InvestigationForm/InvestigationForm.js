@@ -133,7 +133,26 @@ export function InvestigationForm({ params, title }) {
 
         const initial_date = format(startDate, "yyyy-MM-dd");
 
-        //Si el archivo es un objeto, se sube a S3
+        //mejora de código
+
+        const uploadFile = async (file) => {
+          if (file instanceof File) {
+            try {
+              return await uploadToS3(file, setIsUploading, (errorMessage) => {
+                throw new Error(errorMessage);
+              });
+            } catch (error) {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Error al subir el archivo: " + error.message,
+              });
+              throw error; // Si hay un error, lanzar la excepción
+            }
+          }
+          return file;
+        };
+
         const file = formValues.guide_media_link;
         const fileResearchPlan = formValues.research_plan;
 
@@ -141,42 +160,11 @@ export function InvestigationForm({ params, title }) {
           investigation?.attributes?.guide_media_link || "";
         let research_plan = investigation?.attributes?.research_plan || "";
 
-        if (fileResearchPlan instanceof File) {
-          try {
-            research_plan = await uploadToS3(
-              fileResearchPlan,
-              setIsUploading,
-              (errorMessage) => {
-                throw new Error(errorMessage);
-              }
-            );
-          } catch (error) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Error al subir el archivo: " + error.message,
-            });
-            return; // Si hay un error, salir de la función
-          }
-        }
-
-        if (file instanceof File) {
-          try {
-            guide_media_link = await uploadToS3(
-              file,
-              setIsUploading,
-              (errorMessage) => {
-                throw new Error(errorMessage);
-              }
-            );
-          } catch (error) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Error al subir el archivo: " + error.message,
-            });
-            return; // Si hay un error, salir de la función
-          }
+        try {
+          research_plan = await uploadFile(fileResearchPlan);
+          guide_media_link = await uploadFile(file);
+        } catch (error) {
+          return; // Si hay un error, salir de la función
         }
 
         let investigationData = {
