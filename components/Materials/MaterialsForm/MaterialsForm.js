@@ -304,7 +304,7 @@ export function MaterialsForm({ slug }) {
                       error={formik.errors[material.id]?.tool}
                     />
                   </li>
-                  <li className="flex gap-4">
+                  <li className="flex gap-4 justify-between">
                     <label className="flex flex-col w-80" htmlFor="tool_media">
                       <span
                         className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
