@@ -281,7 +281,7 @@ export default function InvestigationsComponent() {
                       <div className="mb-3">
                         <h4
                           title={investigation?.attributes?.name}
-                          className={`font-semibold capitalize min-h-10 text-slate-800 text-sm`}
+                          className="font-semibold capitalize min-h-10 text-slate-800 text-sm"
                         >
                           {investigation?.attributes?.name}
                         </h4>

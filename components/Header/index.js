@@ -6,12 +6,10 @@ import { format } from "date-fns";
 import { useState, useEffect, useContext } from "react";
 
 import { useFormik } from "formik";
-import { InvestigationsContext } from "@/contexts";
 
 export default function HeaderComponent() {
   const router = useRouter();
   const [time, setTime] = useState(format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-  const { filterInvestigations } = useContext(InvestigationsContext);
 
   const { logout } = useAuth();
 
@@ -20,20 +18,7 @@ export default function HeaderComponent() {
       search: "",
     },
     validateOnChange: false,
-    onSubmit: async (values) => {
-      try {
-        router.push("/investigaciones");
-        await filterInvestigations({
-          project: "",
-          objectivePublic: "",
-          sort: "desc",
-          pagination: { page: 1 },
-          search: values.search,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    },
+    onSubmit: async (values) => {},
   });
 
   useEffect(() => {
