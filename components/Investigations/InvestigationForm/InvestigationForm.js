@@ -996,7 +996,7 @@ export function InvestigationForm({ params, title }) {
                     Presentación
                   </h4>
                   <ul className="flex flex-col gap-6">
-                    <li className="flex gap-4">
+                    <li className="flex gap-4 justify-between">
                       <label
                         className="flex flex-col w-80"
                         htmlFor="guide_media_link"
