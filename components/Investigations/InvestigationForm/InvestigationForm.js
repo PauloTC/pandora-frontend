@@ -5,7 +5,6 @@ import { libre_franklin700, libre_franklin600 } from "@/app/fonts";
 import { useRef, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-
 import "react-datepicker/dist/react-datepicker.css";
 import { MultiSelect } from "react-multi-select-component";
 
@@ -54,6 +53,11 @@ export function InvestigationForm({ params, title }) {
   const researcherCtrl = new Researcher();
   const projectCtrl = new Project();
   const materialCtrl = new Material();
+
+  const isCreateScreen =
+    router && router.pathname ? router.pathname.includes("create") : false;
+  const isEditScreen =
+    router && router.pathname ? router.pathname.includes("edit") : false;
 
   const formik = useFormik({
     initialValues: initialValues(investigation),
@@ -357,6 +361,7 @@ export function InvestigationForm({ params, title }) {
         setPresentedDate(parseISO(investigation?.attributes?.presented_date));
       }
     }
+    console.log("router", router);
   }, [investigation]);
 
   const status = [
@@ -460,14 +465,19 @@ export function InvestigationForm({ params, title }) {
                         className="absolute opacity-0 invisible"
                         onChange={handleFileUpload}
                       />
-                      <em className="not-italic">
-                        {researchPlan
-                          ? `Research Plan: ${researchPlan}`
-                          : "Agregar Research Plan"}
-                      </em>
+                      {!investigation?.attributes?.research_plan ? (
+                        <em className="not-italic">
+                          {researchPlan
+                            ? `Research Plan: ${researchPlan}`
+                            : "Agregar Research Plan"}
+                        </em>
+                      ) : (
+                        <em className="not-italic">Modificar Research Plan</em>
+                      )}
                     </label>
                   </div>
                 </div>
+
                 <div className="divide-x divide-gray-200 grid grid-cols-2 gap-y-6">
                   <ul className="flex flex-col gap-6 pr-6">
                     <li className="flex gap-4">
