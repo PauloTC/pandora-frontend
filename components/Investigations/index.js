@@ -371,7 +371,7 @@ export default function InvestigationsComponent() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex pt-2 ">
+                    <div className="flex pt-2">
                       <p
                         className={`${libre_franklin700.className} h-12 flex items-center capitalize text-md w-full`}
                       >
