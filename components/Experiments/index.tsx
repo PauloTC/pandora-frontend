@@ -13,11 +13,15 @@ import ExperimentDetail from "@/components/Experiments/ExperimentDetail";
 export default function ExperimentsComponent() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
+  const [actionMode, setSidebarMode] = useState("read");
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
 
-  const handleOpenSidebar = () => setIsOpenSidebar(true);
+  const handleOpenSidebar = (mode: any) => {
+    setSidebarMode(mode);
+    setIsOpenSidebar(true);
+  };
   const handleCloseSidebar = () => setIsOpenSidebar(false);
 
   return (
@@ -29,8 +33,8 @@ export default function ExperimentsComponent() {
           </h4>
         </div>
         <div>
-          <Link
-            href={"/experiments/create"}
+          <button
+            onClick={() => handleOpenSidebar("create")}
             className="
                 text-white flex 
                 items-center gap-1 
@@ -39,7 +43,7 @@ export default function ExperimentsComponent() {
                 px-5 py-2.5 text-center"
           >
             Agregar Experimento
-          </Link>
+          </button>
         </div>
       </div>
       <div className="flex gap-4">
@@ -100,7 +104,6 @@ export default function ExperimentsComponent() {
 
                       <strong>27/02/24</strong>
                     </span>
-                    {/* <span>-</span> */}
                     <span className="text-xs flex gap-2 mb-2 font-medium grow justify-end">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -535,7 +538,7 @@ export default function ExperimentsComponent() {
 
               <div className="flex justify-between gap-x-2 pt-3 relative">
                 <button
-                  onClick={handleOpenSidebar}
+                  onClick={() => handleOpenSidebar("read")}
                   className="flex flex-1 justify-center gap-2 bg-blue-100 hover:bg-blue-200 px-2.5 py-2.5 rounded-full text-xs text-blueGray-900 transition-colors duration-200"
                 >
                   <svg
@@ -956,17 +959,11 @@ export default function ExperimentsComponent() {
           />
         </figure>
       </ModalImage>
-      <ExperimentDetail isOpen={isOpenSidebar} onClose={handleCloseSidebar}>
-        <ul>
-          <li className="flex">
-            <div className="w-1/2">
-              <p className="font-semibold text-base uppercase">Titulo</p>
-              <span className="text-sm">TItulo del experimento</span>
-            </div>
-            <p className="grow">Reposicionamiento de Secciones en el Landing</p>
-          </li>
-        </ul>
-      </ExperimentDetail>
+      <ExperimentDetail
+        sidebarMode={actionMode}
+        isOpen={isOpenSidebar}
+        onClose={handleCloseSidebar}
+      ></ExperimentDetail>
     </section>
   );
 }

@@ -13,7 +13,6 @@ import Image from "next/image";
 import classNames from "classnames";
 import { format, addDays } from "date-fns";
 import { InvestigationsContext } from "@/contexts";
-import { get } from "http";
 
 const projectCtrl = new Project();
 const publicCtrl = new Public();
