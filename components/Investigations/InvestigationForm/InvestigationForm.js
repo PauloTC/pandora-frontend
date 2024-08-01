@@ -1017,7 +1017,7 @@ export function InvestigationForm({ params, title }) {
                           Adjuntar archivo
                         </span>
                         <span className="text-xs font-regular">
-                          (JPG,PNG,PDF,DOC,XLSX,PPTX)
+                          (JPG,PNG,PDF,DOC,DOCX,XLSX,PPTX)
                         </span>
                       </label>
 
