@@ -300,12 +300,7 @@ export default function ExperimentDetail({
                       Elige una fecha de inicio
                     </span>
                   </label>
-                  <DateRangePicker
-                    startDate={startDate}
-                    endDate={endDate}
-                    onStartDateChange={setStartDate}
-                    onEndDateChange={setEndDate}
-                  />
+
                   <DatePicker
                     dateFormat="dd/MM/yyyy"
                     placeholderText="Selecciona una fecha inicial"
