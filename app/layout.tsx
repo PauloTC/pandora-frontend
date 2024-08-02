@@ -5,7 +5,7 @@ import NextTopLoader from "nextjs-toploader";
 import Script from "next/dist/client/script";
 
 export const metadata: Metadata = {
-  title: "Proyecto Pandora",
+  title: "Pandora | Repositorio de Hallazgos",
   description: "Repositorio de Hallazgos",
 };
 
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.png" />
         <Script strategy="lazyOnload">
           {`
             if (window.location.hostname !== "localhost") {
