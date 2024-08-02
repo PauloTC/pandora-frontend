@@ -312,7 +312,7 @@ export function MaterialsForm({ slug }) {
                         Adjuntar herramienta
                       </span>
                       <span className="text-xs font-regular">
-                        (JPG,PNG,PDF,DOC,DOCX,XLSX,PPTX)
+                        (Jpg,Png,Pdf,Doc,Docx,Xlsx,Pptx)
                       </span>
                     </label>
                     <div className="flex flex-col gap-2 w-64">
