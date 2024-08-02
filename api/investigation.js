@@ -35,13 +35,13 @@ export class Investigation {
   async getInvestigations() {
     try {
       const populateInvestigation =
-        "populate[0]=researchers.photo&populate[1]=materials&populate[2]=materials.locations&populate[3]=materials.publics&populate[4]=project";
+        "&populate[1]=researchers.photo&populate[2]=materials&populate[3]=materials.locations&populate[4]=materials.publics&populate[5]=project";
 
-      const sortInvestigation = "&sort[0]=id:desc";
+      const sortInvestigation = "sort[0]=initial_date:desc";
 
-      const pagination = "&pagination[page]=1&pagination[pageSize]=9";
+      const pagination = `&pagination[page]=1&pagination[pageSize]=9`;
 
-      const url = `${ENV.API_URL}${ENV.ENDPOINTS.INVESTIGATIONS}?${populateInvestigation}${sortInvestigation}${pagination}`;
+      const url = `${ENV.API_URL}${ENV.ENDPOINTS.INVESTIGATIONS}?${sortInvestigation}${populateInvestigation}${pagination}`;
 
       const response = await fetch(url);
       const result = await response.json();
@@ -113,6 +113,7 @@ export class Investigation {
       sort,
       pagination,
       search,
+      status,
     } = filters;
 
     let filter = ``;
@@ -120,6 +121,10 @@ export class Investigation {
     // Si objectivePublic existe, agregarlo al filtro
     if (objectivePublic) {
       filter += `&filters[materials][publics][name][$in][0]=${objectivePublic}`;
+    }
+
+    if (status) {
+      filter += `&filters[status][$eq]=${status}`;
     }
 
     if (objetiveResearcher) {
@@ -142,7 +147,7 @@ export class Investigation {
       const populateInvestigation =
         "populate[0]=researchers.photo&populate[1]=materials&populate[2]=materials.locations&populate[3]=materials.publics&populate[4]=project";
 
-      const sortInvestigation = `sort[0]=id:${sort}`;
+      const sortInvestigation = `sort[0]=initial_date:${sort}`;
 
       const url = `${ENV.API_URL}${ENV.ENDPOINTS.INVESTIGATIONS}?${filter}&${populateInvestigation}&${sortInvestigation}`;
 

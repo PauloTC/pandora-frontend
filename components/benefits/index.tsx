@@ -3,29 +3,33 @@ import Form from "./form";
 
 const benefits = [
   {
-    title: "Sé escuchado",
+    title: "Exprésate y sé escuchado",
     description:
-      "Tus ideas y opiniones pueden marcar la diferencia en el desarrollo de nuevos productos y estrategias.",
+      "Tus ideas y opiniones serán valoradas, influyendo en la creación de nuevos productos y estrategias.",
   },
   {
-    title: "Recibe recompensas",
+    title: "Obtén recompensas",
     description:
-      "Por compartir tus experiencias y tiempo, te ofrecemos incentivos, merchandising, entre otros.",
+      "A cambio de tu tiempo y experiencias, recibirás incentivos, productos exclusivos, merchandising y más.",
   },
   {
-    title: "Construye red",
+    title: "Amplía tu red",
     description:
-      "Conecta con otros bodegueros y restauranteros, expandiendo tu red de contactos y oportunidades de negocio.",
+      "Conecta con otros bodegueros y restauranteros ampliando tus contactos y descubriendo nuevas oportunidades de negocio.",
   },
 ];
 
 const Benefits = () => {
   return (
-    <div className='bg-slate-50 px-4 py-10 xl:py-24'>
-      <div className='container mx-auto gap-12 grid lg:grid-cols-2 xl:gap-48'>
-        <div className='h-fit lg:sticky top-10'>
-          <h2 className='text-2xl mb-8 xl:text-4.5xl xl:leading-10 xl:mb-14'>
-            Beneficios de ser parte de <br /> <span className='font-bold italic'>Conecta Alicorp</span>
+    <div className="bg-slate-50 px-4 py-10 xl:py-24">
+      <div
+        id="form-benefits"
+        className="container mx-auto gap-12 grid lg:grid-cols-2 xl:gap-48"
+      >
+        <div className="h-fit lg:sticky top-10">
+          <h2 className="text-2xl mb-8 xl:text-4.5xl xl:leading-10 xl:mb-14">
+            Beneficios de ser parte de <br />{" "}
+            <span className="font-bold italic">Comunidad Alicorp</span>
           </h2>
           <div className="flex flex-col gap-10">
             {benefits.map((benefit, index) => {

@@ -11,8 +11,9 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import classNames from "classnames";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import { InvestigationsContext } from "@/contexts";
+import { get } from "http";
 
 const projectCtrl = new Project();
 const publicCtrl = new Public();
@@ -27,10 +28,18 @@ export default function InvestigationsComponent() {
   } = useContext(InvestigationsContext);
 
   const [projects, setProjects] = useState([]);
+  const [status, setStatus] = useState([
+    { attributes: { name: "Todos", value: "Todos" } },
+    { attributes: { name: "Por Iniciar", value: "por iniciar" } },
+    { attributes: { name: "En Curso", value: "en curso" } },
+    { attributes: { name: "Finalizado", value: "finalizado" } },
+    { attributes: { name: "Bloqueado", value: "bloqueado" } },
+  ]);
   const [filterPublics, setFilterPublics] = useState([]);
   const [filterResearchers, setFilterResearchers] = useState([]);
   const [filters, setFilters] = useState({
     project: "Todos",
+    status: "Todos",
     objectivePublic: "Todos",
     objetiveResearcher: "Todos",
     sort: "desc",
@@ -48,6 +57,7 @@ export default function InvestigationsComponent() {
     if (type === "reset") {
       setFilters({
         project: "Todos",
+        status: "Todos",
         objectivePublic: "Todos",
         objetiveResearcher: "Todos",
         sort: "desc",
@@ -63,6 +73,13 @@ export default function InvestigationsComponent() {
         const responseProjects = await projectCtrl.getProjects();
         const responsePublics = await publicCtrl.getPublics();
         const responseResearchers = await researcherCtrl.getAllParticipants();
+        const responseStatus = [
+          { attributes: { name: "Todos", alias: "Todos" }, id: 1 },
+          { attributes: { name: "por iniciar", alias: "por iniciar" }, id: 2 },
+          { attributes: { name: "en curso", alias: "en curso" }, id: 3 },
+          { attributes: { name: "finalizado", alias: "finalizado" }, id: 4 },
+          { attributes: { name: "bloqueado", alias: "bloqueado" }, id: 5 },
+        ];
 
         // Agregar la opción "Todos" al inicio del array de proyectos
         const projectsWithAllOption = [
@@ -103,6 +120,7 @@ export default function InvestigationsComponent() {
     (async () => {
       if (
         filters.project ||
+        filters.status ||
         filters.objectivePublic ||
         filters.objetiveResearcher ||
         filters.sort ||
@@ -111,6 +129,7 @@ export default function InvestigationsComponent() {
         try {
           if (
             filters.project === "Todos" &&
+            filters.status === "Todos" &&
             filters.objectivePublic === "Todos" &&
             filters.objetiveResearcher === "Todos" &&
             filters.sort === "desc" &&
@@ -118,8 +137,9 @@ export default function InvestigationsComponent() {
           ) {
             await getInvestigations();
           } else {
-            await filterInvestigations({
+            const investigations = await filterInvestigations({
               project: filters.project === "Todos" ? "" : filters.project,
+              status: filters.status === "Todos" ? "" : filters.status,
               objectivePublic:
                 filters.objectivePublic === "Todos"
                   ? ""
@@ -139,10 +159,6 @@ export default function InvestigationsComponent() {
     })();
   }, [filters]);
 
-  useEffect(() => {
-    console.log("investigations", investigations);
-  }, [investigations]);
-
   //Setea la pagina a 1 cuando se cambia el proyecto o el publico objetivo
   useEffect(() => {
     setFilters((prevFilters) => ({
@@ -154,41 +170,41 @@ export default function InvestigationsComponent() {
   return (
     <section>
       <div className="flex justify-between">
-        <div className="flex items-center">
-          <h4 className="font-semibold text-slate-700 capitalize text-3xl mb-6">
+        <div className="flex items-center gap-6 mb-6">
+          <h4 className="font-semibold text-slate-700 capitalize text-3xl">
             Investigaciones
           </h4>
-          {/* <ul className="flex flex-wrap gap-1 mb-6 ml-6">
-            <li>
-              <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Todos
-              </span>
-            </li>
-            <li>
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Dexarrollate
-              </span>
-            </li>
-            <li>
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                DiaDia Dex
-              </span>
-            </li>
-            <li>
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Insuma
-              </span>
-            </li>
-            <li>
-              <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-3 py-1 rounded-full">
-                Web de clientes
-              </span>
-            </li>
-          </ul> */}
+          <ul className="flex flex-wrap gap-1">
+            {status.map((state, index) => (
+              <li key={index}>
+                <button
+                  onClick={() =>
+                    handleFilterClick("status", state.attributes.value)
+                  }
+                  className={classNames(
+                    filters.status === state.attributes.value
+                      ? "bg-blue-100"
+                      : "bg-gray-100",
+                    filters.status === state.attributes.value
+                      ? "text-blue-800"
+                      : "text-gray-800",
+                    "text-xs",
+                    "font-medium",
+                    "me-2",
+                    "px-3",
+                    "py-1",
+                    "rounded-full"
+                  )}
+                >
+                  {state.attributes.name}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
         <div>
           <Link
-            href={"/investigations/create"}
+            href={"/investigaciones/create"}
             className="
               text-white flex 
               items-center gap-1 
@@ -202,6 +218,21 @@ export default function InvestigationsComponent() {
       </div>
       <div className="flex gap-4">
         <div className="w-3/4 self-start">
+          {investigations.length === 0 && (
+            <div className="flex flex-col items-center justify-center h-96 text-gray-500 text-center gap-2">
+              <Image
+                height={70}
+                width={70}
+                alt="not_found"
+                src="/investigations/not_found.svg"
+              />
+
+              <p className="text-md mt-2">
+                No se encontraron <br /> investigaciones
+              </p>
+            </div>
+          )}
+
           <ul className="grid grid-cols-3 gap-4 ">
             {map(investigations, (investigation) => {
               let locationNames =
@@ -244,16 +275,35 @@ export default function InvestigationsComponent() {
                 >
                   <Link
                     className="divide-y divide-gray-300 "
-                    href={`/investigations/${investigation?.attributes?.slug}`}
+                    href={`/investigaciones/${investigation?.attributes?.slug}`}
                   >
                     <div>
-                      <div className="mb-3">
+                      <div className="mb-3 flex justify-between">
                         <h4
                           title={investigation?.attributes?.name}
-                          className={`font-semibold capitalize min-h-10 text-slate-800 text-sm`}
+                          className={`font-semibold capitalize min-h-10 text-slate-800 text-sm w-4/5`}
                         >
                           {investigation?.attributes?.name}
                         </h4>
+
+                        {investigation?.attributes?.research_plan && (
+                          <div className="border-solid rounded-full border-gray-300 border p-1 self-start">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-3 text-gray-600"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                              />
+                            </svg>
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex mb-3 min-h-4 items-center">
@@ -300,7 +350,12 @@ export default function InvestigationsComponent() {
                           <strong>Inicio:{"  "}</strong>
                           {investigation?.attributes?.initial_date &&
                             format(
-                              new Date(investigation?.attributes?.initial_date),
+                              addDays(
+                                new Date(
+                                  investigation?.attributes?.initial_date
+                                ),
+                                1
+                              ),
                               "dd/MM/yy"
                             )}
                         </span>

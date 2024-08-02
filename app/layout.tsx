@@ -17,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.svg" />
         <Script strategy="lazyOnload">
           {`
             if (window.location.hostname !== "localhost") {
@@ -45,7 +46,7 @@ export default function RootLayout({
       </head>
       <body className="overflow-x-hidden">
         <AuthProvider>
-          <NextTopLoader />
+          <NextTopLoader showSpinner={false} />
           {children}
         </AuthProvider>
       </body>

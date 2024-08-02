@@ -13,6 +13,7 @@ export function InvestigationSlugComponent({ params }) {
   const [investigation, setInvestigation] = useState(null);
   const [serviceTeam, setServiceTeam] = useState(null);
   const [researchTeam, setResearchTeam] = useState(null);
+  const [extendedTeam, setExtendedTeam] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -34,10 +35,9 @@ export function InvestigationSlugComponent({ params }) {
       (researcher) => researcher.attributes.role === "researcher"
     );
 
-    console.log("investigation", investigation);
-
     setResearchTeam(filterResearcherTeam);
     setServiceTeam(filterServiceTeam);
+    setExtendedTeam(investigation?.team_extended?.data);
   }, [investigation]);
 
   let formattedPresentedDate = "";
@@ -104,7 +104,7 @@ export function InvestigationSlugComponent({ params }) {
         <div className="flex">
           <Link
             className="text-blue-700 hover:text-blue-800"
-            href="/investigations"
+            href="/investigaciones"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +127,7 @@ export function InvestigationSlugComponent({ params }) {
         </div>
 
         <Link
-          href={`/investigations/${params.slug}/edit`}
+          href={`/investigaciones/${params.slug}/edit`}
           className="
             text-white 
             bg-blue-700 
@@ -141,81 +141,112 @@ export function InvestigationSlugComponent({ params }) {
       <div>
         <div className="flex flex-col gap-4">
           <div className="border border-gray-200 rounded-xl p-6">
-            <h4 className={`${libre_franklin700.className} text-xl mb-4 flex`}>
-              Ficha Técnica
-            </h4>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-xl font-bold">Ficha Técnica</h4>
+              {investigation?.research_plan ? (
+                <a
+                  href={investigation?.research_plan}
+                  className="text-blue-800 text-xs flex font-medium gap-1"
+                  target="_blank"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                    />
+                  </svg>
+                  Ver Research Plan
+                </a>
+              ) : (
+                <p className="text-xs flex font-medium gap-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.181 8.68a4.503 4.503 0 0 1 1.903 6.405m-9.768-2.782L3.56 14.06a4.5 4.5 0 0 0 6.364 6.365l3.129-3.129m5.614-5.615 1.757-1.757a4.5 4.5 0 0 0-6.364-6.365l-4.5 4.5c-.258.26-.479.541-.661.84m1.903 6.405a4.495 4.495 0 0 1-1.242-.88 4.483 4.483 0 0 1-1.062-1.683m6.587 2.345 5.907 5.907m-5.907-5.907L8.898 8.898M2.991 2.99 8.898 8.9"
+                    />
+                  </svg>
+                  Sin Research Plan
+                </p>
+              )}
+            </div>
             <div className="divide-x divide-gray-200 grid grid-cols-2">
-              <ul className="flex flex-col gap-6">
-                <li className="flex items-center gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Título de la investigación:
-                    </span>
-                  </label>
+              <ul className="flex flex-col gap-6 pr-6">
+                <li className="flex gap-4 items-center">
+                  <p
+                    className={`w-80 text-sm text-gray-900 ${libre_franklin600.className} `}
+                  >
+                    Título de la investigación:
+                  </p>
 
                   <p className="text-sm w-full capitalize">
                     {investigation?.name}
                   </p>
                 </li>
                 <li className="flex gap-4 flex-col">
-                  <label className="flex w-80" htmlFor="description">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Contexto de investigación:
-                    </span>
-                  </label>
+                  <p
+                    className={`flex w-80 text-sm text-gray-900 ${libre_franklin600.className}`}
+                  >
+                    Contexto de investigación:
+                  </p>
                   <p className="text-sm w-full">{investigation?.description}</p>
                 </li>
                 <li className="flex items-center gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Proyecto:
-                    </span>
-                  </label>
+                  <p
+                    className={`${libre_franklin600.className} font-bold text-sm text-gray-900 w-80`}
+                  >
+                    Proyecto:
+                  </p>
 
                   <p className="text-sm w-full capitalize">
                     {investigation?.project?.data?.attributes?.name}
                   </p>
                 </li>
                 <li className="flex items-center gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Fecha de inicio:
-                    </span>
-                  </label>
+                  <p
+                    className={`${libre_franklin600.className} font-bold text-sm text-gray-900 w-80`}
+                  >
+                    Fecha de inicio:
+                  </p>
 
                   <p className="text-sm  w-full capitalize">
                     {formattedInitialDate}
                   </p>
                 </li>
                 <li className="flex items-center gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Fecha de cierre:
-                    </span>
-                  </label>
+                  <p
+                    className={`${libre_franklin600.className} font-bold text-sm text-gray-900 w-80`}
+                  >
+                    Fecha de cierre:
+                  </p>
 
                   <p className="text-sm w-full capitalize">
                     {formattedEndDate}
                   </p>
                 </li>
+              </ul>
+              <ul className="flex flex-col gap-6 pl-6">
                 <li className="flex items-center gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Áreas involucradas:
-                    </span>
-                  </label>
+                  <p
+                    className={`${libre_franklin600.className} font-bold text-sm text-gray-900 w-80`}
+                  >
+                    Áreas involucradas:
+                  </p>
 
                   <p className="text-sm  w-full capitalize">
                     {investigation?.teams?.data
@@ -223,29 +254,23 @@ export function InvestigationSlugComponent({ params }) {
                       .join(", ")}
                   </p>
                 </li>
-              </ul>
-              <ul className="flex flex-col gap-6 pl-6">
                 <li className="flex items-center gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Estado:
-                    </span>
-                  </label>
+                  <p
+                    className={`${libre_franklin600.className} font-bold text-sm text-gray-900 w-80`}
+                  >
+                    Estado:
+                  </p>
 
                   <p className="text-sm  w-full capitalize">
                     {investigation?.status}
                   </p>
                 </li>
                 <li className="flex items-center gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Metodología:
-                    </span>
-                  </label>
+                  <p
+                    className={`${libre_franklin600.className} font-bold text-sm text-gray-900 w-80`}
+                  >
+                    Metodología:
+                  </p>
 
                   <p className="text-sm  w-full capitalize">
                     {investigation?.investigation_types?.data
@@ -253,22 +278,29 @@ export function InvestigationSlugComponent({ params }) {
                       .join(", ")}
                   </p>
                 </li>
-                <li className="flex flex-col gap-4">
-                  <label htmlFor="name" className="w-80">
+                <li
+                  className={`flex gap-4 ${
+                    researchTeam?.length >= 2 ? "flex-col" : "items-center"
+                  }`}
+                >
+                  <p className="w-80">
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
-                      Equipo Research:
+                      Equipo research:
                     </span>
-                  </label>
+                  </p>
 
-                  <ul className="text-sm  w-full gap-4 capitalize grid grid-cols-2">
+                  <ul
+                    className={`text-sm w-full gap-4 capitalize ${
+                      researchTeam?.length >= 2 ? "grid grid-cols-2" : ""
+                    }`}
+                  >
                     {researchTeam?.map((researcher, index) => {
-                      console.log("researcher", researcher);
-
                       return (
                         <li className="flex gap-4 items-center" key={index}>
                           <Image
+                            className="rounded-full"
                             alt={
                               researcher.attributes.photo.data.attributes
                                 .formats.thumbnail.name
@@ -286,60 +318,79 @@ export function InvestigationSlugComponent({ params }) {
                   </ul>
                 </li>
 
-                <li className="flex flex-col gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                {serviceTeam && serviceTeam.length > 0 && (
+                  <li
+                    className={`flex gap-4 ${
+                      serviceTeam?.length >= 2 ? "flex-col" : "items-center"
+                    }`}
+                  >
+                    <p className="w-80">
+                      <span
+                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                      >
+                        Equipo Service:
+                      </span>
+                    </p>
+
+                    <ul
+                      className={`text-sm w-full gap-4 capitalize ${
+                        serviceTeam?.length >= 2 ? "grid grid-cols-2" : ""
+                      }`}
                     >
-                      Equipo Service:
-                    </span>
-                  </label>
+                      {serviceTeam?.map((service, index) => (
+                        <li className="flex gap-4 items-center" key={index}>
+                          <Image
+                            alt={
+                              service.attributes.photo.data.attributes.formats
+                                .thumbnail.name
+                            }
+                            className="rounded-full"
+                            src={service.attributes.photo.data.attributes.url}
+                            width={30}
+                            height={30}
+                          />
+                          <span>{service.attributes.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
 
-                  <ul className="text-sm  w-full gap-4 capitalize grid grid-cols-2">
-                    {serviceTeam?.map((service, index) => (
-                      <li className="flex gap-4 items-center" key={index}>
-                        <Image
-                          alt={
-                            service.attributes.photo.data.attributes.formats
-                              .thumbnail.name
-                          }
-                          src={service.attributes.photo.data.attributes.url}
-                          width={30}
-                          height={30}
-                        />
-                        <span>{service.attributes.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-
-                <li className="flex flex-col gap-4">
-                  <label htmlFor="name" className="w-80">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                {extendedTeam?.length > 0 && (
+                  <li
+                    className={`flex gap-4 ${
+                      extendedTeam?.length >= 2 ? "flex-col" : "items-center"
+                    } `}
+                  >
+                    <p
+                      className={`w-80 ${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
                       Equipo extendido:
-                    </span>
-                  </label>
+                    </p>
 
-                  <ul className="text-sm gap-4 w-full capitalize grid grid-cols-2">
-                    {investigation?.team_extended.data.map((team, index) => (
-                      <li className="flex gap-4 items-center" key={index}>
-                        <Image
-                          className="rounded-full"
-                          alt={
-                            team.attributes.photo.data.attributes.formats
-                              .thumbnail.name
-                          }
-                          src={team.attributes.photo.data.attributes.url}
-                          width={30}
-                          height={30}
-                        />
-                        <span>{team.attributes.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
+                    <ul
+                      className={`text-sm gap-4 w-full capitalize ${
+                        extendedTeam?.length >= 2 ? "grid grid-cols-2" : ""
+                      }`}
+                    >
+                      {extendedTeam.map((team, index) => (
+                        <li className="flex gap-4 items-center" key={index}>
+                          <Image
+                            className="rounded-full"
+                            alt={
+                              team.attributes.photo.data.attributes.formats
+                                .thumbnail.name
+                            }
+                            src={team.attributes.photo.data.attributes.url}
+                            width={30}
+                            height={30}
+                          />
+                          <span>{team.attributes.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
@@ -464,7 +515,7 @@ export function InvestigationSlugComponent({ params }) {
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
-                      Objetivo Principal:
+                      Objetivo principal:
                     </span>
                   </label>
 
@@ -477,7 +528,7 @@ export function InvestigationSlugComponent({ params }) {
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
-                      Objetivos Especificos:
+                      Objetivos específicos:
                     </span>
                   </label>
                   <p className="text-sm w-full">

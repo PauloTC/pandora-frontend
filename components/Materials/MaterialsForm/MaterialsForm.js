@@ -69,7 +69,7 @@ export function MaterialsForm({ slug }) {
 
           await materialCtrl.updateMaterial(material.id, materialData);
 
-          router.push("/investigations", { scroll: false });
+          router.push("/investigaciones", { scroll: false });
         }
       } catch (error) {
         console.error(error);
@@ -87,8 +87,6 @@ export function MaterialsForm({ slug }) {
         const response = await investigationCtrl.getInvestigation(slug);
 
         setInvestigation(response);
-
-        console.log("response", response);
 
         setPublics(
           responsePublics.data.map((audience) => ({
@@ -156,7 +154,7 @@ export function MaterialsForm({ slug }) {
         <div className="flex items-center">
           <Link
             className="text-blue-700 hover:text-blue-800"
-            href="/investigations"
+            href={`/investigaciones/${investigation?.attributes?.slug}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -236,6 +234,7 @@ export function MaterialsForm({ slug }) {
                     <textarea
                       id="sample"
                       rows="5"
+                      maxLength={200}
                       className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-2.5 rounded outline-blue-500"
                       placeholder="Escribir la muestra..."
                       value={formik.values[material.id]?.sample || ""}
@@ -289,6 +288,7 @@ export function MaterialsForm({ slug }) {
                     <input
                       type="text"
                       id="tool"
+                      maxLength={10}
                       className="
                       self-start border border-gray-300 
                       text-gray-900 text-sm rounded
@@ -304,7 +304,7 @@ export function MaterialsForm({ slug }) {
                       error={formik.errors[material.id]?.tool}
                     />
                   </li>
-                  <li className="flex gap-4">
+                  <li className="flex gap-4 justify-between">
                     <label className="flex flex-col w-80" htmlFor="tool_media">
                       <span
                         className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
@@ -312,7 +312,7 @@ export function MaterialsForm({ slug }) {
                         Adjuntar herramienta
                       </span>
                       <span className="text-xs font-regular">
-                        (Jpg,Png, Pdf, Docx, Xlsx, Pptx)
+                        (Jpg,Png,Pdf,Doc,Docx,Xlsx,Pptx)
                       </span>
                     </label>
                     <div className="flex flex-col gap-2 w-64">

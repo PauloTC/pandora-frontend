@@ -1,5 +1,5 @@
 export const ENV = {
-  SERVER_HOST: "https://pandorabackend-production.up.railway.app/",
+  SERVER_HOST: "https://pandorabackend-production.up.railway.app",
   API_URL: "https://pandorabackend-production.up.railway.app/api",
   ENDPOINTS: {
     AUTH: {

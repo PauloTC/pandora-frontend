@@ -6,29 +6,29 @@ export default function CustomersFaqList() {
 
   const faq = [
     {
-      question: "¿Quiénes pueden unirse a “Conecta Alicorp”?",
+      question: "¿Quiénes pueden unirse a “Comunidad Alicorp”?",
       answer:
-        "Todos nuestros clientes que tengan un negocio y que les gustaría paricipar voluntariamente en investigaciones para mejorar nuestros productos digitales.",
+        "Todos nuestros clientes con un negocio que deseen participar voluntariamente en investigaciones para mejorar nuestros productos digitales.",
     },
     {
       question: "¿Cómo protege Alicorp mi información y privacidad?",
       answer:
-        "Los datos que nos proporciones son confidencias y solo se utilizarán con fines de investigación. No serán utilizados con fines comerciales ni publicitarios.",
+        "Tus datos son confidenciales y se utilizarán únicamente con fines de investigación. No se emplearán para actividades comerciales ni publicitarias.",
     },
     {
-      question: "¿Hay alguna compensación por participar en “Conecta Alicorp”?",
+      question: "Hay compensación por participar en “Comunidad Alicorp”",
       answer:
-        "Sí. En la eventualidad de participar de alguna actividad con los diseñadores e investigadores de nuestro equipo y de acuerdo al tipo de investigación, se te entregará un incentivo por tu tiempo.",
+        "Sí. Al participar en actividades con nuestros diseñadores e investigadores, recibirás un incentivo por tu tiempo.",
     },
     {
-      question: "¿Cómo y cuándo me contactará el equipo de “Conecta Alicorp”?",
+      question: "Cómo y cuándo me contactará el equipo de “Comunidad Alicorp”?",
       answer:
-        "Te contactaremos por llamada o mensaje de WhatsApp al celular que proporcionaste para confirmar tu disponibilidad.",
+        "Te contactaremos por llamada o mensaje de WhatsApp al número que nos proporcionaste para confirmar tu disponibilidad",
     },
     {
-      question: "¿Cómo puedo dejar de participar en “Conecta Alicorp”?",
+      question: "Cómo puedo dejar de participar en “Comunidad Alicorp”?",
       answer:
-        "Por favor envía un correo a experiencedesign@alicorp.com.pe indicando que te gustaría dejar de participar y tus datos serán eliminados dentro de las siguientes 48 horas hábiles. Si cambias de opinión, puedes registrarte nuevamente.",
+        "Envía un correo a experiencedesign@alicorp.com.pe indicando tu deseo de dejar de participar. Tus datos serán eliminados en 48 horas hábiles. Puedes registrarte nuevamente si cambias de opinión.",
     },
   ];
 
