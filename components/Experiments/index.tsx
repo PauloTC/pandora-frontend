@@ -19,10 +19,14 @@ export default function ExperimentsComponent() {
   const handleClose = () => setIsOpen(false);
 
   const handleOpenSidebar = (mode: any) => {
+    document.body.style.overflow = "hidden";
     setSidebarMode(mode);
     setIsOpenSidebar(true);
   };
-  const handleCloseSidebar = () => setIsOpenSidebar(false);
+  const handleCloseSidebar = () => {
+    setIsOpenSidebar(false);
+    document.body.style.overflow = "auto";
+  };
 
   return (
     <section>
@@ -78,7 +82,7 @@ export default function ExperimentsComponent() {
 
                   <div className="flex justify-between items-center gap-2 mb-3 min-h-4">
                     <span className="font-semibold text-xs capitalize">
-                      Negocios Internacionales
+                      N. Internacionales
                     </span>
                     <span className="rounded-lg text-xs block capitalize text-white px-2 py-1 bg-teal-600">
                       en curso

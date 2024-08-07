@@ -74,7 +74,7 @@ export default function ExperimentDetail({
             </svg>
           </button>
         </div>
-        <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
+        <div className="flex-1 h-0 py-10 px-4 overflow-y-auto">
           <div className="flex-shrink-0 flex justify-between items-center px-6">
             <h3 className="text-2xl font-semibold">{title}</h3>
             {sidebarMode === "read" && (
@@ -106,6 +106,31 @@ export default function ExperimentDetail({
           <div className="mt-8 px-6 space-y-1">
             {sidebarMode === "create" && (
               <form className="flex flex-col gap-y-6">
+                {/* <li className="flex">
+                  <span className="cursor-pointer text-xs font-medium gap-1 flex items-center relative text-blue-800">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                      />
+                    </svg>
+                    <input
+                      type="file"
+                      id="research_plan"
+                      className="absolute opacity-0"
+                    />
+                    <em className="not-italic">Agregar Referencia</em>
+                  </span>
+                </li> */}
+
                 <li className="flex gap-4">
                   <label htmlFor="name" className="flex flex-col grow">
                     <span
@@ -170,6 +195,32 @@ export default function ExperimentDetail({
                       <path d="M6 9L12 15 18 9"></path>
                     </svg>
                   </div>
+                </li>
+
+                <li className="flex items-center">
+                  <label htmlFor="initial_date" className="flex flex-col grow">
+                    <span
+                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                    >
+                      Fecha de inicio*
+                    </span>
+                    <span className="text-xs font-regular">
+                      Elige una fecha de inicio
+                    </span>
+                  </label>
+
+                  <DatePicker
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="Selecciona una fecha inicial"
+                    className="
+                          placeholder-gray-150
+                          border border-gray-300 
+                          text-sm block p-2 w-64 
+                          rounded h-10 outline-blue-500
+    
+                        "
+                    required
+                  />
                 </li>
 
                 <li className="flex flex-col  gap-4">
@@ -289,65 +340,147 @@ export default function ExperimentDetail({
                   </div>
                 </li>
 
-                <li className="flex items-center">
-                  <label htmlFor="initial_date" className="flex flex-col grow">
+                <li className="flex items-center gap-4">
+                  <label htmlFor="area" className="flex flex-col grow">
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
-                      Fecha de inicio*
+                      Area Estrategica*
                     </span>
                     <span className="text-xs font-regular">
-                      Elige una fecha de inicio
+                      Selecciona a que VP pertenece
                     </span>
                   </label>
 
-                  <DatePicker
-                    dateFormat="dd/MM/yyyy"
-                    placeholderText="Selecciona una fecha inicial"
-                    className="
-                          placeholder-gray-150
-                          border border-gray-300 
-                          text-sm block p-2 w-64 
-                          rounded h-10 outline-blue-500
-    
-                        "
-                    required
-                  />
+                  <div className="relative">
+                    <select
+                      required
+                      name="area"
+                      id="area"
+                      className={`
+                            appearance-none
+                            text-sm 
+                            rounded block 
+                            w-64 p-2.5
+                            border border-gray-300
+                            outline-blue-500
+                          
+                          `}
+                    >
+                      <option value="">Selecciona un area</option>
+                      <option value="fyt">Finanzas y transformacion</option>
+                      <option value="vtp">Vita pro</option>
+                      <option value="business">Negocios Internacionales</option>
+                    </select>
+
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    >
+                      <path d="M6 9L12 15 18 9"></path>
+                    </svg>
+                  </div>
                 </li>
 
-                {/* <li className="flex gap-4">
-                  <label htmlFor="name" className="flex flex-col grow">
+                <li className="flex items-center gap-4">
+                  <label htmlFor="area" className="flex flex-col grow">
                     <span
                       className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
                     >
-                      Selecciona una VP*
+                      Tipo*
                     </span>
                     <span className="text-xs font-regular">
-                      Máximo 40 caracteres
+                      Selecciona un tipo de experimento
                     </span>
                   </label>
 
-                  <input
-                    type="text"
-                    id="name"
-                    className="
-                          self-start h-10 border border-gray-300 
-                          text-gray-900 text-sm rounded
-                          outline-blue-500 block w-64 p-2.5"
-                    placeholder="Titulo del experimento"
-                    required
-                  />
-                </li> */}
+                  <div className="relative">
+                    <select
+                      required
+                      name="area"
+                      id="area"
+                      className={`
+                            appearance-none
+                            text-sm 
+                            rounded block 
+                            w-64 p-2.5
+                            border border-gray-300
+                            outline-blue-500
+                          
+                          `}
+                    >
+                      <option value="">Selecciona un tipo</option>
+                      <option value="exp">Experimento</option>
+                      <option value="fix">Fix</option>
+                      <option value="report">Reporte</option>
+                      <option value="updagrade">
+                        Iniciativa / Mejora continua
+                      </option>
+                      <option value="test">Prueba</option>
+                    </select>
+
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    >
+                      <path d="M6 9L12 15 18 9"></path>
+                    </svg>
+                  </div>
+                </li>
+                <li className="flex items-center gap-4">
+                  <label htmlFor="area" className="flex flex-col grow">
+                    <span
+                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                    >
+                      Medio de Ejecucion*
+                    </span>
+                    <span className="text-xs font-regular">
+                      Selecciona un medio de Ejecucion
+                    </span>
+                  </label>
+
+                  <div className="relative">
+                    <select
+                      required
+                      name="area"
+                      id="area"
+                      className={`
+                            appearance-none
+                            text-sm 
+                            rounded block 
+                            w-64 p-2.5
+                            border border-gray-300
+                            outline-blue-500
+                          
+                          `}
+                    >
+                      <option value="">Selecciona un medio</option>
+                      <option value="fyt">Finanzas y transformacion</option>
+                      <option value="vtp">Vita pro</option>
+                      <option value="business">Negocios Internacionales</option>
+                    </select>
+
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    >
+                      <path d="M6 9L12 15 18 9"></path>
+                    </svg>
+                  </div>
+                </li>
               </form>
-              // <li className="flex">
-              //   <div className="w-1/2">
-              //     <p className="font-semibold text-base uppercase">Titulo</p>
-              //     <span className="text-sm">TItulo del experimento</span>
-              //   </div>
-              //   <p className="grow">
-              //     Reposicionamiento de Secciones en el Landing
-              //   </p>
-              // </li>
             )}
 
             {children}
