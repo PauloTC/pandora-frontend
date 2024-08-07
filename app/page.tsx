@@ -12,11 +12,12 @@ export default function Home() {
         overflow-hidden"
       >
         <div className="p-8 flex items-center justify-center w-4/6">
-          <div className="flex flex-col gap-6">
-            <Image src="/logo.png" width={231} height={36} alt="logo"></Image>
+          <div className="flex flex-col gap-10">
+            <Image src="/logo.png" width={231} height={36} alt="logo" />
             <Image
               width={860}
               height={598}
+              className="w-4/5 self-center"
               alt="login-banner"
               src="/pandora-banner.png"
             />
