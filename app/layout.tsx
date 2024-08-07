@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.png" />
         <Script strategy="lazyOnload">
           {`
             if (window.location.hostname !== "localhost") {
@@ -40,7 +40,7 @@ export default function RootLayout({
               gtag('js', new Date());
 
               gtag('config', 'G-FSQEPD4T59');
-          
+
           `}
         </Script>
       </head>
