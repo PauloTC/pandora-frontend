@@ -70,7 +70,7 @@ export default function SidebarComponent() {
       >
         <div
           className="
-          flex-col h-full overflow-y-auto  flex items-center"
+          flex-col h-full overflow-y-auto flex items-center"
         >
           <Image
             src="/logo.png"
