@@ -106,7 +106,7 @@ export default function ExperimentDetail({
           <div className="mt-8 px-6 space-y-1">
             {sidebarMode === "create" && (
               <form className="flex flex-col gap-y-6">
-                {/* <li className="flex">
+                <li className="flex justify-end">
                   <span className="cursor-pointer text-xs font-medium gap-1 flex items-center relative text-blue-800">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +129,7 @@ export default function ExperimentDetail({
                     />
                     <em className="not-italic">Agregar Referencia</em>
                   </span>
-                </li> */}
+                </li>
 
                 <li className="flex gap-4">
                   <label htmlFor="name" className="flex flex-col grow">
