@@ -11,7 +11,7 @@ export default function Home() {
         w-full bg-blue-800 
         overflow-hidden"
       >
-        <div className="p-8 flex items-center justify-center">
+        <div className="p-8 flex items-center justify-center w-5/6">
           <div className="flex flex-col gap-20 w-5/6">
             <div>
               <Image src="/logo.png" width={231} height={36} alt="logo" />
