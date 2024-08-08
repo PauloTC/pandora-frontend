@@ -90,7 +90,7 @@ export default function SidebarComponent() {
       >
         <div
           className="
-          flex-col h-full overflow-y-auto  flex items-center"
+          flex-col h-full overflow-y-auto flex items-center"
         >
           <Image
             src="/logo.png"
@@ -110,7 +110,7 @@ export default function SidebarComponent() {
               width={80}
               height={80}
             ></Image>
-            <figcaption className="mt-2 text-white text-center ">
+            <figcaption className="mt-2 text-white text-center">
               <p
                 className={`${libre_franklin600.className} capitalize text-lg`}
               >

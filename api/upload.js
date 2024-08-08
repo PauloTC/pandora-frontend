@@ -15,6 +15,7 @@ function validarExtension(file) {
     "jpg",
     "png",
     "doc",
+    "docx",
     "pdf",
     "xls",
     "xlsx",

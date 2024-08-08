@@ -304,7 +304,7 @@ export function MaterialsForm({ slug }) {
                       error={formik.errors[material.id]?.tool}
                     />
                   </li>
-                  <li className="flex gap-4">
+                  <li className="flex gap-4 justify-between">
                     <label className="flex flex-col w-80" htmlFor="tool_media">
                       <span
                         className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
@@ -312,7 +312,7 @@ export function MaterialsForm({ slug }) {
                         Adjuntar herramienta
                       </span>
                       <span className="text-xs font-regular">
-                        (Jpg,Png, Pdf, Docx, Xlsx, Pptx)
+                        (Jpg,Png,Pdf,Doc,Docx,Xlsx,Pptx)
                       </span>
                     </label>
                     <div className="flex flex-col gap-2 w-64">
