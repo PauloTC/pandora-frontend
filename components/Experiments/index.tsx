@@ -1,19 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ModalImage from "@/components/Common/ModalImage";
-import {
-  libre_franklin600,
-  libre_franklin500,
-  libre_franklin700,
-} from "@/app/fonts";
+import { libre_franklin700 } from "@/app/fonts";
 import ExperimentDetail from "@/components/Experiments/ExperimentDetail";
+import { Experiment } from "@/api";
 
 export default function ExperimentsComponent() {
+  const experimentCtrl = new Experiment();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const [actionMode, setSidebarMode] = useState("read");
+  const [experiments, setExperiments] = useState([]);
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
@@ -27,6 +27,21 @@ export default function ExperimentsComponent() {
     setIsOpenSidebar(false);
     document.body.style.overflow = "auto";
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await experimentCtrl.getExperiments();
+        setExperiments(response.data);
+        console.log("response", response);
+        return response;
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <section>
@@ -950,6 +965,12 @@ export default function ExperimentsComponent() {
                 </button>
               </div>
             </li>
+
+            {experiments.map((experiment, index) => (
+              <li key={index}>
+                <p>{experiment.attributes.title}</p>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

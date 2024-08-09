@@ -5,6 +5,7 @@ import { libre_franklin700, libre_franklin600 } from "@/app/fonts";
 import { useRef, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
+
 import "react-datepicker/dist/react-datepicker.css";
 import { MultiSelect } from "react-multi-select-component";
 
@@ -53,11 +54,6 @@ export function InvestigationForm({ params, title }) {
   const researcherCtrl = new Researcher();
   const projectCtrl = new Project();
   const materialCtrl = new Material();
-
-  const isCreateScreen =
-    router && router.pathname ? router.pathname.includes("create") : false;
-  const isEditScreen =
-    router && router.pathname ? router.pathname.includes("edit") : false;
 
   const formik = useFormik({
     initialValues: initialValues(investigation),
@@ -361,7 +357,6 @@ export function InvestigationForm({ params, title }) {
         setPresentedDate(parseISO(investigation?.attributes?.presented_date));
       }
     }
-    console.log("router", router);
   }, [investigation]);
 
   const status = [
@@ -431,53 +426,34 @@ export function InvestigationForm({ params, title }) {
               <div className="border border-gray-200 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-xl font-bold">Ficha Técnica</h4>
-                  <div className="flex divide-x-2 ">
-                    {investigation?.attributes?.research_plan && (
-                      <a
-                        className="text-xs font-regular text-blue-700 hover:underline pr-4"
-                        href={investigation?.attributes?.research_plan}
-                        target="_blank"
-                      >
-                        Actual Research Plan
-                      </a>
-                    )}
-                    <label
-                      htmlFor="research_plan"
-                      className="cursor-pointer hover:underline text-xs font-regular gap-1 flex items-center relative text-blue-700 pl-4"
+                  <span className="cursor-pointer text-xs font-medium gap-1 flex items-center relative text-blue-800">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-4"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-4"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
-                        />
-                      </svg>
-                      <input
-                        type="file"
-                        id="research_plan"
-                        className="absolute opacity-0 invisible"
-                        onChange={handleFileUpload}
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
                       />
-                      {!investigation?.attributes?.research_plan ? (
-                        <em className="not-italic">
-                          {researchPlan
-                            ? `Research Plan: ${researchPlan}`
-                            : "Agregar Research Plan"}
-                        </em>
-                      ) : (
-                        <em className="not-italic">Modificar Research Plan</em>
-                      )}
-                    </label>
-                  </div>
+                    </svg>
+                    <input
+                      type="file"
+                      id="research_plan"
+                      className="absolute opacity-0"
+                      onChange={handleFileUpload}
+                    />
+                    <em className="not-italic">
+                      {researchPlan
+                        ? `Research Plan: ${researchPlan}`
+                        : "Agregar Research Plan"}
+                    </em>
+                  </span>
                 </div>
-
                 <div className="divide-x divide-gray-200 grid grid-cols-2 gap-y-6">
                   <ul className="flex flex-col gap-6 pr-6">
                     <li className="flex gap-4">
@@ -1006,7 +982,7 @@ export function InvestigationForm({ params, title }) {
                     Presentación
                   </h4>
                   <ul className="flex flex-col gap-6">
-                    <li className="flex gap-4 justify-between">
+                    <li className="flex gap-4">
                       <label
                         className="flex flex-col w-80"
                         htmlFor="guide_media_link"
@@ -1017,7 +993,7 @@ export function InvestigationForm({ params, title }) {
                           Adjuntar archivo
                         </span>
                         <span className="text-xs font-regular">
-                          (Jpg,Png,Pdf,Doc,Docx,Xlsx,Pptx)
+                          (JPG,PNG,PDF,DOC,XLSX,PPTX)
                         </span>
                       </label>
 

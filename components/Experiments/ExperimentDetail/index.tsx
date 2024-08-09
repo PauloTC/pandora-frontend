@@ -1,15 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import DateRangePicker from "react-datepicker";
-import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
-
 import {
   libre_franklin600,
   libre_franklin500,
   libre_franklin700,
 } from "@/app/fonts";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function ExperimentDetail({
   isOpen,
@@ -223,6 +220,48 @@ export default function ExperimentDetail({
                   />
                 </li>
 
+                <li className="flex items-center gap-4">
+                  <label htmlFor="status" className="flex flex-col grow">
+                    <span
+                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                    >
+                      Participantes
+                    </span>
+                    <span className="text-xs font-regular">
+                      Estado de la investigación
+                    </span>
+                  </label>
+                  <div className="relative">
+                    <select
+                      required
+                      id="status"
+                      className="
+                            border appearance-none
+                            border-gray-300 
+                            text-gray-900 
+                            text-sm rounded
+                            block w-64 p-2.5 h-10
+                            outline-blue-500"
+                    >
+                      {status.map((state) => (
+                        <option key={state.value} value={state.value}>
+                          {state.label}
+                        </option>
+                      ))}
+                    </select>
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    >
+                      <path d="M6 9L12 15 18 9"></path>
+                    </svg>
+                  </div>
+                </li>
+
                 <li className="flex flex-col  gap-4">
                   <label
                     className="flex items-center justify-between grow"
@@ -385,7 +424,6 @@ export default function ExperimentDetail({
                     </svg>
                   </div>
                 </li>
-
                 <li className="flex items-center gap-4">
                   <label htmlFor="area" className="flex flex-col grow">
                     <span
@@ -479,6 +517,30 @@ export default function ExperimentDetail({
                       <path d="M6 9L12 15 18 9"></path>
                     </svg>
                   </div>
+                </li>
+
+                <li className="flex flex-col  gap-4">
+                  <label
+                    className="flex items-center justify-between grow"
+                    htmlFor="specific_goals"
+                  >
+                    <span
+                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
+                    >
+                      Resultados
+                    </span>
+                    <span className="text-xs font-regular">
+                      Máximo 200 caracteres
+                    </span>
+                  </label>
+
+                  <textarea
+                    id="specific_goals"
+                    rows={4}
+                    maxLength={200}
+                    className={`grow text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500`}
+                    placeholder="Describe los resultados"
+                  ></textarea>
                 </li>
               </form>
             )}

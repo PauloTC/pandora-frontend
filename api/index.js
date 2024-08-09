@@ -12,3 +12,4 @@ export * from "./location";
 export * from "./costumer";
 export * from "./upload";
 export * from "./data";
+export * from "./experiment";
