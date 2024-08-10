@@ -6,8 +6,6 @@ import * as Yup from "yup";
 import { Costumer } from "@/api";
 import * as XLSX from "xlsx";
 
-import { libre_franklin600 } from "@/app/fonts";
-
 export default function Subscribers() {
   const [costumers, setCostumers] = useState([] as any[]);
   const [openEditClient, setOpenEditClient] = useState(false);
@@ -210,9 +208,7 @@ export default function Subscribers() {
               <ul className="flex flex-col gap-y-6">
                 <li className="flex gap-4">
                   <label htmlFor="business_type" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Negocio
                     </span>
                     <span className="text-xs font-regular">
@@ -236,9 +232,7 @@ export default function Subscribers() {
                     htmlFor="business_subtype"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Giro
                     </span>
                     <span className="text-xs font-regular">
@@ -263,9 +257,7 @@ export default function Subscribers() {
                     htmlFor="business_document"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       RUC
                     </span>
                     <span className="text-xs font-regular">
@@ -285,9 +277,7 @@ export default function Subscribers() {
 
                 <li className="flex gap-4">
                   <label htmlFor="business_name" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Nombre del negocio
                     </span>
                     <span className="text-xs font-regular">Negocio</span>
@@ -308,9 +298,7 @@ export default function Subscribers() {
                     htmlFor="business_owner"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Cliente
                     </span>
                     <span className="text-xs font-regular">
@@ -333,9 +321,7 @@ export default function Subscribers() {
                     htmlFor="business_district"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Distrito
                     </span>
                     <span className="text-xs font-regular">
@@ -358,9 +344,7 @@ export default function Subscribers() {
                     htmlFor="owner_cellphone"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Teléfono
                     </span>
                     <span className="text-xs font-regular">
@@ -383,9 +367,7 @@ export default function Subscribers() {
                     htmlFor="owner_document_number"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       DNI
                     </span>
                     <span className="text-xs font-regular">

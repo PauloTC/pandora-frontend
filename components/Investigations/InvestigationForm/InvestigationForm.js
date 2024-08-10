@@ -1,7 +1,6 @@
 "use client";
 import slugify from "slugify";
 import Link from "next/link";
-import { libre_franklin700, libre_franklin600 } from "@/app/fonts";
 import { useRef, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
@@ -382,8 +381,8 @@ export function InvestigationForm({ params, title }) {
     <div>
       {isUploading && (
         <div
-          className={`${libre_franklin600.className} 
-            gap-4
+          className={`
+            gap-4 font-semibold
             text-xl absolute top-0 right-0 bottom-0 
             left-0 w-full h-screen bg-black/50 z-50
             flex text-white flex-col justify-center
@@ -414,9 +413,7 @@ export function InvestigationForm({ params, title }) {
                   />
                 </svg>
               </Link>
-              <h4
-                className={`${libre_franklin700.className} flex flex-col ml-3 text-slate-700 capitalize text-xl`}
-              >
+              <h4 className="font-semibold flex flex-col ml-3 text-slate-700 capitalize text-xl">
                 {title}
               </h4>
             </div>
@@ -433,7 +430,7 @@ export function InvestigationForm({ params, title }) {
             <div className="flex flex-col gap-4">
               <div className="border border-gray-200 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-xl font-bold">Ficha Técnica</h4>
+                  <h4 className="text-xl font-semibold">Ficha Técnica</h4>
                   <div className="flex divide-x-2 ">
                     {investigation?.attributes?.research_plan && (
                       <a
@@ -863,7 +860,7 @@ export function InvestigationForm({ params, title }) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="border border-gray-200 rounded-xl p-6">
-                  <h4 className="font-bold text-xl mb-4 capitalize">
+                  <h4 className="font-semibold text-xl mb-4 capitalize">
                     Objetivo
                   </h4>
                   <ul className="flex flex-col gap-4">
@@ -925,9 +922,7 @@ export function InvestigationForm({ params, title }) {
                   </ul>
                 </div>
                 <div className="border border-gray-200 rounded-xl p-6">
-                  <h4
-                    className={`${libre_franklin700.className} text-xl mb-4 capitalize`}
-                  >
+                  <h4 className="font-semibold text-xl mb-4 capitalize">
                     Presentación
                   </h4>
                   <ul className="flex flex-col gap-6">
