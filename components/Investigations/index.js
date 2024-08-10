@@ -460,9 +460,7 @@ export default function InvestigationsComponent() {
                         {investigation?.attributes?.researchers.data.length >
                           2 && (
                           <li className="absolute right-0 bottom-0 w-8">
-                            <span
-                              className={`${libre_franklin600.className} rounded-md text-xs flex justify-center bg-stone-600 text-white`}
-                            >
+                            <span className="rounded-md text-xs flex justify-center bg-stone-600 text-white">
                               +{" "}
                               {investigation?.attributes?.researchers.data
                                 .length - 2}{" "}
