@@ -281,9 +281,12 @@ export default function InvestigationsComponent() {
                       <div className="mb-3 flex justify-between">
                         <h4
                           title={investigation?.attributes?.name}
-                          className={`font-semibold capitalize min-h-10 text-slate-800 text-sm w-4/5`}
+                          className="font-semibold min-h-10 text-slate-800 text-sm w-4/5"
                         >
-                          {investigation?.attributes?.name}
+                          {investigation?.attributes?.name.length > 25
+                            ? investigation?.attributes?.name.substring(0, 25) +
+                              "..."
+                            : investigation?.attributes?.name}
                         </h4>
 
                         {investigation?.attributes?.research_plan && (
@@ -318,27 +321,49 @@ export default function InvestigationsComponent() {
                               </p>
                             ))
                           ) : (
-                            <p style={{ minHeight: 8 }}></p>
+                            <>
+                              <p className="text-xs align-center flex border px-2 rounded-md">
+                                Sin ubicación
+                              </p>
+                            </>
                           )}
                         </div>
                       </div>
 
                       <div className="flex gap-2 mb-3 min-h-4">
-                        {publics?.length > 0 &&
-                          publics?.slice(0, 2).map((publicItem, index) => (
-                            <span
-                              key={index}
-                              className={`${libre_franklin600.className} text-xs capitalize`}
+                        {publics?.length > 0 ? (
+                          <>
+                            {publics?.slice(0, 2).map((publicItem, index) => (
+                              <span
+                                key={index}
+                                className="font-semibold text-xs capitalize"
+                              >
+                                {publicItem}
+                              </span>
+                            ))}
+                            {publics?.length > 2 && (
+                              <span className="font-semibold text-xs capitalize">
+                                {`+ ${publics?.length - 2}`}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <span className="font-semibold text-xs capitalize flex gap-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-4"
                             >
-                              {publicItem}
-                            </span>
-                          ))}
-
-                        {publics?.length > 2 && (
-                          <span
-                            className={`${libre_franklin600.className} text-xs capitalize`}
-                          >
-                            {`+ ${publics?.length - 2}`}
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6 18 18 6M6 6l12 12"
+                              />
+                            </svg>
+                            Sin público
                           </span>
                         )}
                       </div>
@@ -361,7 +386,6 @@ export default function InvestigationsComponent() {
                         </span>
                         <span
                           className={classNames(
-                            `${libre_franklin600.className}`,
                             "rounded-lg",
                             "text-xs",
                             "block",
@@ -399,7 +423,7 @@ export default function InvestigationsComponent() {
                             .name
                         }
                       </p>
-                      <ul className="flex items-center justify-end grow relative w-40">
+                      <ul className="flex items-center justify-end grow relative w-40 h-12">
                         {investigation?.attributes?.researchers.data
                           .slice(0, 2)
                           .map((researcher, index) => {

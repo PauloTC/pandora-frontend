@@ -12,6 +12,7 @@ import { validationSchema } from "./MaterialsForm.form";
 import { Material, Public, Location, Investigation } from "@/api";
 import { uploadToS3 } from "@/api";
 import PulseLoader from "react-spinners/PulseLoader";
+import { Label } from "@/components/Common";
 
 export function MaterialsForm({ slug }) {
   const router = useRouter();
@@ -199,16 +200,13 @@ export function MaterialsForm({ slug }) {
               <div className="divide-x divide-gray-200 grid grid-cols-2 gap-6">
                 <ul className="flex flex-col gap-4">
                   <li className="flex items-center gap-4">
-                    <label htmlFor="publics" className="flex flex-col grow">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Público objetivo:
-                      </span>
-                      <span className="text-xs font-regular">
-                        Hacía quienes va dirigido
-                      </span>
-                    </label>
+                    <Label
+                      subtext="Hacía quienes va dirigido"
+                      htmlFor="publics"
+                    >
+                      Público objetivo
+                    </Label>
+
                     <MultiSelect
                       className="w-64 text-sm"
                       options={publics}
@@ -221,16 +219,10 @@ export function MaterialsForm({ slug }) {
                   </li>
 
                   <li className="flex gap-4">
-                    <label className="flex flex-col grow" htmlFor="sample">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Muestra
-                      </span>
-                      <span className="text-xs font-regular">
-                        Escribe la muestra
-                      </span>
-                    </label>
+                    <Label subtext="Escribe la muestra" htmlFor="sample">
+                      Muestra
+                    </Label>
+
                     <textarea
                       id="sample"
                       rows="5"
@@ -249,19 +241,13 @@ export function MaterialsForm({ slug }) {
                   </li>
 
                   <li className="flex gap-4">
-                    <label
+                    <Label
+                      subtext="Lugares de investigación"
                       htmlFor="investigation_types"
-                      className="flex flex-col grow"
                     >
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Ámbito geográfico
-                      </span>
-                      <span className="text-xs font-regular">
-                        Lugares de investigacion
-                      </span>
-                    </label>
+                      Ámbito geográfico
+                    </Label>
+
                     <MultiSelect
                       className="w-64 text-sm"
                       options={locations}
@@ -275,20 +261,14 @@ export function MaterialsForm({ slug }) {
                 </ul>
                 <ul className="flex flex-col gap-4 pl-6">
                   <li className="flex gap-4">
-                    <label className="flex flex-col grow" htmlFor="tool">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Herramienta
-                      </span>
-                      <span className="text-xs font-regular">
-                        Máximo 10 caracteres
-                      </span>
-                    </label>
+                    <Label subtext="Máximo 70 caracteres" htmlFor="tool">
+                      Herramienta
+                    </Label>
+
                     <input
                       type="text"
                       id="tool"
-                      maxLength={10}
+                      maxLength={70}
                       className="
                       self-start border border-gray-300 
                       text-gray-900 text-sm rounded
@@ -305,16 +285,13 @@ export function MaterialsForm({ slug }) {
                     />
                   </li>
                   <li className="flex gap-4 justify-between">
-                    <label className="flex flex-col w-80" htmlFor="tool_media">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Adjuntar herramienta
-                      </span>
-                      <span className="text-xs font-regular">
-                        (Jpg,Png,Pdf,Doc,Docx,Xlsx,Pptx)
-                      </span>
-                    </label>
+                    <Label
+                      subtext="(Jpg,Png,Pdf,Doc,Docx,Xlsx,Pptx)"
+                      htmlFor="tool_media"
+                    >
+                      herramienta usada
+                    </Label>
+
                     <div className="flex flex-col gap-2 w-64">
                       <input
                         type="file"
