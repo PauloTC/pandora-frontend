@@ -1,11 +1,9 @@
 "use client";
 import Link from "next/link";
-
-import { libre_franklin700, libre_franklin600 } from "@/app/fonts";
 import Image from "next/image";
 import { Investigation } from "@/api";
 import { useEffect, useState } from "react";
-import { format, parse, startOfDay, isValid } from "date-fns";
+import { format, parse, isValid } from "date-fns";
 import { LabelDetail } from "@/components/Common/index";
 
 export function InvestigationSlugComponent({ params }) {
@@ -217,63 +215,51 @@ export function InvestigationSlugComponent({ params }) {
                     .join(", ")}
                 />
 
-                <li
-                  className={`flex gap-4 ${
-                    researchTeam?.length >= 2 ? "flex-col" : "items-center"
-                  }`}
-                >
-                  <p className="font-medium">Equipo research:</p>
-
-                  <ul
-                    className={`text-sm gap-2 capitalize ${
-                      researchTeam?.length >= 2 ? "grid grid-cols-2" : ""
-                    }`}
-                  >
-                    {researchTeam?.map((researcher, index) => {
-                      return (
-                        <li className="flex gap-2 items-center" key={index}>
-                          <Image
-                            className="rounded-full"
-                            alt={
-                              researcher.attributes.photo.data.attributes
-                                .formats.thumbnail.name
-                            }
-                            src={
-                              researcher.attributes.photo.data.attributes.url
-                            }
-                            width={30}
-                            height={30}
-                          />
-                          <span className="font-medium">
-                            {researcher.attributes.name}
-                          </span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </li>
-
-                {serviceTeam && serviceTeam.length > 0 && (
-                  <li
-                    className={`flex gap-4 ${
-                      serviceTeam?.length >= 2 ? "flex-col" : "items-center"
-                    }`}
-                  >
-                    <p className="w-80">
-                      <span
-                        className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                      >
-                        Equipo Service:
-                      </span>
-                    </p>
+                {researchTeam && researchTeam?.length > 0 && (
+                  <li className="flex gap-4 flex-col">
+                    <p className="font-medium">Equipo research:</p>
 
                     <ul
-                      className={`text-sm w-full gap-4 capitalize ${
+                      className={`text-sm w-full gap-2 capitalize ${
+                        researchTeam?.length >= 2 ? "grid grid-cols-2" : ""
+                      }`}
+                    >
+                      {researchTeam?.map((researcher, index) => {
+                        return (
+                          <li className="flex gap-2 items-center" key={index}>
+                            <Image
+                              className="rounded-full"
+                              alt={
+                                researcher.attributes.photo.data.attributes
+                                  .formats.thumbnail.name
+                              }
+                              src={
+                                researcher.attributes.photo.data.attributes.url
+                              }
+                              width={30}
+                              height={30}
+                            />
+                            <span className="font-medium">
+                              {researcher.attributes.name}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </li>
+                )}
+
+                {serviceTeam && serviceTeam.length > 0 && (
+                  <li className="flex gap-4 flex-col">
+                    <p className="font-medium">Equipo service:</p>
+
+                    <ul
+                      className={`text-sm w-full gap-2 capitalize ${
                         serviceTeam?.length >= 2 ? "grid grid-cols-2" : ""
                       }`}
                     >
                       {serviceTeam?.map((service, index) => (
-                        <li className="flex gap-4 items-center" key={index}>
+                        <li className="flex gap-2 items-center" key={index}>
                           <Image
                             alt={
                               service.attributes.photo.data.attributes.formats
@@ -284,7 +270,9 @@ export function InvestigationSlugComponent({ params }) {
                             width={30}
                             height={30}
                           />
-                          <span>{service.attributes.name}</span>
+                          <span className="font-medium">
+                            {service.attributes.name}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -292,24 +280,16 @@ export function InvestigationSlugComponent({ params }) {
                 )}
 
                 {extendedTeam?.length > 0 && (
-                  <li
-                    className={`flex gap-4 ${
-                      extendedTeam?.length >= 2 ? "flex-col" : "items-center"
-                    } `}
-                  >
-                    <p
-                      className={`w-80 ${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
-                      Equipo extendido:
-                    </p>
+                  <li className="flex gap-4 flex-col">
+                    <p className="font-medium">Equipo extendido:</p>
 
                     <ul
-                      className={`text-sm gap-4 w-full capitalize ${
+                      className={`text-sm gap-2 w-full capitalize ${
                         extendedTeam?.length >= 2 ? "grid grid-cols-2" : ""
                       }`}
                     >
                       {extendedTeam.map((team, index) => (
-                        <li className="flex gap-4 items-center" key={index}>
+                        <li className="flex gap-2 items-center" key={index}>
                           <Image
                             className="rounded-full"
                             alt={
@@ -320,7 +300,9 @@ export function InvestigationSlugComponent({ params }) {
                             width={30}
                             height={30}
                           />
-                          <span>{team.attributes.name}</span>
+                          <span className="font-medium">
+                            {team.attributes.name}
+                          </span>
                         </li>
                       ))}
                     </ul>
