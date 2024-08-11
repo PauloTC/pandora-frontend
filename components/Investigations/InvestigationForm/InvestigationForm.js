@@ -436,7 +436,6 @@ export function InvestigationForm({ params, title }) {
                       <a
                         className="text-xs font-regular text-blue-700 hover:underline pr-4"
                         href={investigation?.attributes?.research_plan}
-                        target="_blank"
                       >
                         Actual Research Plan
                       </a>
@@ -949,7 +948,6 @@ export function InvestigationForm({ params, title }) {
                           initialGuideMediaLinkRef.current !== "" && (
                             <a
                               href={initialGuideMediaLinkRef.current}
-                              target="_blank"
                               rel="noopener noreferrer"
                               className="text-blue-700 hover:underline text-xs font-regular flex justify-end"
                             >

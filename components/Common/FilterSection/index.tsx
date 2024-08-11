@@ -11,7 +11,7 @@ export const FilterSection = ({
   const [selectedValue, setSelectedValue] = useState(null);
   const [showMore, setShowMore] = useState(false);
 
-  const handleClick = (value) => {
+  const handleClick = (value: any) => {
     setSelectedValue(value);
     handleFilterClick(filterType, value);
   };
@@ -33,7 +33,7 @@ export const FilterSection = ({
     <>
       <h4 className="font-medium text-sm block mb-2">{title}</h4>
       <ul className="flex flex-wrap gap-1 mb-6">
-        {displayedItems.map((item, index) => (
+        {displayedItems.map((item: any, index: any) => (
           <li key={index}>
             <button
               onClick={() => handleClick(item.value)}

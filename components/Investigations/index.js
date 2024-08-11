@@ -2,11 +2,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Project, Public, Researcher } from "@/api";
 import { map } from "lodash";
-import {
-  libre_franklin600,
-  libre_franklin500,
-  libre_franklin700,
-} from "@/app/fonts";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -281,12 +276,9 @@ export default function InvestigationsComponent() {
                       <div className="mb-3 flex justify-between">
                         <h4
                           title={investigation?.attributes?.name}
-                          className="font-semibold min-h-10 text-slate-800 text-sm w-4/5"
+                          className="font-semibold h-10 text-slate-800 text-sm w-4/5 overflow-hidden"
                         >
-                          {investigation?.attributes?.name.length > 25
-                            ? investigation?.attributes?.name.substring(0, 25) +
-                              "..."
-                            : investigation?.attributes?.name}
+                          {investigation?.attributes?.name}
                         </h4>
 
                         {investigation?.attributes?.research_plan && (
@@ -369,9 +361,7 @@ export default function InvestigationsComponent() {
                       </div>
 
                       <div className="flex justify-between items-center">
-                        <span
-                          className={`${libre_franklin500.className} text-xs block mb-2`}
-                        >
+                        <span className="font-medium text-xs block mb-2">
                           <strong>Inicio:{"  "}</strong>
                           {investigation?.attributes?.initial_date &&
                             format(
@@ -415,9 +405,7 @@ export default function InvestigationsComponent() {
                       </div>
                     </div>
                     <div className="flex pt-2 ">
-                      <p
-                        className={`${libre_franklin700.className} h-12 flex items-center capitalize text-md w-full`}
-                      >
+                      <p className="font-semibold h-12 flex items-center capitalize text-md w-full">
                         {
                           investigation?.attributes?.project?.data?.attributes
                             .name

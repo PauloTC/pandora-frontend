@@ -307,7 +307,6 @@ export function MaterialsForm({ slug }) {
                         initialToolMedia !== "" && (
                           <a
                             href={initialToolMedia}
-                            target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-700 hover:underline text-xs font-regular flex justify-end"
                           >
