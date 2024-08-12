@@ -1,5 +1,4 @@
 "use client";
-import { libre_franklin500 } from "@/app/fonts";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";

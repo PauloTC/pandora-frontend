@@ -1,10 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  libre_franklin600,
-  libre_franklin500,
-  libre_franklin700,
-} from "@/app/fonts";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -15,9 +10,6 @@ export default function ExperimentDetail({
   children,
 }: any) {
   const [title, setTitle] = useState("");
-
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
 
   useEffect(() => {
     if (sidebarMode === "create") {
@@ -130,9 +122,7 @@ export default function ExperimentDetail({
 
                 <li className="flex gap-4">
                   <label htmlFor="name" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Título*
                     </span>
                     <span className="text-xs font-regular">
@@ -154,9 +144,7 @@ export default function ExperimentDetail({
 
                 <li className="flex items-center gap-4">
                   <label htmlFor="status" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Estado*
                     </span>
                     <span className="text-xs font-regular">
@@ -196,9 +184,7 @@ export default function ExperimentDetail({
 
                 <li className="flex items-center">
                   <label htmlFor="initial_date" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Fecha de inicio*
                     </span>
                     <span className="text-xs font-regular">
@@ -222,9 +208,7 @@ export default function ExperimentDetail({
 
                 <li className="flex items-center gap-4">
                   <label htmlFor="status" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Participantes
                     </span>
                     <span className="text-xs font-regular">
@@ -267,9 +251,7 @@ export default function ExperimentDetail({
                     className="flex items-center justify-between grow"
                     htmlFor="specific_goals"
                   >
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Planteamiento de la problematica
                     </span>
                     <span className="text-xs font-regular">
@@ -290,9 +272,7 @@ export default function ExperimentDetail({
                     className="flex items-center justify-between grow"
                     htmlFor="specific_goals"
                   >
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Planteamiento de hipótesis
                     </span>
                     <span className="text-xs font-regular">
@@ -314,9 +294,7 @@ export default function ExperimentDetail({
                     className="flex items-center justify-between grow"
                     htmlFor="specific_goals"
                   >
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Descripción de la solución
                     </span>
                     <span className="text-xs font-regular">
@@ -335,9 +313,7 @@ export default function ExperimentDetail({
 
                 <li className="flex items-center gap-4">
                   <label htmlFor="project" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       VP*
                     </span>
                     <span className="text-xs font-regular">
@@ -381,9 +357,7 @@ export default function ExperimentDetail({
 
                 <li className="flex items-center gap-4">
                   <label htmlFor="area" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Area Estrategica*
                     </span>
                     <span className="text-xs font-regular">
@@ -426,9 +400,7 @@ export default function ExperimentDetail({
                 </li>
                 <li className="flex items-center gap-4">
                   <label htmlFor="area" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Tipo*
                     </span>
                     <span className="text-xs font-regular">
@@ -475,9 +447,7 @@ export default function ExperimentDetail({
                 </li>
                 <li className="flex items-center gap-4">
                   <label htmlFor="area" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Medio de Ejecucion*
                     </span>
                     <span className="text-xs font-regular">
@@ -524,9 +494,7 @@ export default function ExperimentDetail({
                     className="flex items-center justify-between grow"
                     htmlFor="specific_goals"
                   >
-                    <span
-                      className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                    >
+                    <span className={`font-bold text-sm text-gray-900`}>
                       Resultados
                     </span>
                     <span className="text-xs font-regular">

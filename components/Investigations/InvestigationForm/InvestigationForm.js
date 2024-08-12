@@ -1,13 +1,13 @@
 "use client";
 import slugify from "slugify";
 import Link from "next/link";
-import { libre_franklin700, libre_franklin600 } from "@/app/fonts";
 import { useRef, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { MultiSelect } from "react-multi-select-component";
+import { Label } from "@/components/Common";
 
 import {
   Material,
@@ -376,8 +376,8 @@ export function InvestigationForm({ params, title }) {
     <div>
       {isUploading && (
         <div
-          className={`${libre_franklin600.className} 
-            gap-4
+          className={`
+            gap-4 font-semibold
             text-xl absolute top-0 right-0 bottom-0 
             left-0 w-full h-screen bg-black/50 z-50
             flex text-white flex-col justify-center
@@ -408,9 +408,7 @@ export function InvestigationForm({ params, title }) {
                   />
                 </svg>
               </Link>
-              <h4
-                className={`${libre_franklin700.className} flex flex-col ml-3 text-slate-700 capitalize text-xl`}
-              >
+              <h4 className="font-semibold flex flex-col ml-3 text-slate-700 capitalize text-xl">
                 {title}
               </h4>
             </div>
@@ -418,29 +416,35 @@ export function InvestigationForm({ params, title }) {
               className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-full text-sm px-5 py-2.5 text-center"
               type="submit"
             >
-              Guardar
+              {formik.values.investigation_types.length === 0
+                ? "Guardar"
+                : "Siguiente"}
             </button>
           </div>
           <div>
             <div className="flex flex-col gap-4">
               <div className="border border-gray-200 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-xl font-bold">Ficha Técnica</h4>
-                  <span className="cursor-pointer text-xs font-medium gap-1 flex items-center relative text-blue-800">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-4"
+                  <h4 className="text-xl font-semibold">Ficha Técnica</h4>
+                  <div className="flex divide-x-2 ">
+                    {investigation?.attributes?.research_plan && (
+                      <a
+                        className="text-xs font-regular text-blue-700 hover:underline pr-4"
+                        href={investigation?.attributes?.research_plan}
+                      >
+                        Actual Research Plan
+                      </a>
+                    )}
+                    <label
+                      htmlFor="research_plan"
+                      className="cursor-pointer hover:underline text-xs font-regular gap-1 flex items-center relative text-blue-700 pl-4"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
                       />
-                    </svg>
+                    </label>
                     <input
                       type="file"
                       id="research_plan"
@@ -452,27 +456,20 @@ export function InvestigationForm({ params, title }) {
                         ? `Research Plan: ${researchPlan}`
                         : "Agregar Research Plan"}
                     </em>
-                  </span>
+                  </div>
                 </div>
                 <div className="divide-x divide-gray-200 grid grid-cols-2 gap-y-6">
                   <ul className="flex flex-col gap-6 pr-6">
                     <li className="flex gap-4">
-                      <label htmlFor="name" className="flex flex-col grow">
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Título*
-                        </span>
-                        <span className="text-xs font-regular">
-                          Máximo 40 caracteres
-                        </span>
-                      </label>
+                      <Label subtext="Máximo 70 caracteres" htmlFor="name">
+                        Titulo*
+                      </Label>
 
                       <input
                         value={formik.values.name}
                         onChange={formik.handleChange}
                         error={formik.errors.name}
-                        maxLength={40}
+                        maxLength={70}
                         type="text"
                         id="name"
                         className={`
@@ -492,19 +489,12 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex gap-4">
-                      <label
-                        className="flex flex-col grow"
+                      <Label
+                        subtext="Máximo 200 caracteres"
                         htmlFor="description"
                       >
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Contexto
-                        </span>
-                        <span className="text-xs font-regular">
-                          Máximo 200 caracteres
-                        </span>
-                      </label>
+                        Contexto
+                      </Label>
                       <textarea
                         id="description"
                         rows="5"
@@ -527,16 +517,12 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex items-center gap-4">
-                      <label htmlFor="project" className="flex flex-col grow">
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Proyecto*
-                        </span>
-                        <span className="text-xs font-regular">
-                          Proyecto de la investigación
-                        </span>
-                      </label>
+                      <Label
+                        subtext="Proyecto de la investigación"
+                        htmlFor="project"
+                      >
+                        Proyecto*
+                      </Label>
 
                       <div className="relative">
                         <select
@@ -587,19 +573,13 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex items-center">
-                      <label
+                      <Label
+                        subtext="Elige una fecha de inicio"
                         htmlFor="initial_date"
-                        className="flex flex-col grow"
                       >
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Fecha de inicio*
-                        </span>
-                        <span className="text-xs font-regular">
-                          Elige una fecha de inicio
-                        </span>
-                      </label>
+                        Fecha de inicio*
+                      </Label>
+
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha inicial"
@@ -617,16 +597,9 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex items-center">
-                      <label htmlFor="end_date" className="flex flex-col grow">
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Fecha de cierre
-                        </span>
-                        <span className="text-xs font-regular">
-                          Elige una fecha final
-                        </span>
-                      </label>
+                      <Label subtext="Elige una fecha final" htmlFor="end_date">
+                        Fecha de cierre
+                      </Label>
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha final"
@@ -641,16 +614,12 @@ export function InvestigationForm({ params, title }) {
                   </ul>
                   <ul className="flex flex-col gap-6 pl-6">
                     <li className="flex gap-4">
-                      <label htmlFor="teams" className="flex flex-col grow">
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Otras áreas involucradas
-                        </span>
-                        <span className="text-xs font-regular">
-                          Áreas amigas que participaron
-                        </span>
-                      </label>
+                      <Label
+                        subtext="Áreas amigas que participaron"
+                        htmlFor="teams"
+                      >
+                        áreas involucradas
+                      </Label>
 
                       <MultiSelect
                         className={`
@@ -684,16 +653,13 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex items-center gap-4">
-                      <label htmlFor="status" className="flex flex-col grow">
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Estado*
-                        </span>
-                        <span className="text-xs font-regular">
-                          Estado de la investigación
-                        </span>
-                      </label>
+                      <Label
+                        subtext="Estado de la investigación"
+                        htmlFor="status"
+                      >
+                        Estado*
+                      </Label>
+
                       <div className="relative">
                         <select
                           value={formik.values.status}
@@ -729,19 +695,13 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex gap-4">
-                      <label
-                        className="flex flex-col grow"
+                      <Label
+                        subtext="Tipo de investigación"
                         htmlFor="investigation_types"
                       >
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Metodología
-                        </span>
-                        <span className="text-xs font-regular">
-                          Tipo de investigación
-                        </span>
-                      </label>
+                        Metodología
+                      </Label>
+
                       <MultiSelect
                         className="w-64 text-sm"
                         options={investigationTypes}
@@ -771,19 +731,13 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex gap-4">
-                      <label
-                        className="flex flex-col grow"
+                      <Label
+                        subtext="Researchers involucrados"
                         htmlFor="researchers"
                       >
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Equipo research
-                        </span>
-                        <span className="text-xs font-regular">
-                          Researchers involucrados
-                        </span>
-                      </label>
+                        Equipo research
+                      </Label>
+
                       <MultiSelect
                         className="text-sm w-64"
                         options={researchers}
@@ -813,16 +767,10 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex gap-4">
-                      <label className="flex flex-col grow" htmlFor="service">
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Equipo service
-                        </span>
-                        <span className="text-xs font-regular">
-                          Services involucrados
-                        </span>
-                      </label>
+                      <Label subtext="Services involucrados" htmlFor="service">
+                        Equipo service
+                      </Label>
+
                       <MultiSelect
                         className="text-sm w-64"
                         options={serviceTeam}
@@ -852,19 +800,13 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex gap-4">
-                      <label
-                        className="flex flex-col grow"
+                      <Label
+                        subtext="Otros perfiles involucrados"
                         htmlFor="team_extended"
                       >
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Equipo extendido
-                        </span>
-                        <span className="text-xs font-regular">
-                          Otros perfiles involucrados
-                        </span>
-                      </label>
+                        Equipo extendido
+                      </Label>
+
                       <MultiSelect
                         className="w-64 text-sm"
                         options={extendedTeam}
@@ -898,30 +840,21 @@ export function InvestigationForm({ params, title }) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="border border-gray-200 rounded-xl p-6">
-                  <h4
-                    className={`${libre_franklin700.className} text-xl mb-4 capitalize`}
-                  >
+                  <h4 className="font-semibold text-xl mb-4 capitalize">
                     Objetivo
                   </h4>
                   <ul className="flex flex-col gap-4">
                     <li className="flex items-center gap-4">
-                      <label htmlFor="goal" className="flex flex-col grow">
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Objetivo principal
-                        </span>
-                        <span className="text-xs font-regular">
-                          Máximo 40 caracteres
-                        </span>
-                      </label>
+                      <Label htmlFor="goal" subtext="Máximo 70 caracteres">
+                        Objetivo principal
+                      </Label>
 
                       <input
                         defaultValue={investigation?.goal}
                         value={formik.values.goal}
                         onChange={formik.handleChange}
                         error={formik.errors.goal}
-                        maxLength={40}
+                        maxLength={70}
                         type="text"
                         id="goal"
                         className={`
@@ -936,24 +869,17 @@ export function InvestigationForm({ params, title }) {
                               : "opacity-100"
                           }
                         `}
-                        placeholder="Principal objetivo"
+                        placeholder="Objetivo principal"
                       />
                     </li>
 
                     <li className="flex gap-4">
-                      <label
-                        className="flex flex-col grow"
+                      <Label
                         htmlFor="specific_goals"
+                        subtext="Máximo 200 caracteres"
                       >
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Objetivos específicos
-                        </span>
-                        <span className="text-xs font-regular">
-                          Máximo 200 caracteres
-                        </span>
-                      </label>
+                        Objetivos específicos
+                      </Label>
                       <textarea
                         id="specific_goals"
                         rows="5"
@@ -976,26 +902,17 @@ export function InvestigationForm({ params, title }) {
                   </ul>
                 </div>
                 <div className="border border-gray-200 rounded-xl p-6">
-                  <h4
-                    className={`${libre_franklin700.className} text-xl mb-4 capitalize`}
-                  >
+                  <h4 className="font-semibold text-xl mb-4 capitalize">
                     Presentación
                   </h4>
                   <ul className="flex flex-col gap-6">
-                    <li className="flex gap-4">
-                      <label
-                        className="flex flex-col w-80"
+                    <li className="flex gap-4 justify-between">
+                      <Label
+                        subtext="(Jpg,Png,Pdf,Doc,Docx,Xlsx,Pptx)"
                         htmlFor="guide_media_link"
                       >
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Adjuntar archivo
-                        </span>
-                        <span className="text-xs font-regular">
-                          (JPG,PNG,PDF,DOC,XLSX,PPTX)
-                        </span>
-                      </label>
+                        Adjuntar archivo
+                      </Label>
 
                       <div className="flex flex-col gap-2 w-64">
                         <input
@@ -1012,7 +929,6 @@ export function InvestigationForm({ params, title }) {
                           initialGuideMediaLinkRef.current !== "" && (
                             <a
                               href={initialGuideMediaLinkRef.current}
-                              target="_blank"
                               rel="noopener noreferrer"
                               className="text-blue-700 hover:underline text-xs font-regular flex justify-end"
                             >
@@ -1023,19 +939,13 @@ export function InvestigationForm({ params, title }) {
                     </li>
 
                     <li className="flex gap-4">
-                      <label
+                      <Label
+                        subtext="Listado de personas"
                         htmlFor="presented_to"
-                        className="flex flex-col grow"
                       >
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          A quién se presentó
-                        </span>
-                        <span className="text-xs font-regular">
-                          Listado de personas
-                        </span>
-                      </label>
+                        A quién se presentó
+                      </Label>
+
                       <input
                         type="text"
                         id="presented_to"
@@ -1057,20 +967,15 @@ export function InvestigationForm({ params, title }) {
                         placeholder="Listado de personas"
                       />
                     </li>
+
                     <li className="flex items-center">
-                      <label
+                      <Label
+                        subtext="Cuando se presentó"
                         htmlFor="presented_date"
-                        className="flex flex-col grow"
                       >
-                        <span
-                          className={`${libre_franklin600.className} font-bold text-sm text-gray-900`}
-                        >
-                          Fecha de presentación
-                        </span>
-                        <span className="text-xs font-regular">
-                          Cuando se presentó
-                        </span>
-                      </label>
+                        Fecha de presentación
+                      </Label>
+
                       <DatePicker
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha"

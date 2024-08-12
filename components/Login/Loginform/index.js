@@ -107,7 +107,6 @@ export default function LoginForm() {
         <div className="text-sm font-medium text-gray-500">
           ¿Tienes problemas para iniciar sesión?{" "}
           <a
-            target="_blank"
             href="https://wa.link/8c5ncp"
             className="text-blue-700 hover:underline"
           >

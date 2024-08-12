@@ -1,13 +1,11 @@
 "use client";
 import { useAuth } from "@/hooks";
 import Image from "next/image";
-import { libre_franklin600, libre_franklin500 } from "../../app/fonts";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ENV } from "@/utils/constants";
 
 export default function SidebarComponent() {
-  const { user, updateUser } = useAuth();
+  const { user } = useAuth();
 
   const pathname = usePathname();
 
@@ -111,20 +109,13 @@ export default function SidebarComponent() {
               height={80}
             ></Image>
             <figcaption className="mt-2 text-white text-center">
-              <p
-                className={`${libre_franklin600.className} capitalize text-lg`}
-              >
+              <p className="font-semibold capitalize text-lg">
                 {user?.firstname} {user?.lastname}
               </p>
-              <p
-                className={`${libre_franklin500.className} text-sm capitalize`}
-              >
-                {user?.position}
-              </p>
-              {/* <span className="text-white">{user?.position}</span> */}
+              <p className="font-medium text-sm capitalize">{user?.position}</p>
             </figcaption>
           </figure>
-          {/* </div> */}
+
           <ul className="space-y-2 w-full">
             {links.map((link, index) => {
               return (
@@ -141,9 +132,7 @@ export default function SidebarComponent() {
                     ${pathname === link.href ? "bg-gray-700" : ""}
                     `}
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-md ms-3 flex items-center gap-2`}
-                    >
+                    <span className="font-semibold text-md ms-3 flex items-center gap-2">
                       {link.icon}
 
                       {link.name}
