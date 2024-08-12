@@ -43,14 +43,14 @@ export default function Subscribers() {
           id: costumer.id,
           negocio: costumer.attributes.type,
           giro: costumer.attributes.subtype,
-          ruc: costumer.attributes.ruc,
           nombre_negocio: costumer.attributes.name,
           razon_social: costumer.attributes.social_reason,
+          celular: costumer.attributes.cellphone,
           departamento: costumer.attributes.department,
           provincia: costumer.attributes.province,
           distrito: costumer.attributes.district,
           direccion: costumer.attributes.address,
-          celular: costumer.attributes.cellphone,
+          ruc: costumer.attributes.ruc,
         }));
 
         setCostumers(transformedData);
@@ -108,29 +108,30 @@ export default function Subscribers() {
               <th scope="col" className="px-2 py-3 min-w-32">
                 Giro
               </th>
-              <th scope="col" className="px-2 py-3">
-                RUC
-              </th>
+
               <th scope="col" className="min-w-72 px-2 py-3">
                 Razón Social
               </th>
               <th scope="col" className="min-w-52 px-2 py-3">
                 Nombre del Negocio
               </th>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="min-w-36 px-2 py-3">
+                Teléfono
+              </th>
+              <th scope="col" className="min-w-36 px-2 py-3">
                 Departamento
               </th>
               <th scope="col" className="min-w-40 px-2 py-3">
                 Provincia
               </th>
-              <th scope="col" className="min-w-48 min-w-48 px-2 py-3">
+              <th scope="col" className="min-w-48 px-2 py-3">
                 Distrito
               </th>
               <th scope="col" className="min-w-80 px-2 py-3">
                 Dirección
               </th>
               <th scope="col" className="px-2 py-3">
-                Teléfono
+                RUC
               </th>
               {/* <th scope="col" className="px-2 py-3">
                 Acciones
@@ -144,13 +145,14 @@ export default function Subscribers() {
                   <tr key={index} className="bg-white border-b">
                     <td className="px-2 py-2 capitalize">{costumer.negocio}</td>
                     <td className="px-2 py-2 capitalize">{costumer.giro}</td>
-                    <td className="px-2 py-2 capitalize">{costumer.ruc}</td>
                     <td className="px-2 py-2 font-medium text-gray-900">
                       {costumer.razon_social}
                     </td>
                     <td className="px-2 py-2 capitalize font-medium text-gray-900">
                       {costumer.nombre_negocio}
                     </td>
+                    <td className="px-2 py-2">{costumer.celular}</td>
+
                     <td className="px-2 py-2 capitalize font-medium text-gray-900">
                       {costumer.provincia}
                     </td>
@@ -163,7 +165,8 @@ export default function Subscribers() {
                     <td className="px-2 py-2 capitalize">
                       {costumer.direccion}
                     </td>
-                    <td className="px-2 py-2">{costumer.celular}</td>
+                    <td className="px-2 py-2 capitalize">{costumer.ruc}</td>
+
                     {/* <td className="px-2 py-2 text-center">
                       <button onClick={() => openEditModal(costumer)}>
                         editar
