@@ -407,9 +407,8 @@ export function InvestigationSlugComponent({ params }) {
               );
             }
           })}
-
           <div className="grid grid-cols-2 gap-4">
-            {investigation?.goal && investigation?.specific_goals && (
+            {(investigation?.goal || investigation?.specific_goals) && (
               <div className="border border-gray-200 rounded-xl p-6">
                 <h4 className="font-semibold text-xl mb-4 capitalize">
                   Objetivo
