@@ -6,8 +6,6 @@ import * as Yup from "yup";
 import { Costumer } from "@/api";
 import * as XLSX from "xlsx";
 
-import { libre_franklin600 } from "@/app/fonts";
-
 export default function Subscribers() {
   const [costumers, setCostumers] = useState([] as any[]);
   const [openEditClient, setOpenEditClient] = useState(false);
@@ -45,14 +43,14 @@ export default function Subscribers() {
           id: costumer.id,
           negocio: costumer.attributes.type,
           giro: costumer.attributes.subtype,
-          ruc: costumer.attributes.ruc,
           nombre_negocio: costumer.attributes.name,
           razon_social: costumer.attributes.social_reason,
+          celular: costumer.attributes.cellphone,
           departamento: costumer.attributes.department,
           provincia: costumer.attributes.province,
           distrito: costumer.attributes.district,
           direccion: costumer.attributes.address,
-          celular: costumer.attributes.cellphone,
+          ruc: costumer.attributes.ruc,
         }));
 
         setCostumers(transformedData);
@@ -110,29 +108,30 @@ export default function Subscribers() {
               <th scope="col" className="px-2 py-3 min-w-32">
                 Giro
               </th>
-              <th scope="col" className="px-2 py-3">
-                RUC
-              </th>
+
               <th scope="col" className="min-w-72 px-2 py-3">
                 Razón Social
               </th>
               <th scope="col" className="min-w-52 px-2 py-3">
                 Nombre del Negocio
               </th>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="min-w-36 px-2 py-3">
+                Teléfono
+              </th>
+              <th scope="col" className="min-w-36 px-2 py-3">
                 Departamento
               </th>
               <th scope="col" className="min-w-40 px-2 py-3">
                 Provincia
               </th>
-              <th scope="col" className="min-w-48 min-w-48 px-2 py-3">
+              <th scope="col" className="min-w-48 px-2 py-3">
                 Distrito
               </th>
               <th scope="col" className="min-w-80 px-2 py-3">
                 Dirección
               </th>
               <th scope="col" className="px-2 py-3">
-                Teléfono
+                RUC
               </th>
               {/* <th scope="col" className="px-2 py-3">
                 Acciones
@@ -146,13 +145,14 @@ export default function Subscribers() {
                   <tr key={index} className="bg-white border-b">
                     <td className="px-2 py-2 capitalize">{costumer.negocio}</td>
                     <td className="px-2 py-2 capitalize">{costumer.giro}</td>
-                    <td className="px-2 py-2 capitalize">{costumer.ruc}</td>
                     <td className="px-2 py-2 font-medium text-gray-900">
                       {costumer.razon_social}
                     </td>
                     <td className="px-2 py-2 capitalize font-medium text-gray-900">
                       {costumer.nombre_negocio}
                     </td>
+                    <td className="px-2 py-2">{costumer.celular}</td>
+
                     <td className="px-2 py-2 capitalize font-medium text-gray-900">
                       {costumer.provincia}
                     </td>
@@ -165,7 +165,8 @@ export default function Subscribers() {
                     <td className="px-2 py-2 capitalize">
                       {costumer.direccion}
                     </td>
-                    <td className="px-2 py-2">{costumer.celular}</td>
+                    <td className="px-2 py-2 capitalize">{costumer.ruc}</td>
+
                     {/* <td className="px-2 py-2 text-center">
                       <button onClick={() => openEditModal(costumer)}>
                         editar
@@ -210,9 +211,7 @@ export default function Subscribers() {
               <ul className="flex flex-col gap-y-6">
                 <li className="flex gap-4">
                   <label htmlFor="business_type" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Negocio
                     </span>
                     <span className="text-xs font-regular">
@@ -236,9 +235,7 @@ export default function Subscribers() {
                     htmlFor="business_subtype"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Giro
                     </span>
                     <span className="text-xs font-regular">
@@ -263,9 +260,7 @@ export default function Subscribers() {
                     htmlFor="business_document"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       RUC
                     </span>
                     <span className="text-xs font-regular">
@@ -285,9 +280,7 @@ export default function Subscribers() {
 
                 <li className="flex gap-4">
                   <label htmlFor="business_name" className="flex flex-col grow">
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Nombre del negocio
                     </span>
                     <span className="text-xs font-regular">Negocio</span>
@@ -308,9 +301,7 @@ export default function Subscribers() {
                     htmlFor="business_owner"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Cliente
                     </span>
                     <span className="text-xs font-regular">
@@ -333,9 +324,7 @@ export default function Subscribers() {
                     htmlFor="business_district"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Distrito
                     </span>
                     <span className="text-xs font-regular">
@@ -358,9 +347,7 @@ export default function Subscribers() {
                     htmlFor="owner_cellphone"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       Teléfono
                     </span>
                     <span className="text-xs font-regular">
@@ -383,9 +370,7 @@ export default function Subscribers() {
                     htmlFor="owner_document_number"
                     className="flex flex-col grow"
                   >
-                    <span
-                      className={`${libre_franklin600.className} text-sm text-gray-900`}
-                    >
+                    <span className={`font-semibold text-sm text-gray-900`}>
                       DNI
                     </span>
                     <span className="text-xs font-regular">

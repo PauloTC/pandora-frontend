@@ -2,18 +2,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Project, Public, Researcher } from "@/api";
 import { map } from "lodash";
-import {
-  libre_franklin600,
-  libre_franklin500,
-  libre_franklin700,
-} from "@/app/fonts";
 
 import Link from "next/link";
 import Image from "next/image";
 import classNames from "classnames";
 import { format, addDays } from "date-fns";
 import { InvestigationsContext } from "@/contexts";
-import { get } from "http";
+import { FilterSection } from "@/components/Common";
 
 const projectCtrl = new Project();
 const publicCtrl = new Public();
@@ -281,7 +276,7 @@ export default function InvestigationsComponent() {
                       <div className="mb-3 flex justify-between">
                         <h4
                           title={investigation?.attributes?.name}
-                          className={`font-semibold capitalize min-h-10 text-slate-800 text-sm w-4/5`}
+                          className="font-semibold h-10 text-slate-800 text-sm w-4/5 overflow-hidden overflow-auto break-words"
                         >
                           {investigation?.attributes?.name}
                         </h4>
@@ -318,35 +313,55 @@ export default function InvestigationsComponent() {
                               </p>
                             ))
                           ) : (
-                            <p style={{ minHeight: 8 }}></p>
+                            <>
+                              <p className="text-xs align-center flex border px-2 rounded-md">
+                                Sin ubicación
+                              </p>
+                            </>
                           )}
                         </div>
                       </div>
 
                       <div className="flex gap-2 mb-3 min-h-4">
-                        {publics?.length > 0 &&
-                          publics?.slice(0, 2).map((publicItem, index) => (
-                            <span
-                              key={index}
-                              className={`${libre_franklin600.className} text-xs capitalize`}
+                        {publics?.length > 0 ? (
+                          <>
+                            {publics?.slice(0, 2).map((publicItem, index) => (
+                              <span
+                                key={index}
+                                className="font-semibold text-xs capitalize"
+                              >
+                                {publicItem}
+                              </span>
+                            ))}
+                            {publics?.length > 2 && (
+                              <span className="font-semibold text-xs capitalize">
+                                {`+ ${publics?.length - 2}`}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <span className="font-semibold text-xs capitalize flex gap-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-4"
                             >
-                              {publicItem}
-                            </span>
-                          ))}
-
-                        {publics?.length > 2 && (
-                          <span
-                            className={`${libre_franklin600.className} text-xs capitalize`}
-                          >
-                            {`+ ${publics?.length - 2}`}
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6 18 18 6M6 6l12 12"
+                              />
+                            </svg>
+                            Sin público
                           </span>
                         )}
                       </div>
 
                       <div className="flex justify-between items-center">
-                        <span
-                          className={`${libre_franklin500.className} text-xs block mb-2`}
-                        >
+                        <span className="font-medium text-xs block mb-2">
                           <strong>Inicio:{"  "}</strong>
                           {investigation?.attributes?.initial_date &&
                             format(
@@ -361,7 +376,6 @@ export default function InvestigationsComponent() {
                         </span>
                         <span
                           className={classNames(
-                            `${libre_franklin600.className}`,
                             "rounded-lg",
                             "text-xs",
                             "block",
@@ -391,15 +405,13 @@ export default function InvestigationsComponent() {
                       </div>
                     </div>
                     <div className="flex pt-2 ">
-                      <p
-                        className={`${libre_franklin700.className} h-12 flex items-center capitalize text-md w-full`}
-                      >
+                      <p className="font-semibold h-12 flex items-center capitalize text-md w-full">
                         {
                           investigation?.attributes?.project?.data?.attributes
                             .name
                         }
                       </p>
-                      <ul className="flex items-center justify-end grow relative w-40">
+                      <ul className="flex items-center justify-end grow relative w-40 h-12">
                         {investigation?.attributes?.researchers.data
                           .slice(0, 2)
                           .map((researcher, index) => {
@@ -436,9 +448,7 @@ export default function InvestigationsComponent() {
                         {investigation?.attributes?.researchers.data.length >
                           2 && (
                           <li className="absolute right-0 bottom-0 w-8">
-                            <span
-                              className={`${libre_franklin600.className} rounded-md text-xs flex justify-center bg-stone-600 text-white`}
-                            >
+                            <span className="rounded-md text-xs flex justify-center bg-stone-600 text-white">
                               +{" "}
                               {investigation?.attributes?.researchers.data
                                 .length - 2}{" "}
@@ -503,9 +513,7 @@ export default function InvestigationsComponent() {
         </div>
         <div className="w-1/4 border border-gray-200 rounded-xl p-4 self-start">
           <div className="flex items-center justify-between mb-5">
-            <h3 className={`${libre_franklin600.className} block text-lg`}>
-              Filtros
-            </h3>
+            <h3 className="font-semibold block text-lg">Filtros</h3>
             <button
               className="text-xs underline text-blue-800"
               onClick={() => handleFilterClick("reset")}
@@ -514,148 +522,43 @@ export default function InvestigationsComponent() {
             </button>
           </div>
           <div>
-            <h4 className={`${libre_franklin500.className} text-sm block mb-2`}>
-              Ordenar por
-            </h4>
-            <ul className="flex flex-wrap gap-1 mb-6">
-              {sortOptions.map((option, index) => (
-                <li key={index}>
-                  <button
-                    onClick={() => handleFilterClick("sort", option.value)}
-                    className={classNames(
-                      filters.sort === option.value
-                        ? "bg-blue-100"
-                        : "bg-gray-100",
-                      filters.sort === option.value
-                        ? "text-blue-800"
-                        : "text-gray-800",
-                      "text-xs",
-                      "font-medium",
-                      "me-2",
-                      "px-3",
-                      "py-1",
-                      "rounded-full"
-                    )}
-                  >
-                    {option.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <h4 className={`${libre_franklin500.className} text-sm block mb-2`}>
-              Proyecto
-            </h4>
-            <ul className="flex flex-wrap gap-1 mb-6">
-              {(showAllProjects ? projects : projects.slice(0, 5))?.map(
-                (project, index) => (
-                  <li key={index}>
-                    <button
-                      onClick={() =>
-                        handleFilterClick("project", project.attributes.name)
-                      }
-                      className={classNames(
-                        filters.project === project.attributes.name
-                          ? "bg-blue-100"
-                          : "bg-gray-100",
-                        filters.project === project.attributes.name
-                          ? "text-blue-800"
-                          : "text-gray-800",
-                        "text-xs",
-                        "font-medium",
-                        "me-2",
-                        "px-3",
-                        "py-1",
-                        "rounded-full"
-                      )}
-                    >
-                      {project.attributes.alias}
-                    </button>
-                  </li>
-                )
-              )}
-              {projects.length > 5 && (
-                <button
-                  className="text-xs text-blue-800 underline leading-4"
-                  onClick={() => setShowAllProjects(!showAllProjects)}
-                >
-                  {showAllProjects ? "Ocultar proyectos" : "Más proyectos"}
-                </button>
-              )}
-            </ul>
-            <h4 className={`${libre_franklin500.className} text-sm block mb-2`}>
-              Público objetivo
-            </h4>
-            <ul className="flex flex-wrap gap-1 mb-6">
-              {(showAllPublics
-                ? filterPublics
-                : filterPublics.slice(0, 5)
-              )?.map((publicItem, index) => (
-                <li key={index}>
-                  <button
-                    onClick={() =>
-                      handleFilterClick(
-                        "objectivePublic",
-                        publicItem.attributes.name
-                      )
-                    }
-                    className={classNames(
-                      filters.objectivePublic === publicItem.attributes.name
-                        ? "bg-blue-100"
-                        : "bg-gray-100",
-                      filters.objectivePublic === publicItem.attributes.name
-                        ? "text-blue-800"
-                        : "text-gray-800",
-                      "text-xs",
-                      "font-medium",
-                      "me-2",
-                      "px-3",
-                      "py-1",
-                      "rounded-full"
-                    )}
-                  >
-                    {publicItem.attributes.name}
-                  </button>
-                </li>
-              ))}
-              {filterPublics.length > 5 && (
-                <button
-                  className="text-xs text-blue-800 underline leading-4"
-                  onClick={() => setShowAllPublics(!showAllPublics)}
-                >
-                  {showAllPublics ? "Ocultar públicos" : "Más públicos"}
-                </button>
-              )}
-            </ul>
-            <h4 className={`${libre_franklin500.className} text-sm block mb-2`}>
-              Personas
-            </h4>
-            <ul className="flex flex-wrap gap-1 mb-6">
-              {filterResearchers.map((researcher, index) => (
-                <li key={index}>
-                  <button
-                    onClick={() =>
-                      handleFilterClick("objetiveResearcher", researcher.value)
-                    }
-                    className={classNames(
-                      filters.objetiveResearcher === researcher.value
-                        ? "bg-blue-100"
-                        : "bg-gray-100",
-                      filters.objetiveResearcher === researcher.value
-                        ? "text-blue-800"
-                        : "text-gray-800",
-                      "text-xs",
-                      "font-medium",
-                      "me-2",
-                      "px-3",
-                      "py-1",
-                      "rounded-full"
-                    )}
-                  >
-                    {researcher.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <FilterSection
+              title="Ordenar por"
+              items={sortOptions}
+              handleFilterClick={handleFilterClick}
+              filterType="sort"
+              filterValue={filters.sort}
+            />
+
+            <FilterSection
+              title="Proyecto"
+              items={projects.map((project) => ({
+                value: project.attributes.name,
+                label: project.attributes.alias,
+              }))}
+              handleFilterClick={handleFilterClick}
+              filterType="project"
+              filterValue={filters.project}
+            />
+
+            <FilterSection
+              title="Público objetivo"
+              items={filterPublics.map((publicItem) => ({
+                value: publicItem.attributes.name,
+                label: publicItem.attributes.name,
+              }))}
+              handleFilterClick={handleFilterClick}
+              filterType="objectivePublic"
+              filterValue={filters.objectivePublic}
+            />
+
+            <FilterSection
+              title="Personas"
+              items={filterResearchers}
+              handleFilterClick={handleFilterClick}
+              filterType="objetiveResearcher"
+              filterValue={filters.objetiveResearcher}
+            />
           </div>
         </div>
       </div>
