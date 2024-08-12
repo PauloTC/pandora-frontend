@@ -325,7 +325,7 @@ export function MaterialsForm({ slug }) {
       ) : (
         <ul className="flex flex-col gap-6">
           {[1, 2].map((index) => (
-            <li className="border border-gray-200 rounded-xl p-6">
+            <li key={index} className="border border-gray-200 rounded-xl p-6">
               <h4 className="h-7 bg-gray-200 animate-pulse w-80 rounded-lg mb-4"></h4>
               <div className="divide-x divide-gray-200 grid grid-cols-2 gap-6">
                 <div className="flex flex-col gap-4">
