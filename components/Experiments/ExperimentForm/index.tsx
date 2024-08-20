@@ -151,7 +151,7 @@ export default function ExperimentForm() {
           Guardar
         </button>
       </div>
-      <li className="flex justify-end">
+      <li className="flex justify-end overflow-hidden">
         <span className="cursor-pointer text-xs font-medium gap-1 flex items-center relative text-blue-800">
           <svg
             xmlns="http://www.w3.org/2000/svg"
