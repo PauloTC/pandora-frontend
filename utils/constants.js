@@ -19,6 +19,9 @@ export const ENV = {
     PROJECTS: "/projects",
     COSTUMERS: "/costumers",
     EXPERIMENTS: "/experiments",
+    VPS: "/vps",
+    EXPERIMENT_TYPES: "/experiment-types",
+    EXECUTION_METHODS: "/execution-methods",
   },
   TOKEN: "token",
 };

@@ -8,7 +8,7 @@ import Image from "next/image";
 import classNames from "classnames";
 import { format, addDays } from "date-fns";
 import { InvestigationsContext } from "@/contexts";
-import { FilterSection } from "@/components/Common";
+import { FilterSection, StatusBadge } from "@/components/Common";
 
 const projectCtrl = new Project();
 const publicCtrl = new Public();
@@ -374,7 +374,8 @@ export default function InvestigationsComponent() {
                               "dd/MM/yy"
                             )}
                         </span>
-                        <span
+                        <StatusBadge status={investigation.attributes.status} />
+                        {/* <span
                           className={classNames(
                             "rounded-lg",
                             "text-xs",
@@ -401,7 +402,7 @@ export default function InvestigationsComponent() {
                           )}
                         >
                           {investigation?.attributes?.status}
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                     <div className="flex pt-2 ">

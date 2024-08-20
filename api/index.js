@@ -13,3 +13,6 @@ export * from "./costumer";
 export * from "./upload";
 export * from "./data";
 export * from "./experiment";
+export * from "./vp";
+export * from "./experiment_type";
+export * from "./execution_method";
