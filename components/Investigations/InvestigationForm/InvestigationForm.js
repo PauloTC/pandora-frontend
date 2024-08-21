@@ -7,6 +7,8 @@ import Swal from "sweetalert2";
 import "react-datepicker/dist/react-datepicker.css";
 import { MultiSelect } from "react-multi-select-component";
 import { Label } from "@/components/Common";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import {
   Material,
@@ -182,6 +184,8 @@ export function InvestigationForm({ params, title }) {
           initial_date,
           research_plan,
         };
+
+        console.log("investigationData", investigationData);
 
         if (presentedDate) {
           investigationData.presented_date = format(
@@ -477,8 +481,8 @@ export function InvestigationForm({ params, title }) {
                   </div>
                 </div>
 
-                <div className="divide-x divide-gray-200 grid grid-cols-2 gap-y-6">
-                  <ul className="flex flex-col gap-6 pr-6">
+                <div className="divide-x divide-gray-200 flex gap-y-6">
+                  <ul className="flex flex-col gap-6 pr-6 self-start">
                     <li className="flex gap-4">
                       <Label subtext="Máximo 70 caracteres" htmlFor="name">
                         Titulo*
@@ -507,14 +511,20 @@ export function InvestigationForm({ params, title }) {
                       />
                     </li>
 
-                    <li className="flex gap-4">
-                      <Label
-                        subtext="Máximo 200 caracteres"
-                        htmlFor="description"
-                      >
+                    <li className="flex gap-4 flex-col">
+                      <Label subtext="" htmlFor="description">
                         Contexto
                       </Label>
-                      <textarea
+                      <ReactQuill
+                        theme="snow"
+                        value={formik.values.description_text}
+                        onChange={(content, delta, source) => {
+                          if (source === "user") {
+                            formik.setFieldValue("description_text", content);
+                          }
+                        }}
+                      />
+                      {/* <textarea
                         id="description"
                         rows="5"
                         maxLength={200}
@@ -532,7 +542,7 @@ export function InvestigationForm({ params, title }) {
                         value={formik.values.description}
                         onChange={formik.handleChange}
                         error={formik.errors.description}
-                      ></textarea>
+                      ></textarea> */}
                     </li>
 
                     <li className="flex items-center gap-4">

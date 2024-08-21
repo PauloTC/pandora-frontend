@@ -24,12 +24,9 @@ export const LabelDetail = ({
         {label}:
       </p>
       <p
-        className={classNames(
-          "text-sm capitalize overflow-auto break-words self-center",
-          {
-            "w-full": orientation === "vertical",
-          }
-        )}
+        className={classNames("text-sm overflow-auto break-words self-center", {
+          "w-full": orientation === "vertical",
+        })}
       >
         {value}
       </p>
