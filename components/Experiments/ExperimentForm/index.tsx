@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { Label } from "@/components/Common";
 import { useFormik } from "formik";
 import {
@@ -9,7 +10,9 @@ import {
   Experiment,
   ExecutionMethod,
 } from "@/api";
+import ReactMarkdown from "react-markdown";
 import ReactQuill from "react-quill";
+import Image from "next/image";
 // @ts-ignore
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
@@ -18,14 +21,38 @@ import { MultiSelect } from "react-multi-select-component";
 import "react-quill/dist/quill.snow.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { SelectOption } from "@/types";
+import htmlToDraft from "html-to-draftjs";
+import parse from "html-react-parser";
+import { EditorState, convertToRaw } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-export default function ExperimentForm() {
+interface ExperimentFormProps {
+  readonly?: boolean;
+  experiment?: any;
+}
+
+export default function ExperimentForm({
+  readonly = false,
+  experiment,
+}: ExperimentFormProps) {
   const [participants, setParticipants] = useState([]);
   const [vps, setVps] = useState<SelectOption[]>([]);
   const [projects, setProjects] = useState<SelectOption[]>([]);
   const [experimentTypes, setExperimentTypes] = useState<SelectOption[]>([]);
   const [executionMethods, setExecutionMethods] = useState([]);
   const [reference, setReference] = useState("");
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [localReadonly, setLocalReadonly] = useState(readonly);
+  const [editorStateHypothesis, setEditorStateHypothesis] = useState(
+    EditorState.createEmpty()
+  );
+  const [editorStateDescription, setEditorStateDescription] = useState(
+    EditorState.createEmpty()
+  );
+  const [editorStateResults, setEditorStateResults] = useState(
+    EditorState.createEmpty()
+  );
 
   const status = [
     { value: "en curso", label: "En curso" },
@@ -41,28 +68,185 @@ export default function ExperimentForm() {
   const experimentTypeCtrl = new ExperimentType();
   const executionMethodCtrl = new ExecutionMethod();
 
+  function convertEditorStateToBlocks(editorState: EditorState) {
+    const rawContentState = convertToRaw(editorState.getCurrentContent());
+
+    let listItems = [];
+    let blocks = [];
+
+    rawContentState.blocks.forEach((block) => {
+      let children = [];
+      let start = 0;
+      block.inlineStyleRanges.forEach((range) => {
+        if (range.offset > start) {
+          children.push({
+            type: "text",
+            text: block.text.slice(start, range.offset),
+          });
+        }
+
+        let styledText = {
+          type: "text",
+          text: block.text.slice(range.offset, range.offset + range.length),
+          formats: {}, // Añade esta línea
+        };
+
+        if (range.style === "BOLD") {
+          styledText.formats.bold = true; // Cambia esta línea
+        } else if (range.style === "ITALIC") {
+          styledText.formats.italic = true; // Añade esta línea para el estilo cursiva
+        } else if (range.style === "UNDERLINE") {
+          styledText.formats.underline = true; // Cambia esta línea
+        } else if (range.style === "STRIKETHROUGH") {
+          styledText.formats.strikethrough = true; // Cambia esta línea
+        }
+
+        children.push(styledText);
+        start = range.offset + range.length;
+      });
+
+      if (start < block.text.length) {
+        children.push({ type: "text", text: block.text.slice(start) });
+      }
+
+      if (
+        block.type === "unordered-list-item" ||
+        block.type === "ordered-list-item"
+      ) {
+        listItems.push({
+          type: "list-item",
+          children: [{ text: block.text, type: "text" }],
+        });
+      } else {
+        if (listItems.length > 0) {
+          blocks.push({
+            type: "list",
+            format:
+              listItems[0].type === "unordered-list-item"
+                ? "unordered"
+                : "ordered",
+            children: listItems,
+          });
+          listItems = [];
+        }
+
+        if (block.type === "unstyled") {
+          blocks.push({
+            type: "paragraph",
+            children: [{ type: "text", text: block.text }],
+          });
+        } else if (block.type === "header-one") {
+          blocks.push({
+            type: "heading",
+            level: 1,
+            children: [{ text: block.text, type: "text" }],
+          });
+        } else if (block.type === "header-two") {
+          blocks.push({
+            type: "heading",
+            level: 2,
+            children: [{ text: block.text, type: "text" }],
+          });
+        } else if (block.type === "header-three") {
+          blocks.push({
+            type: "heading",
+            level: 3,
+            children: [{ text: block.text, type: "text" }],
+          });
+        }
+      }
+    });
+
+    if (listItems.length > 0) {
+      blocks.push({
+        type: "list",
+        format:
+          listItems[0].type === "unordered-list-item" ? "unordered" : "ordered",
+        children: listItems,
+      });
+    }
+
+    return blocks;
+  }
+
+  function convertStrapiRichTextToPlainText(strapiRichText) {
+    let plainText = "";
+
+    strapiRichText.forEach((block, index) => {
+      if (block.type === "list-item") {
+        // Añade un número de lista antes del texto
+        plainText += `${index + 1}. `;
+      }
+
+      block.children.forEach((child) => {
+        plainText += child.text;
+      });
+
+      plainText += "\n"; // Añade un salto de línea después de cada bloque
+    });
+
+    return plainText;
+  }
+
+  let plainTextProblem = "";
+  let plainTextHypothesis = "";
+  let plainTextDescription = "";
+  let plainTextResults = "";
+
+  if (experiment) {
+    if (experiment.problem_definition) {
+      plainTextProblem = convertStrapiRichTextToPlainText(
+        experiment.problem_definition
+      );
+    }
+
+    if (experiment.hypotesis) {
+      plainTextHypothesis = convertStrapiRichTextToPlainText(
+        experiment.hypotesis
+      );
+    }
+
+    if (experiment.description) {
+      plainTextDescription = convertStrapiRichTextToPlainText(
+        experiment.description
+      );
+    }
+    if (experiment.results) {
+      plainTextDescription = convertStrapiRichTextToPlainText(
+        experiment.results
+      );
+    }
+  }
+
   const formik = useFormik({
     initialValues: {
-      title: "",
-      status: "en curso",
-      initial_date: new Date(),
+      title: experiment ? experiment.title : "",
+      status: experiment ? experiment.status : "en curso",
+      initial_date: experiment ? parseISO(experiment.initial_date) : new Date(),
       participants: [],
       problem_definition: "",
       hypotesis: "",
       description: "",
-      vp: "",
-      strategic_area: "",
-      experiment_type: "",
+      vp: experiment ? experiment.vp.data.id : "",
+      strategic_area: experiment ? experiment.strategic_area : "",
+      stakeholder: experiment ? experiment.stakeholder : "",
+      experiment_type: experiment ? experiment.experiment_type.data.id : "",
       execution_methods: [],
       results: "",
-      stakeholder: "",
-      roi: "",
+      roi: experiment ? experiment.roi : "",
     },
     onSubmit: async (values) => {
       try {
-        const response = await experimentCtrl.createExperiment(values);
+        // let hypotesis = convertEditorStateToBlocks(formik.values.hypotesis);
+
+        // console.log("editorState", editorState);
+
+        const response = await experimentCtrl.createExperiment({
+          ...values,
+        });
 
         console.log("response", response);
+        // console.log("hypotesis", hypotesis);
         console.log("values", values);
       } catch (error) {
         throw error;
@@ -134,6 +318,15 @@ export default function ExperimentForm() {
     })();
   }, []);
 
+  useEffect(() => {
+    setLocalReadonly(readonly);
+  }, [readonly]);
+
+  useEffect(() => {
+    console.log("experiment desde el formulario", experiment);
+    console.log("lectura?", readonly);
+  }, [experiment]);
+
   const handleFileUpload = (e: any) => {
     formik.setFieldValue("experiment_reference", e.target.files[0]);
 
@@ -143,12 +336,19 @@ export default function ExperimentForm() {
   return (
     <form onSubmit={formik.handleSubmit} className="flex flex-col gap-y-6 px-6">
       <div className="flex-shrink-0 flex justify-between items-center">
-        <h3 className="text-2xl font-semibold">Nuevo experimento</h3>
+        <h3 className="text-2xl font-semibold">
+          {localReadonly ? "Detalle de experimento" : "Nuevo experimento"}
+        </h3>
         <button
-          type="submit"
+          onClick={() => {
+            if (localReadonly) {
+              setLocalReadonly(false);
+            }
+          }}
+          type={localReadonly ? "button" : "submit"}
           className="text-white flex items-center gap-1 bg-blue-700 hover:bg-blue-800 font-medium rounded-full text-smpx-5 py-2.5 text-center w-32 justify-center"
         >
-          Guardar
+          {localReadonly ? "Editar" : "Guardar"}
         </button>
       </div>
       <li className="flex justify-end overflow-hidden">
@@ -189,9 +389,14 @@ export default function ExperimentForm() {
           value={formik.values.title}
           onChange={formik.handleChange}
           id="title"
-          className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+          className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
+            localReadonly
+              ? "border-none pointer-events-none"
+              : "border border-gray-300"
+          }`}
           placeholder="Titulo del experimento"
           required
+          readOnly={localReadonly}
         />
       </li>
 
@@ -202,10 +407,13 @@ export default function ExperimentForm() {
 
         <div className="relative">
           <select
+            disabled={localReadonly}
             value={formik.values.status}
             onChange={formik.handleChange}
             id="status"
-            className="border appearance-none border-gray-300 text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500"
+            className={`appearance-none text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500 ${
+              localReadonly ? "" : "border border-gray-300"
+            }`}
           >
             {status.map((state) => (
               <option key={state.value} value={state.value}>
@@ -213,16 +421,18 @@ export default function ExperimentForm() {
               </option>
             ))}
           </select>
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
-          >
-            <path d="M6 9L12 15 18 9"></path>
-          </svg>
+          {!localReadonly && (
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <path d="M6 9L12 15 18 9"></path>
+            </svg>
+          )}
         </div>
       </li>
 
@@ -243,93 +453,165 @@ export default function ExperimentForm() {
           `}
           selected={formik.values.initial_date}
           onChange={(date: Date) => {
-            console.log("date", date);
-            formik.setFieldValue("initial_date", format(date, "yyyy-MM-dd"));
-            console.log("initial date value", formik.values.initial_date);
+            formik.setFieldValue(
+              "initial_date",
+              parseISO(format(date, "yyyy-MM-dd"))
+            );
           }}
+          disabled={localReadonly}
         />
       </li>
 
-      <li className="flex items-center gap-4">
+      <li
+        className={`gap-4 ${
+          localReadonly ? "items-start" : "items-center"
+        } flex`}
+      >
         <Label subtext="Personas que participaron" htmlFor="participants">
           Participantes
         </Label>
 
-        <MultiSelect
-          className="w-64 text-sm border-gray-300"
-          options={participants}
-          // @ts-ignore
-          value={formik.values.participants.map((id: string) =>
-            participants.find((p: any) => p.value === id)
-          )}
-          onChange={(selectedItems: any[]) => {
-            const ids = selectedItems.map((item) => item.value);
-            formik.setFieldValue("participants", ids);
-          }}
-          labelledBy="Select"
-          overrideStrings={{
+        {localReadonly ? (
+          <ul className="w-1/2 flex gap-4 flex-col">
+            {experiment?.participants?.data.map((participant: any) => (
+              <li className="flex gap-2 items-center" key={participant.id}>
+                <Image
+                  className="rounded-full"
+                  alt={
+                    participant.attributes.photo.data.attributes.formats
+                      .thumbnail.name
+                  }
+                  src={participant.attributes.photo.data.attributes.url}
+                  width={30}
+                  height={30}
+                />
+                <span className="text-sm">{participant.attributes.name}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <MultiSelect
+            className="w-64 text-sm border-gray-300"
+            options={participants}
             // @ts-ignore
-            selectSomeItems: (
-              <span
-                className={
-                  formik.values.participants.length
-                    ? "opacity-100"
-                    : "opacity-90"
-                }
-              >
-                Seleccionar participantes
-              </span>
-            ),
-            search: "Buscar Participantes",
-            selectAll: "Todos Participaron",
-            allItemsAreSelected: "Todos Participaron",
-          }}
-        />
+            value={formik.values.participants.map((id: string) =>
+              participants.find((p: any) => p.value === id)
+            )}
+            onChange={(selectedItems: any[]) => {
+              const ids = selectedItems.map((item) => item.value);
+              formik.setFieldValue("participants", ids);
+            }}
+            labelledBy="Select"
+            overrideStrings={{
+              // @ts-ignore
+              selectSomeItems: (
+                <span
+                  className={
+                    formik.values.participants.length
+                      ? "opacity-100"
+                      : "opacity-90"
+                  }
+                >
+                  Seleccionar participantes
+                </span>
+              ),
+              search: "Buscar Participantes",
+              selectAll: "Todos Participaron",
+              allItemsAreSelected: "Todos Participaron",
+            }}
+          />
+        )}
       </li>
 
       <li className="flex flex-col gap-2">
         <label className="font-medium uppercase text-sm text-gray-900">
           Planteamiento de la problematica
         </label>
-        <ReactQuill
-          theme="snow"
-          value={formik.values.problem_definition}
-          onChange={(content) => {
-            formik.setFieldValue("problem_definition", content);
-          }}
-          className={`grow text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500`}
-          placeholder="Describe la problematica"
-        />
+
+        {localReadonly ? (
+          <div
+            className="text-sm text-gray-900"
+            dangerouslySetInnerHTML={{
+              __html: plainTextProblem.replace(/\n/g, "<br/>"),
+            }}
+          ></div>
+        ) : (
+          <Editor
+            toolbarHidden
+            editorState={editorState}
+            onEditorStateChange={(newState: any) => {
+              setEditorState(newState);
+              const blocks = convertEditorStateToBlocks(newState);
+              formik.setFieldValue("problem_definition", blocks);
+            }}
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName"
+            editorClassName={{
+              "border border-gray-300 p-2.5 rounded outline-blue-500": true,
+            }}
+          />
+        )}
       </li>
 
       <li className="flex flex-col gap-2">
         <label className="font-medium uppercase text-sm text-gray-900">
           Planteamiento de hipótesis
         </label>
-        <ReactQuill
-          theme="snow" // Usa el tema "snow"
-          value={formik.values.hypotesis}
-          onChange={(content) => {
-            formik.setFieldValue("hypotesis", content);
-          }}
-          className={`grow text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500`}
-          placeholder="Describe la hipotesis"
-        />
+
+        {localReadonly ? (
+          <div
+            className="text-sm text-gray-900"
+            dangerouslySetInnerHTML={{
+              __html: plainTextHypothesis.replace(/\n/g, "<br/>"),
+            }}
+          ></div>
+        ) : (
+          <Editor
+            toolbarHidden
+            editorState={editorStateHypothesis}
+            onEditorStateChange={(newState: any) => {
+              setEditorStateHypothesis(newState);
+              const blocks = convertEditorStateToBlocks(newState);
+              formik.setFieldValue("hypotesis", blocks);
+            }}
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName"
+            editorClassName={{
+              "border border-gray-300 p-2.5 rounded outline-blue-500": true,
+            }}
+          />
+        )}
       </li>
 
       <li className="flex flex-col gap-2">
         <label className="font-medium uppercase text-sm text-gray-900">
           Descripción de la solución
         </label>
-        <ReactQuill
-          theme="snow" // Usa el tema "snow"
-          value={formik.values.description}
-          onChange={(content) => {
-            formik.setFieldValue("description", content);
-          }}
-          className={`grow text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500`}
-          placeholder="Describe la solución"
-        />
+
+        {localReadonly ? (
+          <div
+            className="text-sm text-gray-900"
+            dangerouslySetInnerHTML={{
+              __html: plainTextDescription.replace(/\n/g, "<br/>"),
+            }}
+          ></div>
+        ) : (
+          <Editor
+            toolbarHidden
+            editorState={editorStateDescription}
+            onEditorStateChange={(newState: any) => {
+              setEditorStateDescription(newState);
+              const blocks = convertEditorStateToBlocks(newState);
+              formik.setFieldValue("description", blocks);
+            }}
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName"
+            editorClassName={{
+              "border border-gray-300 p-2.5 rounded outline-blue-500 text-sm":
+                true,
+            }}
+          />
+        )}
       </li>
 
       <li className="flex items-center gap-4">
@@ -341,9 +623,12 @@ export default function ExperimentForm() {
           <select
             value={formik.values.vp}
             onChange={formik.handleChange}
+            disabled={localReadonly}
             name="vp"
             id="vp"
-            className="appearance-none text-sm rounded block w-64 p-2.5 border border-gray-300 outline-blue-500"
+            className={`appearance-none text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500 ${
+              localReadonly ? "" : "border border-gray-300"
+            }`}
           >
             <option value="">Selecciona una VP</option>
             {vps.map((vp: SelectOption) => (
@@ -353,16 +638,18 @@ export default function ExperimentForm() {
             ))}
           </select>
 
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
-          >
-            <path d="M6 9L12 15 18 9"></path>
-          </svg>
+          {!localReadonly && (
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <path d="M6 9L12 15 18 9"></path>
+            </svg>
+          )}
         </div>
       </li>
 
@@ -379,7 +666,11 @@ export default function ExperimentForm() {
           value={formik.values.strategic_area}
           onChange={formik.handleChange}
           id="strategic_area"
-          className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+          className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
+            localReadonly
+              ? "border-none pointer-events-none"
+              : "border border-gray-300"
+          }`}
           placeholder="Escribe el área estrategica"
         />
       </li>
@@ -394,7 +685,11 @@ export default function ExperimentForm() {
           value={formik.values.stakeholder}
           onChange={formik.handleChange}
           id="stakeholder"
-          className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+          className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
+            localReadonly
+              ? "border-none pointer-events-none"
+              : "border border-gray-300"
+          }`}
           placeholder="Nombre del stakeholder"
         />
       </li>
@@ -412,8 +707,11 @@ export default function ExperimentForm() {
             value={formik.values.experiment_type}
             onChange={formik.handleChange}
             name="experiment_type"
+            disabled={localReadonly}
             id="experiment_type"
-            className="appearance-none text-sm rounded block w-64 p-2.5 border border-gray-300 outline-blue-500"
+            className={`appearance-none text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500 ${
+              localReadonly ? "" : "border border-gray-300"
+            }`}
           >
             <option value="">Selecciona el Tipo</option>
             {experimentTypes.map((type: SelectOption) => (
@@ -423,52 +721,68 @@ export default function ExperimentForm() {
             ))}
           </select>
 
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
-          >
-            <path d="M6 9L12 15 18 9"></path>
-          </svg>
+          {!localReadonly && (
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <path d="M6 9L12 15 18 9"></path>
+            </svg>
+          )}
         </div>
       </li>
 
-      <li className="flex items-center gap-4">
+      <li
+        className={`gap-2 ${
+          localReadonly ? "items-start" : "items-center"
+        } flex`}
+      >
         <Label subtext="Selecciona el/los medios">Medio de ejecucion</Label>
 
-        <MultiSelect
-          className="w-64 text-sm border-gray-300"
-          options={executionMethods}
-          // @ts-ignore
-          value={formik.values.execution_methods.map((id: string) =>
-            executionMethods.find((p: any) => p.value === id)
-          )}
-          onChange={(selectedItems: any[]) => {
-            const ids = selectedItems.map((item) => item.value);
-            formik.setFieldValue("execution_methods", ids);
-          }}
-          labelledBy="Select"
-          overrideStrings={{
+        {localReadonly ? (
+          <ul className="w-1/2 flex gap-2 justify-between flex-wrap">
+            {experiment?.execution_methods?.data.map((methods: any) => (
+              <li className="flex gap-2 items-center" key={methods.id}>
+                <span className="text-sm">{methods.attributes.name}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <MultiSelect
+            className="w-64 text-sm border-gray-300"
+            options={executionMethods}
             // @ts-ignore
-            selectSomeItems: (
-              <span
-                className={
-                  formik.values.execution_methods.length
-                    ? "opacity-100"
-                    : "opacity-90"
-                }
-              >
-                Seleccionar medios
-              </span>
-            ),
-            search: "Buscar Medios",
-            selectAll: "Todos los medios",
-            allItemsAreSelected: "Todos los medios",
-          }}
-        />
+            value={formik.values.execution_methods.map((id: string) =>
+              executionMethods.find((p: any) => p.value === id)
+            )}
+            onChange={(selectedItems: any[]) => {
+              const ids = selectedItems.map((item) => item.value);
+              formik.setFieldValue("execution_methods", ids);
+            }}
+            labelledBy="Select"
+            overrideStrings={{
+              // @ts-ignore
+              selectSomeItems: (
+                <span
+                  className={
+                    formik.values.execution_methods.length
+                      ? "opacity-100"
+                      : "opacity-90"
+                  }
+                >
+                  Seleccionar medios
+                </span>
+              ),
+              search: "Buscar Medios",
+              selectAll: "Todos los medios",
+              allItemsAreSelected: "Todos los medios",
+            }}
+          />
+        )}
       </li>
 
       <li className="flex items-center gap-4">
@@ -481,7 +795,11 @@ export default function ExperimentForm() {
           value={formik.values.roi}
           onChange={formik.handleChange}
           id="roi"
-          className="self-start h-10 border border-gray-300 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5"
+          className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
+            localReadonly
+              ? "border-none pointer-events-none"
+              : "border border-gray-300"
+          }`}
           placeholder="S/10.000"
         />
       </li>
@@ -490,15 +808,30 @@ export default function ExperimentForm() {
         <label className="font-medium uppercase text-sm text-gray-900">
           Resultados
         </label>
-        <ReactQuill
-          theme="snow" // Usa el tema "snow"
-          value={formik.values.results}
-          onChange={(content) => {
-            formik.setFieldValue("results", content);
-          }}
-          className={`grow text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500`}
-          placeholder="Describe los resultados"
-        />
+
+        {localReadonly ? (
+          <div
+            className="text-sm text-gray-900"
+            dangerouslySetInnerHTML={{
+              __html: plainTextResults.replace(/\n/g, "<br/>"),
+            }}
+          ></div>
+        ) : (
+          <Editor
+            toolbarHidden
+            editorState={editorStateResults}
+            onEditorStateChange={(newState: any) => {
+              setEditorState(newState);
+              const blocks = convertEditorStateToBlocks(newState);
+              formik.setFieldValue("results", blocks);
+            }}
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName"
+            editorClassName={{
+              "border border-gray-300 p-2.5 rounded outline-blue-500": true,
+            }}
+          />
+        )}
       </li>
     </form>
   );

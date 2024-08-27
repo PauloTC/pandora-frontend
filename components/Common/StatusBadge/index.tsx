@@ -12,8 +12,8 @@ export const StatusBadge = ({ status }: { status: string }) => {
     {
       "bg-stone-600": status === "finalizado",
       "bg-teal-600": status === "en curso",
-      "bg-rose-600": status === "bloqueado" || status === "en pausa",
-      "bg-sky-600": status === "por iniciar",
+      "bg-rose-600": status === "bloqueado" || status === "cancelado",
+      "bg-sky-600": status === "por iniciar" || status === "en pausa",
     }
   );
 

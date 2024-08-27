@@ -10,11 +10,13 @@ import { StatusBadge } from "@/components/Common";
 import classNames from "classnames";
 
 interface ExperimentData {
+  id: string;
   attributes: {
     title: string;
     status: string;
     initial_date: Date;
     end_date: Date;
+    strategic_area: string;
     experiment_type: {
       data: {
         attributes: {
@@ -45,19 +47,35 @@ export default function ExperimentsComponent() {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const [actionMode, setSidebarMode] = useState("read");
   const [experiments, setExperiments] = useState([]);
+  const [experiment, setExperiment] = useState<ExperimentData | null>(null);
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
 
-  const handleOpenSidebar = (mode: any) => {
-    document.body.style.overflow = "hidden";
-    setSidebarMode(mode);
-    setIsOpenSidebar(true);
+  const handleOpenSidebar = async (mode: any, id: string | null) => {
+    try {
+      if (id) {
+        const response = await experimentCtrl.getExperiment(id);
+        setExperiment(response.data);
+        console.log("response", response);
+      }
+
+      document.body.style.overflow = "hidden";
+
+      setSidebarMode(mode);
+      setIsOpenSidebar(true);
+    } catch (error) {
+      console.error("Error al obtener los datos del experimento", error);
+    }
   };
   const handleCloseSidebar = () => {
     setIsOpenSidebar(false);
     document.body.style.overflow = "auto";
   };
+
+  useEffect(() => {
+    console.log("experiment", experiment);
+  }, [experiment]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,7 +102,7 @@ export default function ExperimentsComponent() {
         </div>
         <div>
           <button
-            onClick={() => handleOpenSidebar("create")}
+            onClick={() => handleOpenSidebar("create", null)}
             className="
                 text-white flex 
                 items-center gap-1 
@@ -100,7 +118,9 @@ export default function ExperimentsComponent() {
         <div className="w-3/4 self-start">
           <ul className="grid grid-cols-3 gap-4">
             {experiments.map((experiment: ExperimentData, index: number) => {
-              const { title, status, initial_date, end_date } =
+              const { id } = experiment;
+
+              const { title, status, initial_date, end_date, strategic_area } =
                 experiment.attributes;
 
               let type = "";
@@ -164,9 +184,10 @@ export default function ExperimentsComponent() {
                       </div>
 
                       <div className="flex justify-between items-center gap-2 mb-3 min-h-8 mb-2">
-                        <span className="font-semibold text-xs capitalize">
+                        <span className="max-w-32 font-semibold text-xs capitalize">
                           {vp}
                         </span>
+                        <StatusBadge status={status} />
                       </div>
 
                       <div className="flex items-center mb-1 justify-between">
@@ -243,12 +264,13 @@ export default function ExperimentsComponent() {
                       <p
                         className={`font-semibold h-12 flex items-center capitalize text-md w-full`}
                       >
-                        {status}
+                        {strategic_area}
                       </p>
                       <ul className="flex items-center justify-end grow relative w-40">
                         {participants.map((participant: any, index: number) => {
                           return (
                             <li
+                              key={index}
                               // prettier-ignore
                               className={classNames(
                                   {
@@ -297,7 +319,7 @@ export default function ExperimentsComponent() {
 
                   <div className="flex justify-between gap-x-2 pt-3 relative">
                     <button
-                      onClick={handleOpenSidebar}
+                      onClick={() => handleOpenSidebar("read", id)}
                       className="flex flex-1 justify-center gap-2 bg-blue-100 hover:bg-blue-200 px-2.5 py-2.5 rounded-full text-xs text-blueGray-900 transition-colors duration-200"
                     >
                       <svg
@@ -359,6 +381,7 @@ export default function ExperimentsComponent() {
         </figure>
       </ModalImage>
       <ExperimentDetail
+        experiment={experiment}
         sidebarMode={actionMode}
         isOpen={isOpenSidebar}
         onClose={handleCloseSidebar}
