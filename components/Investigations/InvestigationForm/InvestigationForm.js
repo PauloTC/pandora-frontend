@@ -515,16 +515,7 @@ export function InvestigationForm({ params, title }) {
                       <Label subtext="" htmlFor="description">
                         Contexto
                       </Label>
-                      <ReactQuill
-                        theme="snow"
-                        value={formik.values.description_text}
-                        onChange={(content, delta, source) => {
-                          if (source === "user") {
-                            formik.setFieldValue("description_text", content);
-                          }
-                        }}
-                      />
-                      {/* <textarea
+                      <textarea
                         id="description"
                         rows="5"
                         maxLength={200}
@@ -542,7 +533,7 @@ export function InvestigationForm({ params, title }) {
                         value={formik.values.description}
                         onChange={formik.handleChange}
                         error={formik.errors.description}
-                      ></textarea> */}
+                      ></textarea>
                     </li>
 
                     <li className="flex items-center gap-4">
