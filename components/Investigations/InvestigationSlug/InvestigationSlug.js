@@ -182,7 +182,7 @@ export function InvestigationSlugComponent({ params }) {
               )}
             </div>
             <div className="divide-x divide-gray-200 grid grid-cols-2">
-              <ul className="flex flex-col gap-6 pr-6">
+              <ul className="flex flex-col gap-4 pr-6">
                 <LabelDetail label="Título" value={investigation?.name} />
                 <LabelDetail
                   label="Contexto"
@@ -370,7 +370,7 @@ export function InvestigationSlugComponent({ params }) {
                     )}
                   </div>
                   <div className="divide-x divide-gray-200 grid grid-cols-2">
-                    <ul className="flex flex-col gap-4">
+                    <ul className="flex flex-col gap-4 pr-6">
                       <LabelDetail
                         label="Público objetivo"
                         value={material?.attributes?.publics?.data

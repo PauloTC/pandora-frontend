@@ -7,8 +7,6 @@ import Swal from "sweetalert2";
 import "react-datepicker/dist/react-datepicker.css";
 import { MultiSelect } from "react-multi-select-component";
 import { Label } from "@/components/Common";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 
 import {
   Material,
@@ -482,7 +480,7 @@ export function InvestigationForm({ params, title }) {
                 </div>
 
                 <div className="divide-x divide-gray-200 flex gap-y-6">
-                  <ul className="flex flex-col gap-6 pr-6 self-start">
+                  <ul className="flex grow w-1/2 flex-col gap-6 pr-6 self-start">
                     <li className="flex gap-4">
                       <Label subtext="Máximo 70 caracteres" htmlFor="name">
                         Titulo*
@@ -518,11 +516,10 @@ export function InvestigationForm({ params, title }) {
                       <textarea
                         id="description"
                         rows="5"
-                        maxLength={200}
                         className={`
-                          w-64 text-sm text-gray-900 
+                          text-sm text-gray-900 
                           bg-white border border-gray-300 p-2.5 
-                          rounded outline-blue-500
+                          rounded outline-blue-500 w-full
                            ${
                              formik.values.description === ""
                                ? "opacity-90"
@@ -632,7 +629,7 @@ export function InvestigationForm({ params, title }) {
                       />
                     </li>
                   </ul>
-                  <ul className="flex flex-col gap-6 pl-6">
+                  <ul className="flex grow w-1/2 flex-col gap-6 pl-6">
                     <li className="flex gap-4">
                       <Label
                         subtext="Áreas amigas que participaron"
@@ -893,19 +890,16 @@ export function InvestigationForm({ params, title }) {
                       />
                     </li>
 
-                    <li className="flex gap-4">
-                      <Label
-                        htmlFor="specific_goals"
-                        subtext="Máximo 200 caracteres"
-                      >
+                    <li className="flex gap-4 flex-col">
+                      <Label htmlFor="specific_goals" subtext="">
                         Objetivos específicos
                       </Label>
                       <textarea
                         id="specific_goals"
                         rows="5"
-                        maxLength={200}
                         className={`
-                            w-64 text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500
+                            w-full text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500
+
                             ${
                               formik.values.specific_goals === ""
                                 ? "opacity-90"
