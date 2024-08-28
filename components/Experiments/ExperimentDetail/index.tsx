@@ -47,7 +47,7 @@ export default function ExperimentDetail({
           </button>
         </div>
         <div className="flex-1 h-0 py-10 px-4 overflow-y-auto flex-col">
-          {sidebarMode === "create" && <ExperimentForm />}
+          {sidebarMode === "create" && <ExperimentForm onClose={onClose} />}
           {sidebarMode === "read" && (
             <ExperimentForm
               experiment={experiment.attributes}

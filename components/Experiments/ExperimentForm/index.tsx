@@ -10,48 +10,87 @@ import {
   Experiment,
   ExecutionMethod,
 } from "@/api";
-import ReactMarkdown from "react-markdown";
-import ReactQuill from "react-quill";
 import Image from "next/image";
 // @ts-ignore
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { MultiSelect } from "react-multi-select-component";
-import "react-quill/dist/quill.snow.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { SelectOption } from "@/types";
 import htmlToDraft from "html-to-draftjs";
 import parse from "html-react-parser";
-import { EditorState, convertToRaw } from "draft-js";
+import {
+  EditorState,
+  convertToRaw,
+  ContentState,
+  convertFromRaw,
+  genKey as generateRandomKey,
+} from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 interface ExperimentFormProps {
   readonly?: boolean;
   experiment?: any;
+  onClose?: any;
 }
 
 export default function ExperimentForm({
   readonly = false,
   experiment,
+  onClose,
 }: ExperimentFormProps) {
+  function convertSlateToDraft(slateNodes) {
+    if (!slateNodes) {
+      return { blocks: [], entityMap: {} };
+    }
+
+    const blocks = slateNodes.map((node) => ({
+      key: generateRandomKey(),
+      text: node.children[0].text,
+      type: node.type,
+      depth: 0,
+      inlineStyleRanges: [],
+      entityRanges: [],
+      data: {},
+    }));
+
+    return { blocks, entityMap: {} };
+  }
+
+  function convertStrapiRichTextToEditorState(strapiRichText) {
+    const rawContent = convertSlateToDraft(strapiRichText);
+    const contentState = convertFromRaw(rawContent);
+    return EditorState.createWithContent(contentState);
+  }
+  const [title, setTitle] = useState("Nuevo Experimento");
   const [participants, setParticipants] = useState([]);
   const [vps, setVps] = useState<SelectOption[]>([]);
   const [projects, setProjects] = useState<SelectOption[]>([]);
   const [experimentTypes, setExperimentTypes] = useState<SelectOption[]>([]);
   const [executionMethods, setExecutionMethods] = useState([]);
   const [reference, setReference] = useState("");
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(
+    experiment
+      ? convertStrapiRichTextToEditorState(experiment.problem_definition)
+      : EditorState.createEmpty()
+  );
   const [localReadonly, setLocalReadonly] = useState(readonly);
   const [editorStateHypothesis, setEditorStateHypothesis] = useState(
-    EditorState.createEmpty()
+    experiment
+      ? convertStrapiRichTextToEditorState(experiment.hypotesis)
+      : EditorState.createEmpty()
   );
   const [editorStateDescription, setEditorStateDescription] = useState(
-    EditorState.createEmpty()
+    experiment
+      ? convertStrapiRichTextToEditorState(experiment.description)
+      : EditorState.createEmpty()
   );
   const [editorStateResults, setEditorStateResults] = useState(
-    EditorState.createEmpty()
+    experiment
+      ? convertStrapiRichTextToEditorState(experiment.results)
+      : EditorState.createEmpty()
   );
 
   const status = [
@@ -212,9 +251,7 @@ export default function ExperimentForm({
       );
     }
     if (experiment.results) {
-      plainTextDescription = convertStrapiRichTextToPlainText(
-        experiment.results
-      );
+      plainTextResults = convertStrapiRichTextToPlainText(experiment.results);
     }
   }
 
@@ -223,7 +260,9 @@ export default function ExperimentForm({
       title: experiment ? experiment.title : "",
       status: experiment ? experiment.status : "en curso",
       initial_date: experiment ? parseISO(experiment.initial_date) : new Date(),
-      participants: [],
+      participants: experiment
+        ? experiment.participants.data.map((participant: any) => participant.id)
+        : [],
       problem_definition: "",
       hypotesis: "",
       description: "",
@@ -231,23 +270,21 @@ export default function ExperimentForm({
       strategic_area: experiment ? experiment.strategic_area : "",
       stakeholder: experiment ? experiment.stakeholder : "",
       experiment_type: experiment ? experiment.experiment_type.data.id : "",
-      execution_methods: [],
+      execution_methods: experiment
+        ? experiment.execution_methods.data.map((method: any) => method.id)
+        : [],
       results: "",
       roi: experiment ? experiment.roi : "",
     },
     onSubmit: async (values) => {
       try {
-        // let hypotesis = convertEditorStateToBlocks(formik.values.hypotesis);
-
-        // console.log("editorState", editorState);
-
         const response = await experimentCtrl.createExperiment({
           ...values,
         });
 
         console.log("response", response);
-        // console.log("hypotesis", hypotesis);
-        console.log("values", values);
+
+        onClose();
       } catch (error) {
         throw error;
       }
@@ -320,6 +357,9 @@ export default function ExperimentForm({
 
   useEffect(() => {
     setLocalReadonly(readonly);
+    if (readonly) {
+      setTitle("Detalle del Experimento");
+    }
   }, [readonly]);
 
   useEffect(() => {
@@ -336,20 +376,29 @@ export default function ExperimentForm({
   return (
     <form onSubmit={formik.handleSubmit} className="flex flex-col gap-y-6 px-6">
       <div className="flex-shrink-0 flex justify-between items-center">
-        <h3 className="text-2xl font-semibold">
-          {localReadonly ? "Detalle de experimento" : "Nuevo experimento"}
-        </h3>
-        <button
-          onClick={() => {
-            if (localReadonly) {
-              setLocalReadonly(false);
-            }
-          }}
-          type={localReadonly ? "button" : "submit"}
-          className="text-white flex items-center gap-1 bg-blue-700 hover:bg-blue-800 font-medium rounded-full text-smpx-5 py-2.5 text-center w-32 justify-center"
-        >
-          {localReadonly ? "Editar" : "Guardar"}
-        </button>
+        <h3 className="text-2xl font-semibold">{title}</h3>
+        {localReadonly ? (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setTitle("Editar Experimento");
+              if (localReadonly) {
+                setLocalReadonly(false);
+              }
+            }}
+            type="button"
+            className="text-white flex items-center gap-1 bg-blue-700 hover:bg-blue-800 font-medium rounded-full text-smpx-5 py-2.5 text-center w-32 justify-center"
+          >
+            Editar
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="text-white flex items-center gap-1 bg-blue-700 hover:bg-blue-800 font-medium rounded-full text-smpx-5 py-2.5 text-center w-32 justify-center"
+          >
+            Guardar
+          </button>
+        )}
       </div>
       <li className="flex justify-end overflow-hidden">
         <span className="cursor-pointer text-xs font-medium gap-1 flex items-center relative text-blue-800">
@@ -446,10 +495,10 @@ export default function ExperimentForm({
           placeholderText="Selecciona una fecha inicial"
           className={`
             placeholder-gray-150
-            border border-gray-300 
             text-sm block p-2 w-64 
             rounded h-10 outline-blue-500
             ${formik.values.initial_date ? "opacity-100" : "opacity-90"}
+            ${localReadonly ? "bg-transparent" : "border border-gray-300"}
           `}
           selected={formik.values.initial_date}
           onChange={(date: Date) => {
@@ -821,7 +870,7 @@ export default function ExperimentForm({
             toolbarHidden
             editorState={editorStateResults}
             onEditorStateChange={(newState: any) => {
-              setEditorState(newState);
+              setEditorStateResults(newState);
               const blocks = convertEditorStateToBlocks(newState);
               formik.setFieldValue("results", blocks);
             }}
