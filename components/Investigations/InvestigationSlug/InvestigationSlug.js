@@ -312,7 +312,7 @@ export function InvestigationSlugComponent({ params }) {
             </div>
           </div>
 
-          {investigation?.materials.data.map((material, index) => {
+          {investigation?.materials?.data.map((material, index) => {
             if (
               investigation?.investigation_types?.data[index]?.attributes.name
             ) {
@@ -331,6 +331,7 @@ export function InvestigationSlugComponent({ params }) {
                     {material.attributes.tool_media ? (
                       <a
                         href={material.attributes.tool_media}
+                        target="_blank"
                         className="text-blue-800 text-xs flex font-medium gap-1"
                       >
                         <svg

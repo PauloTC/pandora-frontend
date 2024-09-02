@@ -428,11 +428,12 @@ export function InvestigationForm({ params, title }) {
               <div className="border border-gray-200 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-xl font-semibold">Ficha Técnica</h4>
-                  <div className="flex divide-x-2 ">
+                  <div className="flex gap-1 text-xs font-regular text-blue-700 divide-x-2">
                     {investigation?.attributes?.research_plan && (
                       <a
-                        className="text-xs font-regular text-blue-700 hover:underline pr-4"
+                        className="pr-4 hover:underline"
                         href={investigation?.attributes?.research_plan}
+                        target="_blank"
                       >
                         Actual Research Plan
                       </a>
@@ -441,23 +442,32 @@ export function InvestigationForm({ params, title }) {
                       htmlFor="research_plan"
                       className="cursor-pointer hover:underline text-xs font-regular gap-1 flex items-center relative text-blue-700 pl-4"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
-                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                        />
+                      </svg>
+                      <span className="not-italic cursor-pointer">
+                        {researchPlan
+                          ? `Research Plan: ${researchPlan}`
+                          : "Agregar Research Plan"}
+                      </span>
                     </label>
                     <input
                       type="file"
                       id="research_plan"
-                      className="absolute opacity-0"
+                      className="absolute opacity-0 invisible"
                       onChange={handleFileUpload}
                     />
-                    <em className="not-italic">
-                      {researchPlan
-                        ? `Research Plan: ${researchPlan}`
-                        : "Agregar Research Plan"}
-                    </em>
                   </div>
                 </div>
 

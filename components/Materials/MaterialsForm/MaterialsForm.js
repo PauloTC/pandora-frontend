@@ -209,6 +209,12 @@ export function MaterialsForm({ slug }) {
                         formik.setFieldValue(`${material.id}.publics`, value)
                       }
                       error={formik.errors.publics}
+                      overrideStrings={{
+                        selectSomeItems: "Seleccionar Público",
+                        allItemsAreSelected: "Todos seleccionados",
+                        selectAll: "Seleccionar todos",
+                        search: "Buscar Público",
+                      }}
                     />
                   </li>
 
@@ -250,6 +256,12 @@ export function MaterialsForm({ slug }) {
                         formik.setFieldValue(`${material.id}.locations`, value)
                       }
                       error={formik.errors[material.id]?.locations}
+                      overrideStrings={{
+                        selectSomeItems: "Seleccionar Locación",
+                        allItemsAreSelected: "Todos seleccionados",
+                        selectAll: "Seleccionar todos",
+                        search: "Buscar Locación",
+                      }}
                     />
                   </li>
                 </ul>
