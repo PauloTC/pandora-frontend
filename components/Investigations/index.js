@@ -273,7 +273,7 @@ export default function InvestigationsComponent() {
                       <div className="mb-3 flex justify-between">
                         <h4
                           title={investigation?.attributes?.name}
-                          className="font-semibold h-10 text-slate-800 text-sm w-4/5 overflow-hidden"
+                          className="font-semibold h-10 text-slate-800 text-sm w-4/5 overflow-hidden overflow-auto break-words"
                         >
                           {investigation?.attributes?.name}
                         </h4>

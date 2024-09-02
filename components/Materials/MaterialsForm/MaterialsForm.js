@@ -187,139 +187,131 @@ export function MaterialsForm({ slug }) {
             .replace(/-/g, " ");
 
           return (
-            <>
-              <div
-                key={index}
-                className="border border-gray-200 rounded-xl p-6"
-              >
-                <h4 className="font-semibold text-xl mb-4">
-                  Material de {cleanedSlug}
-                </h4>
-                <div className="divide-x divide-gray-200 grid grid-cols-2 gap-6">
-                  <ul className="flex flex-col gap-4">
-                    <li className="flex items-center gap-4">
-                      <Label
-                        subtext="Hacía quienes va dirigido"
-                        htmlFor="publics"
-                      >
-                        Público objetivo
-                      </Label>
+            <div key={index} className="border border-gray-200 rounded-xl p-6">
+              <h4 className="font-semibold text-xl mb-4">
+                Material de {cleanedSlug}
+              </h4>
+              <div className="divide-x divide-gray-200 grid grid-cols-2 gap-6">
+                <ul className="flex flex-col gap-4">
+                  <li className="flex items-center gap-4">
+                    <Label
+                      subtext="Hacía quienes va dirigido"
+                      htmlFor="publics"
+                    >
+                      Público objetivo
+                    </Label>
 
-                      <MultiSelect
-                        className="w-64 text-sm"
-                        options={publics}
-                        value={formik.values[material.id]?.publics || []}
-                        onChange={(value) =>
-                          formik.setFieldValue(`${material.id}.publics`, value)
-                        }
-                        error={formik.errors.publics}
-                      />
-                    </li>
+                    <MultiSelect
+                      className="w-64 text-sm"
+                      options={publics}
+                      value={formik.values[material.id]?.publics || []}
+                      onChange={(value) =>
+                        formik.setFieldValue(`${material.id}.publics`, value)
+                      }
+                      error={formik.errors.publics}
+                    />
+                  </li>
 
-                    <li className="flex gap-4">
-                      <Label subtext="Escribe la muestra" htmlFor="sample">
-                        Muestra
-                      </Label>
+                  <li className="flex gap-4 flex-col">
+                    <Label subtext="" htmlFor="sample">
+                      Muestra
+                    </Label>
 
-                      <textarea
-                        id="sample"
-                        rows="5"
-                        maxLength={200}
-                        className="w-64 text-sm text-gray-900 bg-white border border-gray-200 p-2.5 rounded outline-blue-500"
-                        placeholder="Escribir la muestra..."
-                        value={formik.values[material.id]?.sample || ""}
-                        onChange={(event) =>
-                          formik.setFieldValue(
-                            `${material.id}.sample`,
-                            event.target.value
-                          )
-                        }
-                        error={formik.errors[material.id]?.sample}
-                      ></textarea>
-                    </li>
+                    <textarea
+                      id="sample"
+                      rows="5"
+                      maxLength={200}
+                      className="w-full text-sm text-gray-900 bg-white border border-gray-200 p-2.5 rounded outline-blue-500"
+                      placeholder="Escribir la muestra..."
+                      value={formik.values[material.id]?.sample || ""}
+                      onChange={(event) =>
+                        formik.setFieldValue(
+                          `${material.id}.sample`,
+                          event.target.value
+                        )
+                      }
+                      error={formik.errors[material.id]?.sample}
+                    ></textarea>
+                  </li>
 
-                    <li className="flex gap-4">
-                      <Label
-                        subtext="Lugares de investigación"
-                        htmlFor="investigation_types"
-                      >
-                        Ámbito geográfico
-                      </Label>
+                  <li className="flex gap-4">
+                    <Label
+                      subtext="Lugares de investigación"
+                      htmlFor="investigation_types"
+                    >
+                      Ámbito geográfico
+                    </Label>
 
-                      <MultiSelect
-                        className="w-64 text-sm"
-                        options={locations}
-                        value={formik.values[material.id]?.locations || []}
-                        onChange={(value) =>
-                          formik.setFieldValue(
-                            `${material.id}.locations`,
-                            value
-                          )
-                        }
-                        error={formik.errors[material.id]?.locations}
-                      />
-                    </li>
-                  </ul>
-                  <ul className="flex flex-col gap-4 pl-6">
-                    <li className="flex gap-4">
-                      <Label subtext="Máximo 70 caracteres" htmlFor="tool">
-                        Herramienta
-                      </Label>
+                    <MultiSelect
+                      className="w-64 text-sm"
+                      options={locations}
+                      value={formik.values[material.id]?.locations || []}
+                      onChange={(value) =>
+                        formik.setFieldValue(`${material.id}.locations`, value)
+                      }
+                      error={formik.errors[material.id]?.locations}
+                    />
+                  </li>
+                </ul>
+                <ul className="flex flex-col gap-4 pl-6">
+                  <li className="flex gap-4">
+                    <Label subtext="Máximo 70 caracteres" htmlFor="tool">
+                      Herramienta
+                    </Label>
 
-                      <input
-                        type="text"
-                        id="tool"
-                        maxLength={70}
-                        className="
+                    <input
+                      type="text"
+                      id="tool"
+                      maxLength={70}
+                      className="
                         self-start border border-gray-300 
                         text-gray-900 text-sm rounded
                         block w-64 p-2.5 outline-blue-500 h-10"
-                        placeholder="Nombre de la herramienta"
-                        value={formik.values[material.id]?.tool || ""}
-                        onChange={(event) =>
-                          formik.setFieldValue(
-                            `${material.id}.tool`,
-                            event.target.value
-                          )
-                        }
-                        error={formik.errors[material.id]?.tool}
-                      />
-                    </li>
-                    <li className="flex gap-4 justify-between">
-                      <Label
-                        subtext="(Jpg,Png,Pdf,Doc,Docx,Xlsx,Pptx)"
-                        htmlFor="tool_media"
-                      >
-                        herramienta usada
-                      </Label>
+                      placeholder="Nombre de la herramienta"
+                      value={formik.values[material.id]?.tool || ""}
+                      onChange={(event) =>
+                        formik.setFieldValue(
+                          `${material.id}.tool`,
+                          event.target.value
+                        )
+                      }
+                      error={formik.errors[material.id]?.tool}
+                    />
+                  </li>
+                  <li className="flex gap-4 justify-between">
+                    <Label
+                      subtext="(Jpg,Png,Pdf,Doc,Docx,Xlsx,Pptx)"
+                      htmlFor="tool_media"
+                    >
+                      herramienta usada
+                    </Label>
 
-                      <div className="flex flex-col gap-2 w-64">
-                        <input
-                          type="file"
-                          id="tool_media"
-                          onChange={(event) => {
-                            formik.setFieldValue(
-                              `${material.id}.tool_media`,
-                              event.currentTarget.files[0]
-                            );
-                          }}
-                        />
-                        {typeof initialToolMedia === "string" &&
-                          initialToolMedia !== "" && (
-                            <a
-                              href={initialToolMedia}
-                              rel="noopener noreferrer"
-                              className="text-blue-700 hover:underline text-xs font-regular flex justify-end"
-                            >
-                              Ver archivo actual
-                            </a>
-                          )}
-                      </div>
-                    </li>
-                  </ul>
-                </div>
+                    <div className="flex flex-col gap-2 w-64">
+                      <input
+                        type="file"
+                        id="tool_media"
+                        onChange={(event) => {
+                          formik.setFieldValue(
+                            `${material.id}.tool_media`,
+                            event.currentTarget.files[0]
+                          );
+                        }}
+                      />
+                      {typeof initialToolMedia === "string" &&
+                        initialToolMedia !== "" && (
+                          <a
+                            href={initialToolMedia}
+                            rel="noopener noreferrer"
+                            className="text-blue-700 hover:underline text-xs font-regular flex justify-end"
+                          >
+                            Ver archivo actual
+                          </a>
+                        )}
+                    </div>
+                  </li>
+                </ul>
               </div>
-            </>
+            </div>
           );
         })
       ) : (
