@@ -40,7 +40,9 @@ export class Experiment {
 
       const sortExperiments = "sort[0]=initial_date:desc";
 
-      const url = `${ENV.API_URL}${ENV.ENDPOINTS.EXPERIMENTS}?${sortExperiments}${populateExperiment}`;
+      const pagination = `&pagination[page]=1&pagination[pageSize]=9`;
+
+      const url = `${ENV.API_URL}${ENV.ENDPOINTS.EXPERIMENTS}?${sortExperiments}${populateExperiment}${pagination}`;
       const response = await fetch(url);
       const result = await response.json();
 
@@ -99,7 +101,15 @@ export class Experiment {
   }
 
   async filterExperiments(filters) {
-    const { sort, vp, execution_methods, experiment_type, status } = filters;
+    const {
+      sort,
+      vp,
+      execution_methods,
+      experiment_type,
+      status,
+      pagination,
+      search,
+    } = filters;
 
     let filter = "";
 
@@ -117,6 +127,13 @@ export class Experiment {
 
     if (status) {
       filter += `&filters[status][$eq]=${status}`;
+    }
+    if (pagination) {
+      filter += `&pagination[page]=${pagination.page}&pagination[pageSize]=9`;
+    }
+
+    if (search) {
+      filter += `&filters[title][$contains]=${search}`;
     }
 
     try {

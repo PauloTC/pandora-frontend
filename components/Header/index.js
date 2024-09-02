@@ -5,10 +5,14 @@ import { format } from "date-fns";
 import { useState, useEffect, useContext } from "react";
 
 import { useFormik } from "formik";
+import { InvestigationsContext, ExperimentsContext } from "@/contexts";
 
-export default function HeaderComponent() {
+export default function HeaderComponent({ type }) {
   const router = useRouter();
   const [time, setTime] = useState(format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+
+  const investigationsContext = useContext(InvestigationsContext);
+  const experimentsContext = useContext(ExperimentsContext);
 
   const { logout } = useAuth();
 
@@ -17,7 +21,30 @@ export default function HeaderComponent() {
       search: "",
     },
     validateOnChange: false,
-    onSubmit: async (values) => {},
+    onSubmit: async (values) => {
+      try {
+        if (type === "investigation") {
+          router.push("/investigaciones");
+          await investigationsContext.filterInvestigations({
+            project: "",
+            objectivePublic: "",
+            sort: "desc",
+            pagination: { page: 1 },
+            search: values.search,
+          });
+        } else if (type === "experiment") {
+          router.push("/experimentos");
+
+          await experimentsContext.filterExperiments({
+            sort: "desc",
+            pagination: { page: 1 },
+            search: values.search,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
   });
 
   useEffect(() => {
@@ -73,7 +100,11 @@ export default function HeaderComponent() {
             bg-transparent
             outline-0
             grow"
-          placeholder="Buscar investigaciones por nombre"
+          placeholder={
+            type === "investigation"
+              ? "Buscar investigaciones por nombre"
+              : "Buscar experimentos por nombre"
+          }
         />
 
         <a className="flex gap-2 text-sm items-center" href="/">

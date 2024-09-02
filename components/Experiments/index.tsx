@@ -68,6 +68,7 @@ export default function ExperimentsComponent() {
     execution_methods: "Todos",
     experiment_type: "Todos",
     status: "Todos",
+    page: 1,
   });
 
   const sortOptions = [
@@ -104,7 +105,7 @@ export default function ExperimentsComponent() {
     document.body.style.overflow = "auto";
   };
 
-  const handleFilterClick = async (type, value) => {
+  const handleFilterClick = async (type: any, value: any) => {
     if (type === "reset") {
       setFilters({
         sort: "desc",
@@ -112,6 +113,7 @@ export default function ExperimentsComponent() {
         execution_methods: "Todos",
         experiment_type: "Todos",
         status: "Todos",
+        page: 1,
       });
     } else {
       setFilters((prevFilters) => ({ ...prevFilters, [type]: value }));
@@ -130,7 +132,8 @@ export default function ExperimentsComponent() {
             filters.vp === "Todos" &&
             filters.execution_methods === "Todos" &&
             filters.experiment_type === "Todos" &&
-            filters.status === "Todos"
+            filters.status === "Todos" &&
+            filters.page === 1
           ) {
             await getExperiments();
           } else {
@@ -146,6 +149,7 @@ export default function ExperimentsComponent() {
                   ? ""
                   : filters.experiment_type,
               status: filters.status === "Todos" ? "" : filters.status,
+              pagination: { page: filters.page || 1 },
             });
           }
         } catch (error) {
@@ -471,6 +475,53 @@ export default function ExperimentsComponent() {
               );
             })}
           </ul>
+          {pagination?.pageCount > 1 && (
+            <div className="mt-5 flex items-center justify-between">
+              <ul>
+                {
+                  <ul className="flex gap-2">
+                    {Array.from(
+                      { length: pagination?.pageCount },
+                      (_, index) => index + 1
+                    ).map((page) => (
+                      <li key={page}>
+                        <button
+                          onClick={() => handleFilterClick("page", page)}
+                          className={classNames(
+                            pagination?.page === page
+                              ? "bg-blue-100"
+                              : "bg-gray-100",
+                            pagination?.page === page
+                              ? "text-blue-800"
+                              : "text-gray-800",
+                            "text-xs",
+                            "font-medium",
+                            "h-7",
+                            "w-7",
+                            "rounded-lg"
+                          )}
+                        >
+                          {page}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                }
+              </ul>
+              <p className="text-xs">
+                Muestra{" "}
+                {pagination?.page * pagination?.pageSize -
+                  pagination?.pageSize +
+                  1}{" "}
+                a{" "}
+                {Math.min(
+                  pagination?.page * pagination?.pageSize,
+                  pagination?.total
+                )}{" "}
+                de {pagination?.total} resultados
+              </p>
+            </div>
+          )}
         </div>
         <div className="w-1/4 border border-gray-200 rounded-xl p-4 self-start">
           <div className="flex items-center justify-between mb-5">

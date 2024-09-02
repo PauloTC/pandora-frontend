@@ -40,9 +40,6 @@ export default function InvestigationsComponent() {
     sort: "desc",
   });
 
-  const [showAllProjects, setShowAllProjects] = useState(false);
-  const [showAllPublics, setShowAllPublics] = useState(false);
-
   const sortOptions = [
     { value: "desc", label: "Más Actual" },
     { value: "asc", label: "Más Antiguo" },

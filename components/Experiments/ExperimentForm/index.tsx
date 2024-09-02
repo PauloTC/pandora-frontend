@@ -283,6 +283,7 @@ export default function ExperimentForm({
       title: experiment ? experiment.title : "",
       status: experiment ? experiment.status : "en curso",
       initial_date: experiment ? parseISO(experiment.initial_date) : new Date(),
+      end_date: experiment ? parseISO(experiment.end_date) : "",
       participants: experiment
         ? experiment.participants.data.map((participant: any) => participant.id)
         : [],
@@ -616,6 +617,34 @@ export default function ExperimentForm({
             disabled={localReadonly}
           />
         </li>
+
+        {formik.values.status !== "en curso" && (
+          <li className="flex items-center">
+            <Label subtext="Elige una fecha de cierre" htmlFor="end_date">
+              Fecha de cierre*
+            </Label>
+
+            <DatePicker
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Selecciona una fecha de cierre"
+              className={`
+                  placeholder-gray-150
+                  text-sm block p-2 w-64 
+                  rounded h-10 outline-blue-500
+                  ${formik.values.end_date ? "opacity-100" : "opacity-90"}
+                  ${localReadonly ? "bg-transparent" : "border border-gray-300"}
+                `}
+              selected={formik.values.end_date}
+              onChange={(date: Date) => {
+                formik.setFieldValue(
+                  "end_date",
+                  parseISO(format(date, "yyyy-MM-dd"))
+                );
+              }}
+              disabled={localReadonly}
+            />
+          </li>
+        )}
 
         <li
           className={`gap-4 ${
