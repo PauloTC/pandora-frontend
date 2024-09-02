@@ -375,34 +375,6 @@ export default function InvestigationsComponent() {
                             )}
                         </span>
                         <StatusBadge status={investigation.attributes.status} />
-                        {/* <span
-                          className={classNames(
-                            "rounded-lg",
-                            "text-xs",
-                            "block",
-                            "mb-2",
-                            "capitalize",
-                            "text-white",
-                            "px-2",
-                            "py-1",
-                            {
-                              "bg-stone-600":
-                                investigation?.attributes?.status ===
-                                "finalizado",
-                              "bg-teal-600":
-                                investigation?.attributes?.status ===
-                                "en curso",
-                              "bg-rose-600":
-                                investigation?.attributes?.status ===
-                                "bloqueado",
-                              "bg-sky-600":
-                                investigation?.attributes?.status ===
-                                "por iniciar",
-                            }
-                          )}
-                        >
-                          {investigation?.attributes?.status}
-                        </span> */}
                       </div>
                     </div>
                     <div className="flex pt-2 ">

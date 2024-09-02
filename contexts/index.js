@@ -1,3 +1,3 @@
 export * from "./AuthContext";
 export * from "./investigationsContext";
-export * from "./ExperimentsContext";
+export * from "./experimentsContext";

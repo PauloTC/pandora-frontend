@@ -52,6 +52,8 @@ export default function ExperimentDetail({
             <ExperimentForm
               experiment={experiment.attributes}
               readonly={true}
+              id={experiment.id}
+              onClose={onClose}
             />
           )}
         </div>

@@ -6,7 +6,8 @@ import ExperimentDetail from "@/components/Experiments/ExperimentDetail";
 import { Experiment } from "@/api";
 import { format, addDays } from "date-fns";
 import { ExperimentCardIcon } from "@/components/Experiments/ExperimentCard/ExperimentCardIcon";
-import { StatusBadge } from "@/components/Common";
+import { StatusBadge, FilterSection } from "@/components/Common";
+import { ExperimentsContext } from "@/contexts";
 import classNames from "classnames";
 
 interface ExperimentData {
@@ -17,6 +18,7 @@ interface ExperimentData {
     initial_date: Date;
     end_date: Date;
     strategic_area: string;
+    reference: string;
     experiment_type: {
       data: {
         attributes: {
@@ -41,15 +43,43 @@ interface ExperimentData {
 }
 
 export default function ExperimentsComponent() {
+  const {
+    experiments,
+    vps,
+    executionMethods,
+    getExperiments,
+    filterExperiments,
+    experimentTypes,
+    status,
+    pagination,
+  } = useContext(ExperimentsContext);
+
   const experimentCtrl = new Experiment();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const [actionMode, setSidebarMode] = useState("read");
-  const [experiments, setExperiments] = useState([]);
+  // const [experiments, setExperiments] = useState([]);
   const [experiment, setExperiment] = useState<ExperimentData | null>(null);
+  const [reference, setReference] = useState("");
+  const [filters, setFilters] = useState({
+    sort: "desc",
+    vp: "Todos",
+    execution_methods: "Todos",
+    experiment_type: "Todos",
+    status: "Todos",
+  });
 
-  const handleOpen = () => setIsOpen(true);
+  const sortOptions = [
+    { value: "desc", label: "Más Actual" },
+    { value: "asc", label: "Más Antiguo" },
+  ];
+
+  const handleOpen = (data: string) => {
+    setIsOpen(true);
+    setReference(data);
+  };
+
   const handleClose = () => setIsOpen(false);
 
   const handleOpenSidebar = async (mode: any, id: string | null) => {
@@ -68,29 +98,62 @@ export default function ExperimentsComponent() {
       console.error("Error al obtener los datos del experimento", error);
     }
   };
+
   const handleCloseSidebar = () => {
     setIsOpenSidebar(false);
     document.body.style.overflow = "auto";
   };
 
-  useEffect(() => {
-    console.log("experiment", experiment);
-  }, [experiment]);
+  const handleFilterClick = async (type, value) => {
+    if (type === "reset") {
+      setFilters({
+        sort: "desc",
+        vp: "Todos",
+        execution_methods: "Todos",
+        experiment_type: "Todos",
+        status: "Todos",
+      });
+    } else {
+      setFilters((prevFilters) => ({ ...prevFilters, [type]: value }));
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await experimentCtrl.getExperiments();
-        setExperiments(response.data);
-        console.log("response", response);
-        return response;
-      } catch (error) {
-        console.log("error", error);
+    console.log("filters", filters);
+    console.log("executionMethods", executionMethods);
+
+    (async () => {
+      if (filters.sort || filters.vp || filters.execution_methods) {
+        try {
+          if (
+            filters.sort === "desc" &&
+            filters.vp === "Todos" &&
+            filters.execution_methods === "Todos" &&
+            filters.experiment_type === "Todos" &&
+            filters.status === "Todos"
+          ) {
+            await getExperiments();
+          } else {
+            await filterExperiments({
+              sort: filters.sort,
+              vp: filters.vp === "Todos" ? "" : filters.vp,
+              execution_methods:
+                filters.execution_methods === "Todos"
+                  ? ""
+                  : filters.execution_methods,
+              experiment_type:
+                filters.experiment_type === "Todos"
+                  ? ""
+                  : filters.experiment_type,
+              status: filters.status === "Todos" ? "" : filters.status,
+            });
+          }
+        } catch (error) {
+          console.error("Error al obtener los datos del experimento", error);
+        }
       }
-    };
-
-    fetchData();
-  }, []);
+    })();
+  }, [filters]);
 
   return (
     <section>
@@ -99,6 +162,35 @@ export default function ExperimentsComponent() {
           <h4 className="font-semibold text-slate-700 capitalize text-3xl">
             Experimentación
           </h4>
+          <ul className="flex flex-wrap gap-1">
+            {[
+              { attributes: { value: "Todos", label: "Todos" } },
+              ...status,
+            ].map((state: any, index: number) => (
+              <li key={index}>
+                <button
+                  onClick={() =>
+                    handleFilterClick("status", state.attributes.value)
+                  }
+                  className={classNames(
+                    filters.status === state.attributes.value
+                      ? "bg-blue-100"
+                      : "bg-gray-100",
+                    filters.status === state.attributes.value
+                      ? "text-blue-800"
+                      : "text-gray-800",
+                    "text-xs",
+                    "font-medium",
+                    "px-3",
+                    "py-1",
+                    "rounded-full"
+                  )}
+                >
+                  {state.attributes.label}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
         <div>
           <button
@@ -120,8 +212,14 @@ export default function ExperimentsComponent() {
             {experiments.map((experiment: ExperimentData, index: number) => {
               const { id } = experiment;
 
-              const { title, status, initial_date, end_date, strategic_area } =
-                experiment.attributes;
+              const {
+                title,
+                status,
+                initial_date,
+                end_date,
+                strategic_area,
+                reference,
+              } = experiment.attributes;
 
               let type = "";
               let vp = "";
@@ -339,8 +437,13 @@ export default function ExperimentsComponent() {
                       Detalles
                     </button>
                     <button
-                      onClick={handleOpen}
-                      className="flex-1 flex justify-center gap-2 bg-blue-600 hover:bg-blue-700  px-2.5 py-2.5 rounded-full text-xs text-white transition-colors duration-200"
+                      onClick={() => handleOpen(reference)}
+                      className={`flex-1 flex justify-center gap-2 px-2.5 py-2.5 rounded-full text-xs text-white transition-colors duration-200 
+                      ${
+                        reference
+                          ? "bg-blue-600 hover:bg-blue-700"
+                          : "bg-gray-400 cursor-not-allowed"
+                      }`}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -369,15 +472,61 @@ export default function ExperimentsComponent() {
             })}
           </ul>
         </div>
+        <div className="w-1/4 border border-gray-200 rounded-xl p-4 self-start">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-semibold block text-lg">Filtros</h3>
+            <button
+              className="text-xs underline text-blue-800"
+              onClick={() => handleFilterClick("reset", null)}
+            >
+              Limpiar todo
+            </button>
+          </div>
+          <div>
+            <FilterSection
+              title="Ordenar por"
+              items={sortOptions}
+              handleFilterClick={handleFilterClick}
+              filterType="sort"
+              filterValue={filters.sort}
+            />
+
+            <FilterSection
+              title="Vicepresidencia"
+              items={[{ value: "Todos", label: "Todos" }, ...vps]}
+              handleFilterClick={handleFilterClick}
+              filterType="vp"
+              filterValue={filters.vp}
+            />
+
+            <FilterSection
+              title="Medios de ejecución"
+              items={[{ value: "Todos", label: "Todos" }, ...executionMethods]}
+              handleFilterClick={handleFilterClick}
+              filterType="execution_methods"
+              filterValue={filters.execution_methods}
+            />
+
+            <FilterSection
+              title="Tipo de experimento"
+              items={[{ value: "Todos", label: "Todos" }, ...experimentTypes]}
+              handleFilterClick={handleFilterClick}
+              filterType="experiment_type"
+              filterValue={filters.experiment_type}
+            />
+          </div>
+        </div>
       </div>
       <ModalImage isOpen={isOpen} onClose={handleClose}>
         <figure className="w-96 h-96 mx-auto relative">
-          <Image
-            alt="image"
-            layout="fill"
-            objectFit="contain"
-            src="https://firebasestorage.googleapis.com/v0/b/alicorpexperimentsstorage.appspot.com/o/Alicorp%20experiments%2FBoton%20Continuar%20Comprando.JPG?alt=media&token=345bde4f-9442-46a8-9c40-fe4513ee060e"
-          />
+          <a href={reference} target="_blank">
+            <Image
+              alt="image"
+              layout="fill"
+              objectFit="contain"
+              src={reference}
+            />
+          </a>
         </figure>
       </ModalImage>
       <ExperimentDetail
