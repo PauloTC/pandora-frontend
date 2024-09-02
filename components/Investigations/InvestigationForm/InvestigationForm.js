@@ -179,8 +179,6 @@ export function InvestigationForm({ params, title }) {
           research_plan,
         };
 
-        console.log("investigationData", investigationData);
-
         if (presentedDate) {
           investigationData.presented_date = format(
             presentedDate,

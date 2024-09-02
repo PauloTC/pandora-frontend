@@ -88,7 +88,6 @@ export default function ExperimentsComponent() {
       if (id) {
         const response = await experimentCtrl.getExperiment(id);
         setExperiment(response.data);
-        console.log("response", response);
       }
 
       document.body.style.overflow = "hidden";
@@ -121,9 +120,6 @@ export default function ExperimentsComponent() {
   };
 
   useEffect(() => {
-    console.log("filters", filters);
-    console.log("executionMethods", executionMethods);
-
     (async () => {
       if (filters.sort || filters.vp || filters.execution_methods) {
         try {

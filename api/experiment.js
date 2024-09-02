@@ -21,13 +21,7 @@ export class Experiment {
 
       if (response.status !== 200) throw result;
 
-      console.log("result", result);
-      // // Obtener el experimento creado
-      // const createdExperiment = await this.getExperiment(
-      //   result.data.attributes.slug
-      // );
-
-      return createdExperiment;
+      return response;
     } catch (error) {
       throw error;
     }
@@ -63,8 +57,6 @@ export class Experiment {
 
       const response = await fetch(url);
       const result = await response.json();
-
-      console.log("result", result);
 
       if (response.status !== 200) throw result;
 

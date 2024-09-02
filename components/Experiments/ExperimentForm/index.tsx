@@ -281,7 +281,7 @@ export default function ExperimentForm({
       title: experiment ? experiment.title : "",
       status: experiment ? experiment.status : "en curso",
       initial_date: experiment ? parseISO(experiment.initial_date) : new Date(),
-      end_date: experiment ? parseISO(experiment.end_date) : "",
+      end_date: experiment ? parseISO(experiment.end_date) : null,
       participants: experiment
         ? experiment.participants.data.map((participant: any) => participant.id)
         : [],
@@ -309,15 +309,11 @@ export default function ExperimentForm({
             ...values,
             reference: media_reference,
           });
-
-          console.log("se editó el experimento", response);
         } else {
           const response = await experimentCtrl.createExperiment({
             ...values,
             reference: media_reference,
           });
-
-          console.log("se creó el experimento", response);
         }
       } catch (error) {
         throw error;
@@ -385,8 +381,6 @@ export default function ExperimentForm({
             })
           )
         );
-
-        console.log("executionMethods", executionMethods);
       } catch (error) {
         throw error;
       }
@@ -399,11 +393,6 @@ export default function ExperimentForm({
       setTitle("Detalle del Experimento");
     }
   }, [readonly]);
-
-  useEffect(() => {
-    console.log("experiment desde el formulario", experiment);
-    console.log("lectura?", readonly);
-  }, [experiment]);
 
   const handleFileUpload = (event: any) => {
     formik.setFieldValue("reference", event.target.files[0]);

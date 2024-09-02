@@ -40,8 +40,6 @@ export const ExperimentsProvider = ({ children }) => {
       setExperiments(response.data);
       setPagination(response.meta.pagination);
 
-      console.log("filter experiments", response);
-
       return response;
     } catch (error) {
       console.log("error", error);
@@ -69,7 +67,6 @@ export const ExperimentsProvider = ({ children }) => {
         }))
       );
 
-      console.log("execution_methods", execution_methods.data);
       setExecutionMethods(
         execution_methods.data.map((method) => ({
           value: method?.id,
@@ -79,9 +76,6 @@ export const ExperimentsProvider = ({ children }) => {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log("executionMethods", executionMethods);
-  }, [executionMethods]);
   return (
     <ExperimentsContext.Provider
       value={{
