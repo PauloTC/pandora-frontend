@@ -281,7 +281,7 @@ export default function ExperimentForm({
       title: experiment ? experiment.title : "",
       status: experiment ? experiment.status : "en curso",
       initial_date: experiment ? parseISO(experiment.initial_date) : new Date(),
-      end_date: experiment ? parseISO(experiment.end_date) : null,
+      end_date: experiment?.end_date ? parseISO(experiment.end_date) : null,
       participants: experiment
         ? experiment.participants.data.map((participant: any) => participant.id)
         : [],
