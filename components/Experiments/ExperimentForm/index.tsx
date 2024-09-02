@@ -19,8 +19,6 @@ import { format, parseISO } from "date-fns";
 import { MultiSelect } from "react-multi-select-component";
 import "react-datepicker/dist/react-datepicker.css";
 import { SelectOption } from "@/types";
-import htmlToDraft from "html-to-draftjs";
-import parse from "html-react-parser";
 import {
   EditorState,
   convertToRaw,
@@ -49,12 +47,12 @@ export default function ExperimentForm({
 }: ExperimentFormProps) {
   const { getExperiments } = useContext(ExperimentsContext);
 
-  function convertSlateToDraft(slateNodes) {
+  function convertSlateToDraft(slateNodes: any) {
     if (!slateNodes) {
       return { blocks: [], entityMap: {} };
     }
 
-    const blocks = slateNodes.map((node) => ({
+    const blocks = slateNodes.map((node: any) => ({
       key: generateRandomKey(),
       text: node.children[0].text,
       type: node.type,
@@ -67,7 +65,7 @@ export default function ExperimentForm({
     return { blocks, entityMap: {} };
   }
 
-  function convertStrapiRichTextToEditorState(strapiRichText) {
+  function convertStrapiRichTextToEditorState(strapiRichText: any) {
     const rawContent = convertSlateToDraft(strapiRichText);
     const contentState = convertFromRaw(rawContent);
     return EditorState.createWithContent(contentState);
@@ -120,7 +118,7 @@ export default function ExperimentForm({
   function convertEditorStateToBlocks(editorState: EditorState) {
     const rawContentState = convertToRaw(editorState.getCurrentContent());
 
-    let listItems = [];
+    let listItems: any[] = [];
     let blocks = [];
 
     rawContentState.blocks.forEach((block) => {
@@ -211,13 +209,13 @@ export default function ExperimentForm({
   function convertStrapiRichTextToPlainText(strapiRichText: any) {
     let plainText = "";
 
-    strapiRichText.forEach((block, index) => {
+    strapiRichText.forEach((block: any, index: number) => {
       if (block.type === "list-item") {
         // Añade un número de lista antes del texto
         plainText += `${index + 1}. `;
       }
 
-      block.children.forEach((child) => {
+      block.children.forEach((child: any) => {
         plainText += child.text;
       });
 
@@ -255,22 +253,22 @@ export default function ExperimentForm({
     }
   }
 
-  const uploadFile = async (file) => {
+  const uploadFile = async (file: any) => {
     if (file instanceof File) {
       try {
         const result = await uploadToS3(
           file,
           setIsUploading,
-          (errorMessage) => {
+          (errorMessage: any) => {
             throw new Error(errorMessage);
           }
         );
         return result;
-      } catch (error) {
+      } catch (error: any) {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Error al subir el archivo: " + error.message,
+          text: "Error al subir el archivo: " + error?.message,
         });
         throw error; // Si hay un error, lanzar la excepción
       }
@@ -730,10 +728,9 @@ export default function ExperimentForm({
               }}
               toolbarClassName="toolbarClassName"
               wrapperClassName="wrapperClassName"
-              editorClassName={{
-                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm":
-                  true,
-              }}
+              editorClassName={
+                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
+              }
               placeholder="Introduce la problematica"
             />
           )}
@@ -762,10 +759,9 @@ export default function ExperimentForm({
               }}
               toolbarClassName="toolbarClassName"
               wrapperClassName="wrapperClassName"
-              editorClassName={{
-                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm":
-                  true,
-              }}
+              editorClassName={
+                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
+              }
               placeholder="Introduce la hipótesis"
             />
           )}
@@ -794,10 +790,9 @@ export default function ExperimentForm({
               }}
               toolbarClassName="toolbarClassName"
               wrapperClassName="wrapperClassName"
-              editorClassName={{
-                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm":
-                  true,
-              }}
+              editorClassName={
+                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
+              }
               placeholder="Introduce la descripción de la solución"
             />
           )}
@@ -1016,10 +1011,9 @@ export default function ExperimentForm({
               }}
               toolbarClassName="toolbarClassName"
               wrapperClassName="wrapperClassName"
-              editorClassName={{
-                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm":
-                  true,
-              }}
+              editorClassName={
+                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
+              }
               placeholder="Introduce los resultados"
             />
           )}
