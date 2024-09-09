@@ -357,8 +357,8 @@ export default function InvestigationsComponent() {
                         )}
                       </div>
 
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium text-xs block mb-2">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium text-xs block">
                           <strong>Inicio:{"  "}</strong>
                           {investigation?.attributes?.initial_date &&
                             format(
