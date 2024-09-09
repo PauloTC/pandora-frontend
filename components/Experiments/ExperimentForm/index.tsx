@@ -605,7 +605,13 @@ export default function ExperimentForm({
               readOnly={localReadonly}
             />
             {formik.touched.title && formik.errors.title ? (
-              <ErrorFormMessage message={formik.errors.title} />
+              <ErrorFormMessage
+                message={
+                  typeof formik.errors.title === "string"
+                    ? formik.errors.title
+                    : JSON.stringify(formik.errors.title)
+                }
+              />
             ) : null}
           </div>
         </li>
@@ -759,7 +765,13 @@ export default function ExperimentForm({
                 }}
               />
               {formik.touched.participants && formik.errors.participants ? (
-                <ErrorFormMessage message={formik.errors.participants} />
+                <ErrorFormMessage
+                  message={
+                    typeof formik.errors.participants === "string"
+                      ? formik.errors.participants
+                      : JSON.stringify(formik.errors.participants)
+                  }
+                />
               ) : null}
             </div>
           )}
@@ -913,7 +925,13 @@ export default function ExperimentForm({
               )}
             </div>
             {formik.touched.vp && formik.errors.vp ? (
-              <ErrorFormMessage message={formik.errors.vp} />
+              <ErrorFormMessage
+                message={
+                  typeof formik.errors.vp === "string"
+                    ? formik.errors.vp
+                    : JSON.stringify(formik.errors.vp)
+                }
+              />
             ) : null}
           </div>
         </li>
@@ -960,7 +978,13 @@ export default function ExperimentForm({
               )}
             </div>
             {formik.touched.strategic_area && formik.errors.strategic_area ? (
-              <ErrorFormMessage message={formik.errors.strategic_area} />
+              <ErrorFormMessage
+                message={
+                  typeof formik.errors.strategic_area === "string"
+                    ? formik.errors.strategic_area
+                    : JSON.stringify(formik.errors.strategic_area)
+                }
+              />
             ) : null}
           </div>
         </li>
@@ -984,7 +1008,13 @@ export default function ExperimentForm({
               placeholder="Nombre del stakeholder"
             />
             {formik.touched.stakeholder && formik.errors.stakeholder ? (
-              <ErrorFormMessage message={formik.errors.stakeholder} />
+              <ErrorFormMessage
+                message={
+                  typeof formik.errors.stakeholder === "string"
+                    ? formik.errors.stakeholder
+                    : JSON.stringify(formik.errors.stakeholder)
+                }
+              />
             ) : null}
           </div>
         </li>
@@ -1032,7 +1062,13 @@ export default function ExperimentForm({
               )}
             </div>
             {formik.touched.experiment_type && formik.errors.experiment_type ? (
-              <ErrorFormMessage message={formik.errors.experiment_type} />
+              <ErrorFormMessage
+                message={
+                  typeof formik.errors.experiment_type === "string"
+                    ? formik.errors.experiment_type
+                    : JSON.stringify(formik.errors.experiment_type)
+                }
+              />
             ) : null}
           </div>
         </li>
@@ -1086,7 +1122,13 @@ export default function ExperimentForm({
               />
               {formik.touched.execution_methods &&
               formik.errors.execution_methods ? (
-                <ErrorFormMessage message={formik.errors.execution_methods} />
+                <ErrorFormMessage
+                  message={
+                    typeof formik.errors.execution_methods === "string"
+                      ? formik.errors.execution_methods
+                      : JSON.stringify(formik.errors.execution_methods)
+                  }
+                />
               ) : null}
             </div>
           )}
