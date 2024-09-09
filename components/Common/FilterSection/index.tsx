@@ -18,7 +18,7 @@ export const FilterSection = ({
 
   const displayedItems = showMore ? items : items.slice(0, 5);
 
-  const buttonText = showMore ? "Ocultar" : "Más";
+  const buttonText = showMore ? "Ocultar" : "Ver más";
   let buttonFilterText = "";
 
   if (filterType === "project") {
@@ -27,6 +27,8 @@ export const FilterSection = ({
     buttonFilterText = `${buttonText} públicos`;
   } else if (filterType === "objetiveResearcher") {
     buttonFilterText = `${buttonText} personas`;
+  } else {
+    buttonFilterText = `${buttonText}`;
   }
 
   return (

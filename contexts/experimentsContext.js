@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useState, useEffect } from "react";
-import { Experiment, Vp, ExecutionMethod, ExperimentType } from "@/api";
+import { Experiment, Vp, ExecutionMethod, ExperimentType, Team } from "@/api";
 
 export const ExperimentsContext = createContext();
 
@@ -8,12 +8,14 @@ const experimentCtrl = new Experiment();
 const vpCtrl = new Vp();
 const executionMethodCtrl = new ExecutionMethod();
 const experimentTypeCtrl = new ExperimentType();
+const teamCtrl = new Team();
 
 export const ExperimentsProvider = ({ children }) => {
   const [experiments, setExperiments] = useState([]);
   const [pagination, setPagination] = useState({});
   const [executionMethods, setExecutionMethods] = useState([]);
   const [experimentTypes, setExperimentTypes] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [vps, setVps] = useState([]);
   const [status, setStatus] = useState([
     { attributes: { label: "En Pausa", value: "en pausa" } },
@@ -52,6 +54,7 @@ export const ExperimentsProvider = ({ children }) => {
       const execution_methods =
         await executionMethodCtrl.getAllExecutionMethods();
       const experiment_types = await experimentTypeCtrl.getAllExperimentTypes();
+      const teams = await teamCtrl.getTeams();
 
       setVps(
         vps.data.map((vp) => ({
@@ -73,6 +76,13 @@ export const ExperimentsProvider = ({ children }) => {
           label: method?.attributes?.name,
         }))
       );
+
+      setTeams(
+        teams.data.map((team) => ({
+          value: team?.id,
+          label: team?.attributes?.name,
+        }))
+      );
     })();
   }, []);
 
@@ -84,6 +94,7 @@ export const ExperimentsProvider = ({ children }) => {
         filterExperiments,
         pagination,
         vps,
+        teams,
         executionMethods,
         experimentTypes,
         status,

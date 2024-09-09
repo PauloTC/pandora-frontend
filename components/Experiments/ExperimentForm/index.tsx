@@ -31,6 +31,8 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Swal from "sweetalert2";
 import PulseLoader from "react-spinners/PulseLoader";
 import { ExperimentsContext } from "@/contexts";
+import * as Yup from "yup";
+import ErrorFormMessage from "@/components/Common/ErrorFormMessage";
 
 interface ExperimentFormProps {
   readonly?: boolean;
@@ -45,7 +47,8 @@ export default function ExperimentForm({
   onClose,
   id,
 }: ExperimentFormProps) {
-  const { getExperiments } = useContext(ExperimentsContext);
+  const { getExperiments, teams, vps, experimentTypes, executionMethods } =
+    useContext(ExperimentsContext);
 
   function convertSlateToDraft(slateNodes: any) {
     if (!slateNodes) {
@@ -72,10 +75,6 @@ export default function ExperimentForm({
   }
   const [title, setTitle] = useState("Nuevo Experimento");
   const [participants, setParticipants] = useState([]);
-  const [vps, setVps] = useState<SelectOption[]>([]);
-  const [projects, setProjects] = useState<SelectOption[]>([]);
-  const [experimentTypes, setExperimentTypes] = useState<SelectOption[]>([]);
-  const [executionMethods, setExecutionMethods] = useState([]);
   const [reference, setReference] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [editorState, setEditorState] = useState(
@@ -276,6 +275,111 @@ export default function ExperimentForm({
     return file;
   };
 
+  const validationSchema = Yup.object({
+    title: Yup.string().required("El título es requerido"),
+    participants: Yup.array().min(1, "Al menos un participante es requerido"),
+    problem_definition: Yup.array()
+      .of(
+        Yup.object()
+          .shape({
+            type: Yup.string().required(),
+            children: Yup.array()
+              .of(
+                Yup.object()
+                  .shape({
+                    type: Yup.string().required(),
+                    text: Yup.string().notOneOf(
+                      [""],
+                      "La definición del problema es requerida"
+                    ),
+                  })
+                  .required()
+              )
+              .required(),
+          })
+          .required()
+      )
+      .required("La definición del problema es requerida"),
+    hypotesis: Yup.array()
+      .of(
+        Yup.object()
+          .shape({
+            type: Yup.string().required(),
+            children: Yup.array()
+              .of(
+                Yup.object()
+                  .shape({
+                    type: Yup.string().required(),
+                    text: Yup.string().notOneOf(
+                      [""],
+                      "La hipótesis es requerida"
+                    ),
+                  })
+                  .required()
+              )
+              .required(),
+          })
+          .required()
+      )
+      .required("La hipótesis es requerida"),
+    description: Yup.array()
+      .of(
+        Yup.object()
+          .shape({
+            type: Yup.string().required(),
+            children: Yup.array()
+              .of(
+                Yup.object()
+                  .shape({
+                    type: Yup.string().required(),
+                    text: Yup.string().notOneOf(
+                      [""],
+                      "La descripción es requerida"
+                    ),
+                  })
+                  .required()
+              )
+              .required(),
+          })
+          .required()
+      )
+      .required("La descripción es requerida"),
+    vp: Yup.string().required("La VP es requerida"),
+    strategic_area: Yup.string().required("El área estratégica es requerida"),
+    stakeholder: Yup.string().required(
+      "El nombre del stakeholder es requerido"
+    ),
+    experiment_type: Yup.string().required(
+      "El tipo de experimento es requerido"
+    ),
+    execution_methods: Yup.array().min(
+      1,
+      "Un método de ejecución es requerido"
+    ),
+    results: Yup.array()
+      .of(
+        Yup.object()
+          .shape({
+            type: Yup.string().required(),
+            children: Yup.array()
+              .of(
+                Yup.object()
+                  .shape({
+                    type: Yup.string().required(),
+                    text: Yup.string().notOneOf(
+                      [""],
+                      "Los resultados son requeridos"
+                    ),
+                  })
+                  .required()
+              )
+              .required(),
+          })
+          .required()
+      )
+      .required("Los resultados son requeridos"),
+  });
+
   const formik = useFormik({
     initialValues: {
       title: experiment ? experiment.title : "",
@@ -299,6 +403,7 @@ export default function ExperimentForm({
       roi: experiment ? experiment.roi : "",
       reference: "",
     },
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
       setLoading(true);
       try {
@@ -329,55 +434,12 @@ export default function ExperimentForm({
     (async () => {
       try {
         const participants = await researcherCtrl.getAllParticipants();
-        const vps = await vpCtrl.getAllVps();
-        const projects = await projectCtrl.getProjects();
-        const experimentTypes =
-          await experimentTypeCtrl.getAllExperimentTypes();
-
-        const executionMethods =
-          await executionMethodCtrl.getAllExecutionMethods();
-
-        setProjects(
-          projects.data.map(
-            (p: any): SelectOption => ({
-              value: p?.id,
-              label: p?.attributes?.name,
-            })
-          )
-        );
 
         setParticipants(
           participants.data.map(
             (p: any): SelectOption => ({
               value: p?.id,
               label: p?.attributes?.name,
-            })
-          )
-        );
-
-        setVps(
-          vps.data.map(
-            (vp: any): SelectOption => ({
-              value: vp?.id,
-              label: vp?.attributes?.name,
-            })
-          )
-        );
-
-        setExperimentTypes(
-          experimentTypes.data.map(
-            (exp: any): SelectOption => ({
-              value: exp?.id,
-              label: exp?.attributes?.name,
-            })
-          )
-        );
-
-        setExecutionMethods(
-          executionMethods.data.map(
-            (method: any): SelectOption => ({
-              value: method?.id,
-              label: method?.attributes?.name,
             })
           )
         );
@@ -527,20 +589,25 @@ export default function ExperimentForm({
             Título*
           </Label>
 
-          <input
-            type="text"
-            value={formik.values.title}
-            onChange={formik.handleChange}
-            id="title"
-            className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
-              localReadonly
-                ? "border-none pointer-events-none"
-                : "border border-gray-300"
-            }`}
-            placeholder="Titulo del experimento"
-            required
-            readOnly={localReadonly}
-          />
+          <div>
+            <input
+              type="text"
+              value={formik.values.title}
+              onChange={formik.handleChange}
+              id="title"
+              className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
+                localReadonly
+                  ? "border-none pointer-events-none"
+                  : "border border-gray-300"
+              }`}
+              placeholder="Titulo del experimento"
+              required
+              readOnly={localReadonly}
+            />
+            {formik.touched.title && formik.errors.title ? (
+              <ErrorFormMessage message={formik.errors.title} />
+            ) : null}
+          </div>
         </li>
 
         <li className="flex items-center gap-4">
@@ -550,12 +617,11 @@ export default function ExperimentForm({
 
           <div className="relative">
             <select
-              disabled={localReadonly}
               value={formik.values.status}
               onChange={formik.handleChange}
               id="status"
               className={`appearance-none text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500 ${
-                localReadonly ? "" : "border border-gray-300"
+                localReadonly ? "pointer-events-none" : "border border-gray-300"
               }`}
             >
               {status.map((state) => (
@@ -589,7 +655,7 @@ export default function ExperimentForm({
             placeholderText="Selecciona una fecha inicial"
             className={`
               placeholder-gray-150
-              text-sm block p-2 w-64 
+              text-sm block p-2.5 w-64 
               rounded h-10 outline-blue-500
               ${formik.values.initial_date ? "opacity-100" : "opacity-90"}
               ${localReadonly ? "bg-transparent" : "border border-gray-300"}
@@ -643,7 +709,7 @@ export default function ExperimentForm({
           </Label>
 
           {localReadonly ? (
-            <ul className="w-1/2 flex gap-4 flex-col">
+            <ul className="w-64 px-2.5 flex gap-4 flex-col">
               {experiment?.participants?.data.map((participant: any) => (
                 <li className="flex gap-2 items-center" key={participant.id}>
                   <Image
@@ -661,42 +727,47 @@ export default function ExperimentForm({
               ))}
             </ul>
           ) : (
-            <MultiSelect
-              className="w-64 text-sm border-gray-300"
-              options={participants}
-              // @ts-ignore
-              value={formik.values.participants.map((id: string) =>
-                participants.find((p: any) => p.value === id)
-              )}
-              onChange={(selectedItems: any[]) => {
-                const ids = selectedItems.map((item) => item.value);
-                formik.setFieldValue("participants", ids);
-              }}
-              labelledBy="Select"
-              overrideStrings={{
+            <div className="flex flex-col">
+              <MultiSelect
+                className="w-64 text-sm border-gray-300 z-0"
+                options={participants}
                 // @ts-ignore
-                selectSomeItems: (
-                  <span
-                    className={
-                      formik.values.participants.length
-                        ? "opacity-100"
-                        : "opacity-90"
-                    }
-                  >
-                    Seleccionar participantes
-                  </span>
-                ),
-                search: "Buscar Participantes",
-                selectAll: "Todos Participaron",
-                allItemsAreSelected: "Todos Participaron",
-              }}
-            />
+                value={formik.values.participants.map((id: string) =>
+                  participants.find((p: any) => p.value === id)
+                )}
+                onChange={(selectedItems: any[]) => {
+                  const ids = selectedItems.map((item) => item.value);
+                  formik.setFieldValue("participants", ids);
+                }}
+                labelledBy="Select"
+                overrideStrings={{
+                  // @ts-ignore
+                  selectSomeItems: (
+                    <span
+                      className={
+                        formik.values.participants.length
+                          ? "opacity-100"
+                          : "opacity-90"
+                      }
+                    >
+                      Seleccionar participantes
+                    </span>
+                  ),
+                  search: "Buscar Participantes",
+                  selectAll: "Todos Participaron",
+                  allItemsAreSelected: "Todos Participaron",
+                }}
+              />
+              {formik.touched.participants && formik.errors.participants ? (
+                <ErrorFormMessage message={formik.errors.participants} />
+              ) : null}
+            </div>
           )}
         </li>
 
         <li className="flex flex-col gap-2">
           <label className="font-medium uppercase text-sm text-gray-900">
-            Planteamiento de la problematica
+            Planteamiento de la problemática
           </label>
 
           {localReadonly ? (
@@ -707,21 +778,27 @@ export default function ExperimentForm({
               }}
             ></div>
           ) : (
-            <Editor
-              toolbarHidden
-              editorState={editorState}
-              onEditorStateChange={(newState: any) => {
-                setEditorState(newState);
-                const blocks = convertEditorStateToBlocks(newState);
-                formik.setFieldValue("problem_definition", blocks);
-              }}
-              toolbarClassName="toolbarClassName"
-              wrapperClassName="wrapperClassName"
-              editorClassName={
-                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
-              }
-              placeholder="Introduce la problematica"
-            />
+            <div className="flex flex-col">
+              <Editor
+                toolbarHidden
+                editorState={editorState}
+                onEditorStateChange={(newState: any) => {
+                  setEditorState(newState);
+                  const blocks = convertEditorStateToBlocks(newState);
+                  formik.setFieldValue("problem_definition", blocks);
+                }}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName={
+                  "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
+                }
+                placeholder="Introduce la problemática"
+              />
+              {formik.touched.problem_definition &&
+              formik.errors.problem_definition ? (
+                <ErrorFormMessage message={formik.errors.problem_definition} />
+              ) : null}
+            </div>
           )}
         </li>
 
@@ -738,21 +815,26 @@ export default function ExperimentForm({
               }}
             ></div>
           ) : (
-            <Editor
-              toolbarHidden
-              editorState={editorStateHypothesis}
-              onEditorStateChange={(newState: any) => {
-                setEditorStateHypothesis(newState);
-                const blocks = convertEditorStateToBlocks(newState);
-                formik.setFieldValue("hypotesis", blocks);
-              }}
-              toolbarClassName="toolbarClassName"
-              wrapperClassName="wrapperClassName"
-              editorClassName={
-                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
-              }
-              placeholder="Introduce la hipótesis"
-            />
+            <div className="flex flex-col">
+              <Editor
+                toolbarHidden
+                editorState={editorStateHypothesis}
+                onEditorStateChange={(newState: any) => {
+                  setEditorStateHypothesis(newState);
+                  const blocks = convertEditorStateToBlocks(newState);
+                  formik.setFieldValue("hypotesis", blocks);
+                }}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName={
+                  "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
+                }
+                placeholder="Introduce la hipótesis"
+              />
+              {formik.touched.hypotesis && formik.errors.hypotesis ? (
+                <ErrorFormMessage message={formik.errors.hypotesis} />
+              ) : null}
+            </div>
           )}
         </li>
 
@@ -769,21 +851,26 @@ export default function ExperimentForm({
               }}
             ></div>
           ) : (
-            <Editor
-              toolbarHidden
-              editorState={editorStateDescription}
-              onEditorStateChange={(newState: any) => {
-                setEditorStateDescription(newState);
-                const blocks = convertEditorStateToBlocks(newState);
-                formik.setFieldValue("description", blocks);
-              }}
-              toolbarClassName="toolbarClassName"
-              wrapperClassName="wrapperClassName"
-              editorClassName={
-                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
-              }
-              placeholder="Introduce la descripción de la solución"
-            />
+            <div className="flex flex-col">
+              <Editor
+                toolbarHidden
+                editorState={editorStateDescription}
+                onEditorStateChange={(newState: any) => {
+                  setEditorStateDescription(newState);
+                  const blocks = convertEditorStateToBlocks(newState);
+                  formik.setFieldValue("description", blocks);
+                }}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName={
+                  "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
+                }
+                placeholder="Introduce la descripción de la solución"
+              />
+              {formik.touched.description && formik.errors.description ? (
+                <ErrorFormMessage message={formik.errors.description} />
+              ) : null}
+            </div>
           )}
         </li>
 
@@ -791,61 +878,91 @@ export default function ExperimentForm({
           <Label subtext="Selecciona a que VP pertenece" htmlFor="vp">
             VP
           </Label>
-
-          <div className="relative">
-            <select
-              value={formik.values.vp}
-              onChange={formik.handleChange}
-              disabled={localReadonly}
-              name="vp"
-              id="vp"
-              className={`appearance-none text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500 ${
-                localReadonly ? "" : "border border-gray-300"
-              }`}
-            >
-              <option value="">Selecciona una VP</option>
-              {vps.map((vp: SelectOption) => (
-                <option key={vp?.value} value={vp?.value}>
-                  {vp?.label}
-                </option>
-              ))}
-            </select>
-
-            {!localReadonly && (
-              <svg
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+          <div className="flex flex-col">
+            <div className="relative">
+              <select
+                value={formik.values.vp}
+                onChange={formik.handleChange}
+                name="vp"
+                id="vp"
+                className={`appearance-none text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500 ${
+                  localReadonly
+                    ? "pointer-events-none"
+                    : "border border-gray-300"
+                }`}
               >
-                <path d="M6 9L12 15 18 9"></path>
-              </svg>
-            )}
+                <option value="">Selecciona una VP</option>
+                {vps.map((vp: SelectOption) => (
+                  <option key={vp?.value} value={vp?.value}>
+                    {vp?.label}
+                  </option>
+                ))}
+              </select>
+
+              {!localReadonly && (
+                <svg
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                >
+                  <path d="M6 9L12 15 18 9"></path>
+                </svg>
+              )}
+            </div>
+            {formik.touched.vp && formik.errors.vp ? (
+              <ErrorFormMessage message={formik.errors.vp} />
+            ) : null}
           </div>
         </li>
 
         <li className="flex items-center gap-4">
           <Label
-            subtext="Selecciona a que area pertenece"
+            subtext="Selecciona a qué área pertenece"
             htmlFor="strategic_area"
           >
-            Area estrategica
+            Área estratégica
           </Label>
 
-          <input
-            type="text"
-            value={formik.values.strategic_area}
-            onChange={formik.handleChange}
-            id="strategic_area"
-            className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
-              localReadonly
-                ? "border-none pointer-events-none"
-                : "border border-gray-300"
-            }`}
-            placeholder="Escribe el área estrategica"
-          />
+          <div className="flex flex-col">
+            <div className="relative">
+              <select
+                value={formik.values.strategic_area}
+                onChange={formik.handleChange}
+                name="strategic_area"
+                id="strategic_area"
+                className={`appearance-none text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500 ${
+                  localReadonly
+                    ? "pointer-events-none"
+                    : "border border-gray-300"
+                }`}
+              >
+                <option value="">Selecciona un área</option>
+                {teams.map((team: SelectOption) => (
+                  <option key={team.value} value={team.label}>
+                    {team.label}
+                  </option>
+                ))}
+              </select>
+              {!localReadonly && (
+                <svg
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                >
+                  <path d="M6 9L12 15 18 9"></path>
+                </svg>
+              )}
+            </div>
+            {formik.touched.strategic_area && formik.errors.strategic_area ? (
+              <ErrorFormMessage message={formik.errors.strategic_area} />
+            ) : null}
+          </div>
         </li>
 
         <li className="flex items-center gap-4">
@@ -853,18 +970,23 @@ export default function ExperimentForm({
             Stakeholder
           </Label>
 
-          <input
-            type="text"
-            value={formik.values.stakeholder}
-            onChange={formik.handleChange}
-            id="stakeholder"
-            className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
-              localReadonly
-                ? "border-none pointer-events-none"
-                : "border border-gray-300"
-            }`}
-            placeholder="Nombre del stakeholder"
-          />
+          <div className="flex flex-col">
+            <input
+              type="text"
+              value={formik.values.stakeholder}
+              onChange={formik.handleChange}
+              id="stakeholder"
+              className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
+                localReadonly
+                  ? "border-none pointer-events-none"
+                  : "border border-gray-300"
+              }`}
+              placeholder="Nombre del stakeholder"
+            />
+            {formik.touched.stakeholder && formik.errors.stakeholder ? (
+              <ErrorFormMessage message={formik.errors.stakeholder} />
+            ) : null}
+          </div>
         </li>
 
         <li className="flex items-center gap-4">
@@ -875,37 +997,43 @@ export default function ExperimentForm({
             Tipo
           </Label>
 
-          <div className="relative">
-            <select
-              value={formik.values.experiment_type}
-              onChange={formik.handleChange}
-              name="experiment_type"
-              disabled={localReadonly}
-              id="experiment_type"
-              className={`appearance-none text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500 ${
-                localReadonly ? "" : "border border-gray-300"
-              }`}
-            >
-              <option value="">Selecciona el Tipo</option>
-              {experimentTypes.map((type: SelectOption) => (
-                <option key={type?.value} value={type?.value}>
-                  {type?.label}
-                </option>
-              ))}
-            </select>
-
-            {!localReadonly && (
-              <svg
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+          <div className="flex flex-col">
+            <div className="relative">
+              <select
+                value={formik.values.experiment_type}
+                onChange={formik.handleChange}
+                name="experiment_type"
+                id="experiment_type"
+                className={`appearance-none text-gray-900 text-sm rounded block w-64 p-2.5 h-10 outline-blue-500 ${
+                  localReadonly
+                    ? "pointer-events-none"
+                    : "border border-gray-300"
+                }`}
               >
-                <path d="M6 9L12 15 18 9"></path>
-              </svg>
-            )}
+                <option value="">Selecciona el Tipo</option>
+                {experimentTypes.map((type: SelectOption) => (
+                  <option key={type?.value} value={type?.value}>
+                    {type?.label}
+                  </option>
+                ))}
+              </select>
+
+              {!localReadonly && (
+                <svg
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="dropdown-heading-dropdown-arrow gray size-5 pointer-events-none absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                >
+                  <path d="M6 9L12 15 18 9"></path>
+                </svg>
+              )}
+            </div>
+            {formik.touched.experiment_type && formik.errors.experiment_type ? (
+              <ErrorFormMessage message={formik.errors.experiment_type} />
+            ) : null}
           </div>
         </li>
 
@@ -914,10 +1042,10 @@ export default function ExperimentForm({
             localReadonly ? "items-start" : "items-center"
           } flex`}
         >
-          <Label subtext="Selecciona el/los medios">Medio de ejecucion</Label>
+          <Label subtext="Selecciona el/los medios">Medio de ejecución</Label>
 
           {localReadonly ? (
-            <ul className="w-1/2 flex gap-2 justify-between flex-wrap">
+            <ul className="w-64 flex gap-2 justify-between flex-wrap p-2.5">
               {experiment?.execution_methods?.data.map((methods: any) => (
                 <li className="flex gap-2 items-center" key={methods.id}>
                   <span className="text-sm">{methods.attributes.name}</span>
@@ -925,41 +1053,47 @@ export default function ExperimentForm({
               ))}
             </ul>
           ) : (
-            <MultiSelect
-              className="w-64 text-sm border-gray-300"
-              options={executionMethods}
-              // @ts-ignore
-              value={formik.values.execution_methods.map((id: string) =>
-                executionMethods.find((p: any) => p.value === id)
-              )}
-              onChange={(selectedItems: any[]) => {
-                const ids = selectedItems.map((item) => item.value);
-                formik.setFieldValue("execution_methods", ids);
-              }}
-              labelledBy="Select"
-              overrideStrings={{
+            <div className="flex flex-col">
+              <MultiSelect
+                className="w-64 text-sm border-gray-300 z-0"
+                options={executionMethods}
                 // @ts-ignore
-                selectSomeItems: (
-                  <span
-                    className={
-                      formik.values.execution_methods.length
-                        ? "opacity-100"
-                        : "opacity-90"
-                    }
-                  >
-                    Seleccionar medios
-                  </span>
-                ),
-                search: "Buscar Medios",
-                selectAll: "Todos los medios",
-                allItemsAreSelected: "Todos los medios",
-              }}
-            />
+                value={formik.values.execution_methods.map((id: string) =>
+                  executionMethods.find((p: any) => p.value === id)
+                )}
+                onChange={(selectedItems: any[]) => {
+                  const ids = selectedItems.map((item) => item.value);
+                  formik.setFieldValue("execution_methods", ids);
+                }}
+                labelledBy="Select"
+                overrideStrings={{
+                  // @ts-ignore
+                  selectSomeItems: (
+                    <span
+                      className={
+                        formik.values.execution_methods.length
+                          ? "opacity-100"
+                          : "opacity-90"
+                      }
+                    >
+                      Seleccionar medios
+                    </span>
+                  ),
+                  search: "Buscar Medios",
+                  selectAll: "Todos los medios",
+                  allItemsAreSelected: "Todos los medios",
+                }}
+              />
+              {formik.touched.execution_methods &&
+              formik.errors.execution_methods ? (
+                <ErrorFormMessage message={formik.errors.execution_methods} />
+              ) : null}
+            </div>
           )}
         </li>
 
         <li className="flex items-center gap-4">
-          <Label subtext="Retorno de inversion" htmlFor="roi">
+          <Label subtext="Retorno de inversión" htmlFor="roi">
             ROI
           </Label>
 
@@ -990,21 +1124,26 @@ export default function ExperimentForm({
               }}
             ></div>
           ) : (
-            <Editor
-              toolbarHidden
-              editorState={editorStateResults}
-              onEditorStateChange={(newState: any) => {
-                setEditorStateResults(newState);
-                const blocks = convertEditorStateToBlocks(newState);
-                formik.setFieldValue("results", blocks);
-              }}
-              toolbarClassName="toolbarClassName"
-              wrapperClassName="wrapperClassName"
-              editorClassName={
-                "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
-              }
-              placeholder="Introduce los resultados"
-            />
+            <div className="flex flex-col">
+              <Editor
+                toolbarHidden
+                editorState={editorStateResults}
+                onEditorStateChange={(newState: any) => {
+                  setEditorStateResults(newState);
+                  const blocks = convertEditorStateToBlocks(newState);
+                  formik.setFieldValue("results", blocks);
+                }}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName={
+                  "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
+                }
+                placeholder="Introduce los resultados"
+              />
+              {formik.touched.results && formik.errors.results ? (
+                <ErrorFormMessage message={formik.errors.results} />
+              ) : null}
+            </div>
           )}
         </li>
       </form>

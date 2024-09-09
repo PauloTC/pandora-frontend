@@ -251,10 +251,10 @@ export default function ExperimentsComponent() {
                 <li
                   key={index}
                   className="border border-gray-200 
-                    rounded-lg p-5 box-border
+                    rounded-lg p-4 box-border
                     self-start justify-between transition-all 
-                    duration-300 ease-in-out cursor-pointer
-                    relative overflow-hidden divide-y divide-gray-300"
+                    duration-300 ease-in-out relative 
+                    overflow-hidden divide-y divide-gray-300"
                 >
                   <div className="pb-3">
                     <div className="relative z-10">
@@ -282,7 +282,7 @@ export default function ExperimentsComponent() {
                       </div>
 
                       <div className="flex justify-between items-center gap-2 mb-3 min-h-8 mb-2">
-                        <span className="max-w-32 font-semibold text-xs capitalize">
+                        <span className="max-w-32 font-semibold text-xs capitalize overflow-hidden overflow-ellipsis display-box line-clamp-2">
                           {vp}
                         </span>
                         <StatusBadge status={status} />
@@ -365,12 +365,14 @@ export default function ExperimentsComponent() {
                         {strategic_area}
                       </p>
                       <ul className="flex items-center justify-end grow relative w-40">
-                        {participants.map((participant: any, index: number) => {
-                          return (
-                            <li
-                              key={index}
-                              // prettier-ignore
-                              className={classNames(
+                        {participants
+                          .slice(0, 2)
+                          .map((participant: any, index: number) => {
+                            return (
+                              <li
+                                key={index}
+                                // prettier-ignore
+                                className={classNames(
                                   {
                                     "absolute": index === 1,
                                     "right-7": index === 1
@@ -379,36 +381,30 @@ export default function ExperimentsComponent() {
                                   "border-white",
                                   "rounded-full"
                                 )}
-                            >
-                              <Image
-                                src={
-                                  participant.attributes.photo.data.attributes
-                                    .url
-                                }
-                                alt={
-                                  participant.attributes.photo.data.attributes
-                                    .name
-                                }
-                                width={40}
-                                height={40}
-                                className="rounded-full"
-                              />
-                            </li>
-                          );
-                        })}
-
-                        {/* <li
-                          // prettier-ignore
-                          className="absolute right-7 border-2 border-white rounded-full"
-                        >
-                          <Image
-                            src="https://data-center-strapi.s3.sa-east-1.amazonaws.com/martha_c5edcc7817_3d7e1509d6.png"
-                            alt="person"
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                          />
-                        </li> */}
+                              >
+                                <Image
+                                  src={
+                                    participant.attributes.photo.data.attributes
+                                      .url
+                                  }
+                                  alt={
+                                    participant.attributes.photo.data.attributes
+                                      .name
+                                  }
+                                  width={40}
+                                  height={40}
+                                  className="rounded-full"
+                                />
+                              </li>
+                            );
+                          })}
+                        {participants.length > 2 && (
+                          <li className="absolute right-0 bottom-0 w-8">
+                            <span className="rounded-md text-xs flex justify-center bg-stone-600 text-white">
+                              + {participants.length - 2}{" "}
+                            </span>
+                          </li>
+                        )}
                       </ul>
                     </div>
 
@@ -442,7 +438,7 @@ export default function ExperimentsComponent() {
                       ${
                         reference
                           ? "bg-blue-600 hover:bg-blue-700"
-                          : "bg-gray-400 cursor-not-allowed"
+                          : "bg-gray-400 cursor-not-allowed pointer-events-none"
                       }`}
                     >
                       <svg
