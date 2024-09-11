@@ -17,7 +17,6 @@ import DatePicker from "react-datepicker";
 import { useEffect, useState, useContext } from "react";
 import { format, parseISO } from "date-fns";
 import { MultiSelect } from "react-multi-select-component";
-import "react-datepicker/dist/react-datepicker.css";
 import { SelectOption } from "@/types";
 import {
   EditorState,
@@ -33,7 +32,6 @@ import PulseLoader from "react-spinners/PulseLoader";
 import { ExperimentsContext } from "@/contexts";
 import * as Yup from "yup";
 import ErrorFormMessage from "@/components/Common/ErrorFormMessage";
-import exp from "constants";
 
 interface ExperimentFormProps {
   readonly?: boolean;
@@ -289,8 +287,8 @@ export default function ExperimentForm({
                 Yup.object()
                   .shape({
                     type: Yup.string().required(),
-                    text: Yup.string().min(
-                      1,
+                    text: Yup.string().notOneOf(
+                      [""],
                       "La definición del problema es requerida"
                     ),
                   })
@@ -300,6 +298,7 @@ export default function ExperimentForm({
           })
           .required()
       )
+      .min(1, "La definición del problema es requerida")
       .required("La definición del problema es requerida"),
     hypotesis: Yup.array()
       .of(
@@ -740,7 +739,7 @@ export default function ExperimentForm({
           ) : (
             <div className="flex flex-col">
               <MultiSelect
-                className="w-64 text-sm border-gray-300 z-0"
+                className="w-64 text-sm border-gray-300 z-10"
                 options={participants}
                 // @ts-ignore
                 value={formik.values.participants.map((id: string) => {
@@ -1117,7 +1116,7 @@ export default function ExperimentForm({
           ) : (
             <div className="flex flex-col">
               <MultiSelect
-                className="w-64 text-sm border-gray-300 z-0"
+                className="w-64 text-sm border-gray-300 z-10"
                 options={executionMethods}
                 // @ts-ignore
                 value={formik.values.execution_methods.map((id: string) =>
