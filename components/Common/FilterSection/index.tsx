@@ -19,17 +19,6 @@ export const FilterSection = ({
   const displayedItems = showMore ? items : items.slice(0, 5);
 
   const buttonText = showMore ? "Ocultar" : "Ver más";
-  let buttonFilterText = "";
-
-  if (filterType === "project") {
-    buttonFilterText = `${buttonText} proyectos`;
-  } else if (filterType === "objectivePublic") {
-    buttonFilterText = `${buttonText} públicos`;
-  } else if (filterType === "objetiveResearcher") {
-    buttonFilterText = `${buttonText} personas`;
-  } else {
-    buttonFilterText = `${buttonText}`;
-  }
 
   return (
     <>
@@ -59,7 +48,7 @@ export const FilterSection = ({
             className="text-xs text-blue-800 underline leading-4"
             onClick={() => setShowMore(!showMore)}
           >
-            {buttonFilterText}
+            {buttonText}
           </button>
         )}
       </ul>

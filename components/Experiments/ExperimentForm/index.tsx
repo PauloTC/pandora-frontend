@@ -389,9 +389,9 @@ export default function ExperimentForm({
       participants: experiment
         ? experiment.participants.data.map((participant: any) => participant.id)
         : [],
-      problem_definition: "",
-      hypotesis: "",
-      description: "",
+      problem_definition: experiment ? experiment.problem_definition : [],
+      hypotesis: experiment ? experiment.hypotesis : [],
+      description: experiment ? experiment.description : [],
       vp: experiment ? experiment.vp.data.id : "",
       strategic_area: experiment ? experiment.strategic_area : "",
       stakeholder: experiment ? experiment.stakeholder : "",
@@ -399,7 +399,7 @@ export default function ExperimentForm({
       execution_methods: experiment
         ? experiment.execution_methods.data.map((method: any) => method.id)
         : [],
-      results: "",
+      results: experiment ? experiment.results : [],
       roi: experiment ? experiment.roi : "",
       reference: "",
     },
@@ -880,7 +880,7 @@ export default function ExperimentForm({
                 editorClassName={
                   "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
                 }
-                placeholder="Introduce la descripción de la solución"
+                placeholder="Introduce la descripción"
               />
               {formik.touched.description && formik.errors.description ? (
                 <ErrorFormMessage message={formik.errors.description} />
@@ -1152,7 +1152,7 @@ export default function ExperimentForm({
                 ? "border-none pointer-events-none"
                 : "border border-gray-300"
             }`}
-            placeholder="S/10.000"
+            placeholder={!localReadonly ? "S/10.000" : ""}
           />
         </li>
 

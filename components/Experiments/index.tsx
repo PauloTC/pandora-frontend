@@ -59,7 +59,6 @@ export default function ExperimentsComponent() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const [actionMode, setSidebarMode] = useState("read");
-  // const [experiments, setExperiments] = useState([]);
   const [experiment, setExperiment] = useState<ExperimentData | null>(null);
   const [reference, setReference] = useState("");
   const [filters, setFilters] = useState({
@@ -266,17 +265,23 @@ export default function ExperimentsComponent() {
 
                       <div className="flex mb-3 min-h-4 items-center">
                         <div className="flex gap-2 ">
-                          {execution_methods.map(
-                            (method: any, index: number) => {
+                          {execution_methods
+                            .slice(0, 2)
+                            .map((method: any, index: number) => {
                               return (
                                 <p
                                   key={index}
                                   className="text-xs align-center flex border px-2 rounded-md"
                                 >
-                                  {method.attributes.name}
+                                  {method.attributes.alias}
                                 </p>
                               );
-                            }
+                            })}
+
+                          {execution_methods.length > 2 && (
+                            <p className="text-xs align-center flex border px-2 rounded-md">
+                              + {execution_methods.length - 2}{" "}
+                            </p>
                           )}
                         </div>
                       </div>
