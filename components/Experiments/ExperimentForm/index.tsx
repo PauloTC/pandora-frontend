@@ -811,7 +811,13 @@ export default function ExperimentForm({
               />
               {formik.touched.problem_definition &&
               formik.errors.problem_definition ? (
-                <ErrorFormMessage message={formik.errors.problem_definition} />
+                <ErrorFormMessage
+                  message={
+                    typeof formik.errors.problem_definition === "string"
+                      ? formik.errors.problem_definition
+                      : JSON.stringify(formik.errors.problem_definition)
+                  }
+                />
               ) : null}
             </div>
           )}
@@ -847,7 +853,13 @@ export default function ExperimentForm({
                 placeholder="Introduce la hipótesis"
               />
               {formik.touched.hypotesis && formik.errors.hypotesis ? (
-                <ErrorFormMessage message={formik.errors.hypotesis} />
+                <ErrorFormMessage
+                  message={
+                    typeof formik.errors.hypotesis === "string"
+                      ? formik.errors.hypotesis
+                      : JSON.stringify(formik.errors.hypotesis)
+                  }
+                />
               ) : null}
             </div>
           )}
@@ -883,7 +895,13 @@ export default function ExperimentForm({
                 placeholder="Introduce la descripción"
               />
               {formik.touched.description && formik.errors.description ? (
-                <ErrorFormMessage message={formik.errors.description} />
+                <ErrorFormMessage
+                  message={
+                    typeof formik.errors.description === "string"
+                      ? formik.errors.description
+                      : JSON.stringify(formik.errors.description)
+                  }
+                />
               ) : null}
             </div>
           )}
@@ -1186,7 +1204,13 @@ export default function ExperimentForm({
                 placeholder="Introduce los resultados"
               />
               {formik.touched.results && formik.errors.results ? (
-                <ErrorFormMessage message={formik.errors.results} />
+                <ErrorFormMessage
+                  message={
+                    typeof formik.errors.results === "string"
+                      ? formik.errors.results
+                      : JSON.stringify(formik.errors.results)
+                  }
+                />
               ) : null}
             </div>
           )}
