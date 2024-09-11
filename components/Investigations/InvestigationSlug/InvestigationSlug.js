@@ -182,7 +182,7 @@ export function InvestigationSlugComponent({ params }) {
               )}
             </div>
             <div className="divide-x divide-gray-200 grid grid-cols-2">
-              <ul className="flex flex-col gap-6 pr-6">
+              <ul className="flex flex-col gap-4 pr-6">
                 <LabelDetail label="Título" value={investigation?.name} />
                 <LabelDetail
                   label="Contexto"
@@ -216,12 +216,16 @@ export function InvestigationSlugComponent({ params }) {
                 />
 
                 {researchTeam && researchTeam?.length > 0 && (
-                  <li className="flex gap-4 flex-col">
-                    <p className="font-medium">Equipo research:</p>
+                  <li
+                    className={`flex gap-4 ${
+                      serviceTeam?.length >= 2 ? "flex-col" : "items-center"
+                    } `}
+                  >
+                    <p className="font-medium  w-1/2">Equipo research:</p>
 
                     <ul
                       className={`text-sm w-full gap-2 capitalize ${
-                        researchTeam?.length >= 2 ? "grid grid-cols-2" : ""
+                        researchTeam?.length >= 2 ? "grid grid-cols-2" : "flex"
                       }`}
                     >
                       {researchTeam?.map((researcher, index) => {
@@ -250,8 +254,12 @@ export function InvestigationSlugComponent({ params }) {
                 )}
 
                 {serviceTeam && serviceTeam.length > 0 && (
-                  <li className="flex gap-4 flex-col">
-                    <p className="font-medium">Equipo service:</p>
+                  <li
+                    className={`flex gap-4 ${
+                      serviceTeam?.length >= 2 ? "flex-col" : "items-center"
+                    } `}
+                  >
+                    <p className="font-medium w-1/2">Equipo service:</p>
 
                     <ul
                       className={`text-sm w-full gap-2 capitalize ${
@@ -280,8 +288,12 @@ export function InvestigationSlugComponent({ params }) {
                 )}
 
                 {extendedTeam?.length > 0 && (
-                  <li className="flex gap-4 flex-col">
-                    <p className="font-medium">Equipo extendido:</p>
+                  <li
+                    className={`flex gap-4 ${
+                      serviceTeam?.length >= 2 ? "flex-col" : "items-center"
+                    } `}
+                  >
+                    <p className="font-medium w-1/2">Equipo extendido:</p>
 
                     <ul
                       className={`text-sm gap-2 w-full capitalize ${
@@ -312,7 +324,7 @@ export function InvestigationSlugComponent({ params }) {
             </div>
           </div>
 
-          {investigation?.materials.data.map((material, index) => {
+          {investigation?.materials?.data.map((material, index) => {
             if (
               investigation?.investigation_types?.data[index]?.attributes.name
             ) {
@@ -331,6 +343,7 @@ export function InvestigationSlugComponent({ params }) {
                     {material.attributes.tool_media ? (
                       <a
                         href={material.attributes.tool_media}
+                        target="_blank"
                         className="text-blue-800 text-xs flex font-medium gap-1"
                       >
                         <svg
@@ -370,7 +383,7 @@ export function InvestigationSlugComponent({ params }) {
                     )}
                   </div>
                   <div className="divide-x divide-gray-200 grid grid-cols-2">
-                    <ul className="flex flex-col gap-4">
+                    <ul className="flex flex-col gap-4 pr-6">
                       <LabelDetail
                         label="Público objetivo"
                         value={material?.attributes?.publics?.data

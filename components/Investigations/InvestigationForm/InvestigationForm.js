@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
+
 import "react-datepicker/dist/react-datepicker.css";
 import { MultiSelect } from "react-multi-select-component";
 import { Label } from "@/components/Common";
@@ -53,11 +54,6 @@ export function InvestigationForm({ params, title }) {
   const researcherCtrl = new Researcher();
   const projectCtrl = new Project();
   const materialCtrl = new Material();
-
-  const isCreateScreen =
-    router && router.pathname ? router.pathname.includes("create") : false;
-  const isEditScreen =
-    router && router.pathname ? router.pathname.includes("edit") : false;
 
   const formik = useFormik({
     initialValues: initialValues(investigation),
@@ -361,7 +357,6 @@ export function InvestigationForm({ params, title }) {
         setPresentedDate(parseISO(investigation?.attributes?.presented_date));
       }
     }
-    console.log("router", router);
   }, [investigation]);
 
   const status = [
@@ -431,11 +426,12 @@ export function InvestigationForm({ params, title }) {
               <div className="border border-gray-200 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-xl font-semibold">Ficha Técnica</h4>
-                  <div className="flex divide-x-2 ">
+                  <div className="flex gap-1 text-xs font-regular text-blue-700 divide-x-2">
                     {investigation?.attributes?.research_plan && (
                       <a
-                        className="text-xs font-regular text-blue-700 hover:underline pr-4"
+                        className="pr-4 hover:underline"
                         href={investigation?.attributes?.research_plan}
+                        target="_blank"
                       >
                         Actual Research Plan
                       </a>
@@ -458,27 +454,23 @@ export function InvestigationForm({ params, title }) {
                           d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
                         />
                       </svg>
-                      <input
-                        type="file"
-                        id="research_plan"
-                        className="absolute opacity-0 invisible"
-                        onChange={handleFileUpload}
-                      />
-                      {!investigation?.attributes?.research_plan ? (
-                        <em className="not-italic">
-                          {researchPlan
-                            ? `Research Plan: ${researchPlan}`
-                            : "Agregar Research Plan"}
-                        </em>
-                      ) : (
-                        <em className="not-italic">Modificar Research Plan</em>
-                      )}
+                      <span className="not-italic cursor-pointer">
+                        {researchPlan
+                          ? `Research Plan: ${researchPlan}`
+                          : "Agregar Research Plan"}
+                      </span>
                     </label>
+                    <input
+                      type="file"
+                      id="research_plan"
+                      className="absolute opacity-0 invisible"
+                      onChange={handleFileUpload}
+                    />
                   </div>
                 </div>
 
-                <div className="divide-x divide-gray-200 grid grid-cols-2 gap-y-6">
-                  <ul className="flex flex-col gap-6 pr-6">
+                <div className="divide-x divide-gray-200 flex gap-y-6">
+                  <ul className="flex grow w-1/2 flex-col gap-6 pr-6 self-start">
                     <li className="flex gap-4">
                       <Label subtext="Máximo 70 caracteres" htmlFor="name">
                         Titulo*
@@ -507,21 +499,17 @@ export function InvestigationForm({ params, title }) {
                       />
                     </li>
 
-                    <li className="flex gap-4">
-                      <Label
-                        subtext="Máximo 200 caracteres"
-                        htmlFor="description"
-                      >
+                    <li className="flex gap-4 flex-col">
+                      <Label subtext="" htmlFor="description">
                         Contexto
                       </Label>
                       <textarea
                         id="description"
                         rows="5"
-                        maxLength={200}
                         className={`
-                          w-64 text-sm text-gray-900 
+                          text-sm text-gray-900 
                           bg-white border border-gray-300 p-2.5 
-                          rounded outline-blue-500
+                          rounded outline-blue-500 w-full
                            ${
                              formik.values.description === ""
                                ? "opacity-90"
@@ -631,7 +619,7 @@ export function InvestigationForm({ params, title }) {
                       />
                     </li>
                   </ul>
-                  <ul className="flex flex-col gap-6 pl-6">
+                  <ul className="flex grow w-1/2 flex-col gap-6 pl-6">
                     <li className="flex gap-4">
                       <Label
                         subtext="Áreas amigas que participaron"
@@ -892,19 +880,16 @@ export function InvestigationForm({ params, title }) {
                       />
                     </li>
 
-                    <li className="flex gap-4">
-                      <Label
-                        htmlFor="specific_goals"
-                        subtext="Máximo 200 caracteres"
-                      >
+                    <li className="flex gap-4 flex-col">
+                      <Label htmlFor="specific_goals" subtext="">
                         Objetivos específicos
                       </Label>
                       <textarea
                         id="specific_goals"
                         rows="5"
-                        maxLength={200}
                         className={`
-                            w-64 text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500
+                            w-full text-sm text-gray-900 bg-white border border-gray-300 p-2.5 rounded outline-blue-500
+
                             ${
                               formik.values.specific_goals === ""
                                 ? "opacity-90"

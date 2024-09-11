@@ -4,6 +4,7 @@ const nextConfig = {
     domains: [
       "data-center-strapi.s3.sa-east-1.amazonaws.com",
       "bucket-pandora.s3.sa-east-1.amazonaws.com",
+      "firebasestorage.googleapis.com",
     ],
   },
 };

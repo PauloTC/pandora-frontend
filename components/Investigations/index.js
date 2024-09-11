@@ -8,7 +8,7 @@ import Image from "next/image";
 import classNames from "classnames";
 import { format, addDays } from "date-fns";
 import { InvestigationsContext } from "@/contexts";
-import { FilterSection } from "@/components/Common";
+import { FilterSection, StatusBadge } from "@/components/Common";
 
 const projectCtrl = new Project();
 const publicCtrl = new Public();
@@ -39,9 +39,6 @@ export default function InvestigationsComponent() {
     objetiveResearcher: "Todos",
     sort: "desc",
   });
-
-  const [showAllProjects, setShowAllProjects] = useState(false);
-  const [showAllPublics, setShowAllPublics] = useState(false);
 
   const sortOptions = [
     { value: "desc", label: "Más Actual" },
@@ -360,8 +357,8 @@ export default function InvestigationsComponent() {
                         )}
                       </div>
 
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium text-xs block mb-2">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium text-xs block">
                           <strong>Inicio:{"  "}</strong>
                           {investigation?.attributes?.initial_date &&
                             format(
@@ -374,34 +371,7 @@ export default function InvestigationsComponent() {
                               "dd/MM/yy"
                             )}
                         </span>
-                        <span
-                          className={classNames(
-                            "rounded-lg",
-                            "text-xs",
-                            "block",
-                            "mb-2",
-                            "capitalize",
-                            "text-white",
-                            "px-2",
-                            "py-1",
-                            {
-                              "bg-stone-600":
-                                investigation?.attributes?.status ===
-                                "finalizado",
-                              "bg-teal-600":
-                                investigation?.attributes?.status ===
-                                "en curso",
-                              "bg-rose-600":
-                                investigation?.attributes?.status ===
-                                "bloqueado",
-                              "bg-sky-600":
-                                investigation?.attributes?.status ===
-                                "por iniciar",
-                            }
-                          )}
-                        >
-                          {investigation?.attributes?.status}
-                        </span>
+                        <StatusBadge status={investigation.attributes.status} />
                       </div>
                     </div>
                     <div className="flex pt-2 ">
