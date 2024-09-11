@@ -1116,7 +1116,7 @@ export default function ExperimentForm({
           ) : (
             <div className="flex flex-col">
               <MultiSelect
-                className="w-64 text-sm border-gray-300 z-0"
+                className="w-64 text-sm border-gray-300 z-10"
                 options={executionMethods}
                 // @ts-ignore
                 value={formik.values.execution_methods.map((id: string) =>
