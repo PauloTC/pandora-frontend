@@ -537,7 +537,7 @@ export default function ExperimentForm({
               <label htmlFor="reference" className="not-italic">
                 {reference
                   ? `Referencia: ${reference}`
-                  : !localReadonly && experiment.reference
+                  : !localReadonly && experiment?.reference
                   ? "Modificar Referencia"
                   : "Agregar Referencia"}
               </label>
