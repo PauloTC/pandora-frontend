@@ -33,6 +33,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import { ExperimentsContext } from "@/contexts";
 import * as Yup from "yup";
 import ErrorFormMessage from "@/components/Common/ErrorFormMessage";
+import exp from "constants";
 
 interface ExperimentFormProps {
   readonly?: boolean;
@@ -288,8 +289,8 @@ export default function ExperimentForm({
                 Yup.object()
                   .shape({
                     type: Yup.string().required(),
-                    text: Yup.string().notOneOf(
-                      [""],
+                    text: Yup.string().min(
+                      1,
                       "La definición del problema es requerida"
                     ),
                   })
@@ -389,9 +390,9 @@ export default function ExperimentForm({
       participants: experiment
         ? experiment.participants.data.map((participant: any) => participant.id)
         : [],
-      problem_definition: experiment ? experiment.problem_definition : [],
-      hypotesis: experiment ? experiment.hypotesis : [],
-      description: experiment ? experiment.description : [],
+      problem_definition: experiment ? experiment.problem_definition : "",
+      hypotesis: experiment ? experiment.hypotesis : "",
+      description: experiment ? experiment.description : "",
       vp: experiment ? experiment.vp.data.id : "",
       strategic_area: experiment ? experiment.strategic_area : "",
       stakeholder: experiment ? experiment.stakeholder : "",
@@ -399,9 +400,9 @@ export default function ExperimentForm({
       execution_methods: experiment
         ? experiment.execution_methods.data.map((method: any) => method.id)
         : [],
-      results: experiment ? experiment.results : [],
+      results: experiment ? experiment.results : "",
       roi: experiment ? experiment.roi : "",
-      reference: "",
+      reference: experiment ? experiment.reference : "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -509,7 +510,7 @@ export default function ExperimentForm({
             </button>
           )}
         </div>
-        <li className="flex justify-end overflow-hidden">
+        <li className="flex justify-end overflow-hidden gap-2">
           {!localReadonly && (
             <div className="cursor-pointer text-xs font-medium gap-1 flex items-center relative text-blue-800">
               <svg
@@ -534,7 +535,11 @@ export default function ExperimentForm({
               />
 
               <label htmlFor="reference" className="not-italic">
-                {reference ? `Referencia: ${reference}` : "Agregar Referencia"}
+                {reference
+                  ? `Referencia: ${reference}`
+                  : !localReadonly && experiment.reference
+                  ? "Modificar Referencia"
+                  : "Agregar Referencia"}
               </label>
             </div>
           )}
