@@ -711,7 +711,7 @@ export default function ExperimentForm({
           } flex`}
         >
           <Label subtext="Personas que participaron" htmlFor="participants">
-            Participantes
+            Participantes*
           </Label>
 
           {localReadonly ? (
@@ -738,9 +738,12 @@ export default function ExperimentForm({
                 className="w-64 text-sm border-gray-300 z-0"
                 options={participants}
                 // @ts-ignore
-                value={formik.values.participants.map((id: string) =>
-                  participants.find((p: any) => p.value === id)
-                )}
+                value={formik.values.participants.map((id: string) => {
+                  const participant = participants.find(
+                    (p: any) => p.value === id
+                  );
+                  return participant ? participant : null;
+                })}
                 onChange={(selectedItems: any[]) => {
                   const ids = selectedItems.map((item) => item.value);
                   formik.setFieldValue("participants", ids);
@@ -779,7 +782,7 @@ export default function ExperimentForm({
 
         <li className="flex flex-col gap-2">
           <label className="font-medium uppercase text-sm text-gray-900">
-            Planteamiento de la problemática
+            Planteamiento de la problemática*
           </label>
 
           {localReadonly ? (
@@ -816,7 +819,7 @@ export default function ExperimentForm({
 
         <li className="flex flex-col gap-2">
           <label className="font-medium uppercase text-sm text-gray-900">
-            Planteamiento de hipótesis
+            Planteamiento de hipótesis*
           </label>
 
           {localReadonly ? (
@@ -852,7 +855,7 @@ export default function ExperimentForm({
 
         <li className="flex flex-col gap-2">
           <label className="font-medium uppercase text-sm text-gray-900">
-            Descripción de la solución
+            Descripción de la solución*
           </label>
 
           {localReadonly ? (
@@ -888,7 +891,7 @@ export default function ExperimentForm({
 
         <li className="flex items-center gap-4">
           <Label subtext="Selecciona a que VP pertenece" htmlFor="vp">
-            VP
+            VP*
           </Label>
           <div className="flex flex-col">
             <div className="relative">
@@ -941,7 +944,7 @@ export default function ExperimentForm({
             subtext="Selecciona a qué área pertenece"
             htmlFor="strategic_area"
           >
-            Área estratégica
+            Área estratégica*
           </Label>
 
           <div className="flex flex-col">
@@ -991,7 +994,7 @@ export default function ExperimentForm({
 
         <li className="flex items-center gap-4">
           <Label subtext="Nombre del stakeholder" htmlFor="stakeholder">
-            Stakeholder
+            Stakeholder*
           </Label>
 
           <div className="flex flex-col">
@@ -1024,7 +1027,7 @@ export default function ExperimentForm({
             subtext="Selecciona un tipo de experimento"
             htmlFor="experiment_type"
           >
-            Tipo
+            Tipo*
           </Label>
 
           <div className="flex flex-col">
@@ -1078,7 +1081,7 @@ export default function ExperimentForm({
             localReadonly ? "items-start" : "items-center"
           } flex`}
         >
-          <Label subtext="Selecciona el/los medios">Medio de ejecución</Label>
+          <Label subtext="Selecciona el/los medios">Medio de ejecución*</Label>
 
           {localReadonly ? (
             <ul className="w-64 flex gap-2 justify-between flex-wrap p-2.5">
@@ -1155,7 +1158,7 @@ export default function ExperimentForm({
 
         <li className="flex flex-col gap-2">
           <label className="font-medium uppercase text-sm text-gray-900">
-            Resultados
+            Resultados*
           </label>
 
           {localReadonly ? (
