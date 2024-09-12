@@ -1,6 +1,13 @@
 "use client";
 import React, { createContext, useState, useEffect } from "react";
-import { Experiment, Vp, ExecutionMethod, ExperimentType, Team } from "@/api";
+import {
+  Experiment,
+  Vp,
+  ExecutionMethod,
+  ExperimentType,
+  Team,
+  Researcher,
+} from "@/api";
 
 export const ExperimentsContext = createContext();
 
@@ -9,6 +16,7 @@ const vpCtrl = new Vp();
 const executionMethodCtrl = new ExecutionMethod();
 const experimentTypeCtrl = new ExperimentType();
 const teamCtrl = new Team();
+const researcherCtrl = new Researcher();
 
 export const ExperimentsProvider = ({ children }) => {
   const [experiments, setExperiments] = useState([]);
@@ -16,6 +24,7 @@ export const ExperimentsProvider = ({ children }) => {
   const [executionMethods, setExecutionMethods] = useState([]);
   const [experimentTypes, setExperimentTypes] = useState([]);
   const [teams, setTeams] = useState([]);
+  const [participants, setParticipants] = useState([]);
   const [vps, setVps] = useState([]);
   const [status, setStatus] = useState([
     { attributes: { label: "En Pausa", value: "en pausa" } },
@@ -48,42 +57,52 @@ export const ExperimentsProvider = ({ children }) => {
     }
   };
 
+  const fetchFormData = async () => {
+    const vps = await vpCtrl.getAllVps();
+    const execution_methods =
+      await executionMethodCtrl.getAllExecutionMethods();
+    const experiment_types = await experimentTypeCtrl.getAllExperimentTypes();
+    const teams = await teamCtrl.getTeams();
+    const participants = await researcherCtrl.getAllParticipants();
+
+    setParticipants(
+      participants.data.map((p) => ({
+        value: p?.id,
+        label: p?.attributes?.name,
+      }))
+    );
+
+    setVps(
+      vps.data.map((vp) => ({
+        value: vp?.id,
+        label: vp?.attributes?.name,
+      }))
+    );
+
+    setExperimentTypes(
+      experiment_types.data.map((type) => ({
+        value: type?.id,
+        label: type?.attributes?.name,
+      }))
+    );
+
+    setExecutionMethods(
+      execution_methods.data.map((method) => ({
+        value: method?.id,
+        label: method?.attributes?.name,
+      }))
+    );
+
+    setTeams(
+      teams.data.map((team) => ({
+        value: team?.id,
+        label: team?.attributes?.name,
+      }))
+    );
+  };
+
   useEffect(() => {
-    (async () => {
-      const vps = await vpCtrl.getAllVps();
-      const execution_methods =
-        await executionMethodCtrl.getAllExecutionMethods();
-      const experiment_types = await experimentTypeCtrl.getAllExperimentTypes();
-      const teams = await teamCtrl.getTeams();
-
-      setVps(
-        vps.data.map((vp) => ({
-          value: vp?.id,
-          label: vp?.attributes?.name,
-        }))
-      );
-
-      setExperimentTypes(
-        experiment_types.data.map((type) => ({
-          value: type?.id,
-          label: type?.attributes?.name,
-        }))
-      );
-
-      setExecutionMethods(
-        execution_methods.data.map((method) => ({
-          value: method?.id,
-          label: method?.attributes?.name,
-        }))
-      );
-
-      setTeams(
-        teams.data.map((team) => ({
-          value: team?.id,
-          label: team?.attributes?.name,
-        }))
-      );
-    })();
+    fetchFormData();
   }, []);
 
   return (
@@ -98,6 +117,8 @@ export const ExperimentsProvider = ({ children }) => {
         executionMethods,
         experimentTypes,
         status,
+        fetchFormData,
+        participants,
       }}
     >
       {children}

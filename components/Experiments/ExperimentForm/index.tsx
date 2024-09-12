@@ -2,15 +2,7 @@
 import React from "react";
 import { Label } from "@/components/Common";
 import { useFormik } from "formik";
-import {
-  ExperimentType,
-  Researcher,
-  Vp,
-  Project,
-  Experiment,
-  ExecutionMethod,
-  uploadToS3,
-} from "@/api";
+import { Experiment, uploadToS3 } from "@/api";
 import Image from "next/image";
 // @ts-ignore
 import DatePicker from "react-datepicker";
@@ -21,7 +13,6 @@ import { SelectOption } from "@/types";
 import {
   EditorState,
   convertToRaw,
-  ContentState,
   convertFromRaw,
   genKey as generateRandomKey,
 } from "draft-js";
@@ -46,8 +37,15 @@ export default function ExperimentForm({
   onClose,
   id,
 }: ExperimentFormProps) {
-  const { getExperiments, teams, vps, experimentTypes, executionMethods } =
-    useContext(ExperimentsContext);
+  const {
+    getExperiments,
+    teams,
+    vps,
+    participants,
+    experimentTypes,
+    executionMethods,
+    fetchFormData,
+  } = useContext(ExperimentsContext);
 
   function convertSlateToDraft(slateNodes: any) {
     if (!slateNodes) {
@@ -73,7 +71,6 @@ export default function ExperimentForm({
     return EditorState.createWithContent(contentState);
   }
   const [title, setTitle] = useState("Nuevo Experimento");
-  const [participants, setParticipants] = useState([]);
   const [reference, setReference] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [editorState, setEditorState] = useState(
@@ -107,11 +104,6 @@ export default function ExperimentForm({
   ];
 
   const experimentCtrl = new Experiment();
-  const researcherCtrl = new Researcher();
-  const vpCtrl = new Vp();
-  const projectCtrl = new Project();
-  const experimentTypeCtrl = new ExperimentType();
-  const executionMethodCtrl = new ExecutionMethod();
 
   function convertEditorStateToBlocks(editorState: EditorState) {
     const rawContentState = convertToRaw(editorState.getCurrentContent());
@@ -431,22 +423,7 @@ export default function ExperimentForm({
   });
 
   useEffect(() => {
-    (async () => {
-      try {
-        const participants = await researcherCtrl.getAllParticipants();
-
-        setParticipants(
-          participants.data.map(
-            (p: any): SelectOption => ({
-              value: p?.id,
-              label: p?.attributes?.name,
-            })
-          )
-        );
-      } catch (error) {
-        throw error;
-      }
-    })();
+    fetchFormData();
   }, []);
 
   useEffect(() => {
