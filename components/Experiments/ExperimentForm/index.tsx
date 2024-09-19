@@ -4,6 +4,10 @@ import { Label } from "@/components/Common";
 import { useFormik } from "formik";
 import { Experiment, uploadToS3 } from "@/api";
 import Image from "next/image";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import ReactMarkdown from "react-markdown";
+import { SendComment } from "@/components/Common/Comment";
+
 // @ts-ignore
 import DatePicker from "react-datepicker";
 import { useEffect, useState, useContext } from "react";
@@ -17,12 +21,12 @@ import {
   genKey as generateRandomKey,
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Swal from "sweetalert2";
 import PulseLoader from "react-spinners/PulseLoader";
 import { ExperimentsContext } from "@/contexts";
 import * as Yup from "yup";
 import ErrorFormMessage from "@/components/Common/ErrorFormMessage";
+import { Comment } from "@/api";
 
 interface ExperimentFormProps {
   readonly?: boolean;
@@ -46,6 +50,8 @@ export default function ExperimentForm({
     executionMethods,
     fetchFormData,
   } = useContext(ExperimentsContext);
+
+  const commentCtrl = new Comment();
 
   function convertSlateToDraft(slateNodes: any) {
     if (!slateNodes) {
@@ -73,6 +79,7 @@ export default function ExperimentForm({
   const [title, setTitle] = useState("Nuevo Experimento");
   const [reference, setReference] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [comments, setComments] = useState([]);
   const [editorState, setEditorState] = useState(
     experiment
       ? convertStrapiRichTextToEditorState(experiment.problem_definition)
@@ -422,8 +429,23 @@ export default function ExperimentForm({
     },
   });
 
+  const handleUpdateComments = async ({ id }: any) => {
+    setLoading(true);
+    try {
+      const response = await commentCtrl.getCommentsByExperiment(id);
+      setComments(response.data);
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchFormData();
+    if (experiment?.comments) {
+      setComments(experiment?.comments.data);
+    }
   }, []);
 
   useEffect(() => {
@@ -510,7 +532,7 @@ export default function ExperimentForm({
                 onChange={handleFileUpload}
               />
 
-              <label htmlFor="reference" className="not-italic">
+              <label htmlFor="reference" className="not-italic cursor-pointer">
                 {reference
                   ? `Referencia: ${reference}`
                   : !localReadonly && experiment?.reference
@@ -1197,6 +1219,59 @@ export default function ExperimentForm({
           )}
         </li>
       </form>
+
+      {localReadonly && (
+        <div className="px-6 mt-6">
+          {comments.length !== 0 && (
+            <>
+              <p className="font-medium uppercase text-sm text-gray-900 mb-2">
+                Comentarios
+              </p>
+              <ul className="flex flex-col gap-4">
+                {comments.map((comment: any, index: number) => (
+                  <li
+                    className="border border-neutral-medium rounded-lg p-4"
+                    key={index}
+                  >
+                    <span className="text-sm flex w-full justify-end">
+                      Enviado el:{" "}
+                      {format(comment.attributes.updatedAt, "dd/MM/yyyy HH:mm")}
+                    </span>
+                    <div className="divide-solid divide-y">
+                      <div className="flex">
+                        <div className="flex gap-2 mb-2">
+                          <Image
+                            src={
+                              comment.attributes.user.data.attributes.photo.data
+                                .attributes.url
+                            }
+                            alt="profile"
+                            width={25}
+                            height={25}
+                            className="rounded-full"
+                          />
+                          <p className="font-medium text-md text-gray-900 italic">
+                            {comment.attributes.user.data.attributes.firstname}{" "}
+                            {comment.attributes.user.data.attributes.lastname}{" "}
+                            comentó:
+                          </p>
+                        </div>
+                      </div>
+                      <div className="pt-2 text-sm">
+                        <ReactMarkdown>
+                          {comment.attributes.description}
+                        </ReactMarkdown>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          <SendComment onEvent={handleUpdateComments} id={id} />
+        </div>
+      )}
     </>
   );
 }

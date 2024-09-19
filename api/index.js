@@ -16,3 +16,4 @@ export * from "./experiment";
 export * from "./vp";
 export * from "./experiment_type";
 export * from "./execution_method";
+export * from "./comment";
