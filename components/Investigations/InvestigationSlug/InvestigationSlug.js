@@ -5,6 +5,7 @@ import { Investigation } from "@/api";
 import { useEffect, useState } from "react";
 import { format, parse, isValid } from "date-fns";
 import { LabelDetail } from "@/components/Common/index";
+import MarkdownEditor from "@/components/Common/MarkdownEditor";
 
 export function InvestigationSlugComponent({ params }) {
   const investigationCtrl = new Investigation();
@@ -184,11 +185,14 @@ export function InvestigationSlugComponent({ params }) {
             <div className="divide-x divide-gray-200 grid grid-cols-2">
               <ul className="flex flex-col gap-4 pr-6">
                 <LabelDetail label="Título" value={investigation?.name} />
-                <LabelDetail
+
+                <MarkdownEditor
+                  textStyle="inherit"
                   label="Contexto"
-                  orientation="vertical"
                   value={investigation?.description}
+                  readonly
                 />
+
                 <LabelDetail
                   label="Proyecto"
                   value={investigation?.project?.data?.attributes?.name}
@@ -221,7 +225,9 @@ export function InvestigationSlugComponent({ params }) {
                       serviceTeam?.length >= 2 ? "flex-col" : "items-center"
                     } `}
                   >
-                    <p className="font-medium  w-1/2">Equipo research:</p>
+                    <p className="font-medium text-sm w-1/2">
+                      Equipo research:
+                    </p>
 
                     <ul
                       className={`text-sm w-full gap-2 capitalize ${
@@ -259,7 +265,7 @@ export function InvestigationSlugComponent({ params }) {
                       serviceTeam?.length >= 2 ? "flex-col" : "items-center"
                     } `}
                   >
-                    <p className="font-medium w-1/2">Equipo service:</p>
+                    <p className="font-medium text-sm w-1/2">Equipo service:</p>
 
                     <ul
                       className={`text-sm w-full gap-2 capitalize ${
@@ -293,7 +299,9 @@ export function InvestigationSlugComponent({ params }) {
                       serviceTeam?.length >= 2 ? "flex-col" : "items-center"
                     } `}
                   >
-                    <p className="font-medium w-1/2">Equipo extendido:</p>
+                    <p className="font-medium text-sm w-1/2">
+                      Equipo extendido:
+                    </p>
 
                     <ul
                       className={`text-sm gap-2 w-full capitalize ${
@@ -391,10 +399,11 @@ export function InvestigationSlugComponent({ params }) {
                           .join(", ")}
                       />
 
-                      <LabelDetail
+                      <MarkdownEditor
+                        textStyle="inherit"
                         label="Muestra"
-                        orientation="vertical"
                         value={material.attributes.sample}
+                        readonly
                       />
                     </ul>
                     <ul className="flex flex-col gap-4 pl-6">
@@ -429,11 +438,18 @@ export function InvestigationSlugComponent({ params }) {
                 <ul className="flex flex-col gap-4">
                   <LabelDetail label="Principal" value={investigation?.goal} />
 
-                  <LabelDetail
+                  <MarkdownEditor
+                    textStyle="inherit"
+                    label="Objetivos específicos"
+                    value={investigation?.specific_goals}
+                    readonly
+                  />
+
+                  {/* <LabelDetail
                     label="Objetivos específicos"
                     orientation="vertical"
                     value={investigation?.specific_goals}
-                  />
+                  /> */}
                 </ul>
               </div>
             )}

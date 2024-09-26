@@ -24,6 +24,7 @@ import { initialValues, validationSchema } from "./InvestigationForm.form";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { MaterialsForm } from "@/components/Materials/MaterialsForm";
+import MarkdownEditor from "@/components/Common/MarkdownEditor";
 
 import PulseLoader from "react-spinners/PulseLoader";
 
@@ -499,7 +500,17 @@ export function InvestigationForm({ params, title }) {
                       />
                     </li>
 
-                    <li className="flex gap-4 flex-col">
+                    <MarkdownEditor
+                      label="Contexto"
+                      value={formik.values.description}
+                      onChange={(value) =>
+                        formik.setFieldValue("description", value)
+                      }
+                      error={formik.errors.description}
+                      touched={formik.touched.description}
+                    />
+
+                    {/* <li className="flex gap-4 flex-col">
                       <Label subtext="" htmlFor="description">
                         Contexto
                       </Label>
@@ -521,7 +532,7 @@ export function InvestigationForm({ params, title }) {
                         onChange={formik.handleChange}
                         error={formik.errors.description}
                       ></textarea>
-                    </li>
+                    </li> */}
 
                     <li className="flex items-center gap-4">
                       <Label
@@ -880,7 +891,16 @@ export function InvestigationForm({ params, title }) {
                       />
                     </li>
 
-                    <li className="flex gap-4 flex-col">
+                    <MarkdownEditor
+                      label="Objetivos específicos"
+                      value={formik.values.specific_goals}
+                      onChange={(value) =>
+                        formik.setFieldValue("specific_goals", value)
+                      }
+                      error={formik.errors.specific_goals}
+                      touched={formik.touched.specific_goals}
+                    />
+                    {/* <li className="flex gap-4 flex-col">
                       <Label htmlFor="specific_goals" subtext="">
                         Objetivos específicos
                       </Label>
@@ -902,7 +922,7 @@ export function InvestigationForm({ params, title }) {
                         onChange={formik.handleChange}
                         error={formik.errors.specific_goals}
                       ></textarea>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
                 <div className="border border-gray-200 rounded-xl p-6">

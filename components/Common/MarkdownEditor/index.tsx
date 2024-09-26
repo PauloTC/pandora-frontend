@@ -9,6 +9,7 @@ interface MarkdownEditorProps {
   error: any;
   touched: any;
   readonly: boolean;
+  textStyle?: "uppercase" | "lowercase" | "inherit";
 }
 
 const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
@@ -18,10 +19,11 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   error,
   touched,
   readonly,
+  textStyle = "uppercase",
 }) => {
   return (
     <li className="flex flex-col gap-2">
-      <label className="font-medium uppercase text-sm text-gray-900">
+      <label className={`font-medium text-sm text-gray-900 ${textStyle}`}>
         {label}
       </label>
       {readonly ? (
