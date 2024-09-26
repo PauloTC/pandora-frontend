@@ -7,7 +7,7 @@ import Image from "next/image";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import ReactMarkdown from "react-markdown";
 import { SendComment } from "@/components/Common/Comment";
-
+import MDEditor from "@uiw/react-md-editor";
 // @ts-ignore
 import DatePicker from "react-datepicker";
 import { useEffect, useState, useContext } from "react";
@@ -27,6 +27,7 @@ import { ExperimentsContext } from "@/contexts";
 import * as Yup from "yup";
 import ErrorFormMessage from "@/components/Common/ErrorFormMessage";
 import { Comment } from "@/api";
+import MarkdownEditor from "@/components/Common/MarkdownEditor";
 
 interface ExperimentFormProps {
   readonly?: boolean;
@@ -53,54 +54,11 @@ export default function ExperimentForm({
 
   const commentCtrl = new Comment();
 
-  function convertSlateToDraft(slateNodes: any) {
-    if (!slateNodes) {
-      return { blocks: [], entityMap: {} };
-    }
-
-    const blocks = slateNodes.map((node: any) => ({
-      key: generateRandomKey(),
-      text: node.children[0].text,
-      type: node.type,
-      depth: 0,
-      inlineStyleRanges: [],
-      entityRanges: [],
-      data: {},
-    }));
-
-    return { blocks, entityMap: {} };
-  }
-
-  function convertStrapiRichTextToEditorState(strapiRichText: any) {
-    const rawContent = convertSlateToDraft(strapiRichText);
-    const contentState = convertFromRaw(rawContent);
-    return EditorState.createWithContent(contentState);
-  }
   const [title, setTitle] = useState("Nuevo Experimento");
   const [reference, setReference] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [comments, setComments] = useState([]);
-  const [editorState, setEditorState] = useState(
-    experiment
-      ? convertStrapiRichTextToEditorState(experiment.problem_definition)
-      : EditorState.createEmpty()
-  );
   const [localReadonly, setLocalReadonly] = useState(readonly);
-  const [editorStateHypothesis, setEditorStateHypothesis] = useState(
-    experiment
-      ? convertStrapiRichTextToEditorState(experiment.hypotesis)
-      : EditorState.createEmpty()
-  );
-  const [editorStateDescription, setEditorStateDescription] = useState(
-    experiment
-      ? convertStrapiRichTextToEditorState(experiment.description)
-      : EditorState.createEmpty()
-  );
-  const [editorStateResults, setEditorStateResults] = useState(
-    experiment
-      ? convertStrapiRichTextToEditorState(experiment.results)
-      : EditorState.createEmpty()
-  );
   const [loading, setLoading] = useState(false);
 
   const status = [
@@ -111,144 +69,6 @@ export default function ExperimentForm({
   ];
 
   const experimentCtrl = new Experiment();
-
-  function convertEditorStateToBlocks(editorState: EditorState) {
-    const rawContentState = convertToRaw(editorState.getCurrentContent());
-
-    let listItems: any[] = [];
-    let blocks = [];
-
-    rawContentState.blocks.forEach((block) => {
-      let children = [];
-      let start = 0;
-      block.inlineStyleRanges.forEach((range) => {
-        if (range.offset > start) {
-          children.push({
-            type: "text",
-            text: block.text.slice(start, range.offset),
-          });
-        }
-
-        let styledText = {
-          type: "text",
-          text: block.text.slice(range.offset, range.offset + range.length),
-          formats: {}, // Añade esta línea
-        };
-
-        children.push(styledText);
-        start = range.offset + range.length;
-      });
-
-      if (start < block.text.length) {
-        children.push({ type: "text", text: block.text.slice(start) });
-      }
-
-      if (
-        block.type === "unordered-list-item" ||
-        block.type === "ordered-list-item"
-      ) {
-        listItems.push({
-          type: "list-item",
-          children: [{ text: block.text, type: "text" }],
-        });
-      } else {
-        if (listItems.length > 0) {
-          blocks.push({
-            type: "list",
-            format:
-              listItems[0].type === "unordered-list-item"
-                ? "unordered"
-                : "ordered",
-            children: listItems,
-          });
-          listItems = [];
-        }
-
-        if (block.type === "unstyled") {
-          blocks.push({
-            type: "paragraph",
-            children: [{ type: "text", text: block.text }],
-          });
-        } else if (block.type === "header-one") {
-          blocks.push({
-            type: "heading",
-            level: 1,
-            children: [{ text: block.text, type: "text" }],
-          });
-        } else if (block.type === "header-two") {
-          blocks.push({
-            type: "heading",
-            level: 2,
-            children: [{ text: block.text, type: "text" }],
-          });
-        } else if (block.type === "header-three") {
-          blocks.push({
-            type: "heading",
-            level: 3,
-            children: [{ text: block.text, type: "text" }],
-          });
-        }
-      }
-    });
-
-    if (listItems.length > 0) {
-      blocks.push({
-        type: "list",
-        format:
-          listItems[0].type === "unordered-list-item" ? "unordered" : "ordered",
-        children: listItems,
-      });
-    }
-
-    return blocks;
-  }
-
-  function convertStrapiRichTextToPlainText(strapiRichText: any) {
-    let plainText = "";
-
-    strapiRichText.forEach((block: any, index: number) => {
-      if (block.type === "list-item") {
-        // Añade un número de lista antes del texto
-        plainText += `${index + 1}. `;
-      }
-
-      block.children.forEach((child: any) => {
-        plainText += child.text;
-      });
-
-      plainText += "\n"; // Añade un salto de línea después de cada bloque
-    });
-
-    return plainText;
-  }
-
-  let plainTextProblem = "";
-  let plainTextHypothesis = "";
-  let plainTextDescription = "";
-  let plainTextResults = "";
-
-  if (experiment) {
-    if (experiment.problem_definition) {
-      plainTextProblem = convertStrapiRichTextToPlainText(
-        experiment.problem_definition
-      );
-    }
-
-    if (experiment.hypotesis) {
-      plainTextHypothesis = convertStrapiRichTextToPlainText(
-        experiment.hypotesis
-      );
-    }
-
-    if (experiment.description) {
-      plainTextDescription = convertStrapiRichTextToPlainText(
-        experiment.description
-      );
-    }
-    if (experiment.results) {
-      plainTextResults = convertStrapiRichTextToPlainText(experiment.results);
-    }
-  }
 
   const uploadFile = async (file: any) => {
     if (file instanceof File) {
@@ -276,73 +96,11 @@ export default function ExperimentForm({
   const validationSchema = Yup.object({
     title: Yup.string().required("El título es requerido"),
     participants: Yup.array().min(1, "Al menos un participante es requerido"),
-    problem_definition: Yup.array()
-      .of(
-        Yup.object()
-          .shape({
-            type: Yup.string().required(),
-            children: Yup.array()
-              .of(
-                Yup.object()
-                  .shape({
-                    type: Yup.string().required(),
-                    text: Yup.string().notOneOf(
-                      [""],
-                      "La definición del problema es requerida"
-                    ),
-                  })
-                  .required()
-              )
-              .required(),
-          })
-          .required()
-      )
-      .min(1, "La definición del problema es requerida")
-      .required("La definición del problema es requerida"),
-    hypotesis: Yup.array()
-      .of(
-        Yup.object()
-          .shape({
-            type: Yup.string().required(),
-            children: Yup.array()
-              .of(
-                Yup.object()
-                  .shape({
-                    type: Yup.string().required(),
-                    text: Yup.string().notOneOf(
-                      [""],
-                      "La hipótesis es requerida"
-                    ),
-                  })
-                  .required()
-              )
-              .required(),
-          })
-          .required()
-      )
-      .required("La hipótesis es requerida"),
-    description: Yup.array()
-      .of(
-        Yup.object()
-          .shape({
-            type: Yup.string().required(),
-            children: Yup.array()
-              .of(
-                Yup.object()
-                  .shape({
-                    type: Yup.string().required(),
-                    text: Yup.string().notOneOf(
-                      [""],
-                      "La descripción es requerida"
-                    ),
-                  })
-                  .required()
-              )
-              .required(),
-          })
-          .required()
-      )
-      .required("La descripción es requerida"),
+    second_problem_definition: Yup.string().required(
+      "La definición del problema es requerido"
+    ),
+    second_hypotesis: Yup.string().required("La hipótesis es requerida"),
+    second_description: Yup.string().required("La descripción es requerida"),
     vp: Yup.string().required("La VP es requerida"),
     strategic_area: Yup.string().required("El área estratégica es requerida"),
     stakeholder: Yup.string().required(
@@ -355,28 +113,7 @@ export default function ExperimentForm({
       1,
       "Un método de ejecución es requerido"
     ),
-    results: Yup.array()
-      .of(
-        Yup.object()
-          .shape({
-            type: Yup.string().required(),
-            children: Yup.array()
-              .of(
-                Yup.object()
-                  .shape({
-                    type: Yup.string().required(),
-                    text: Yup.string().notOneOf(
-                      [""],
-                      "Los resultados son requeridos"
-                    ),
-                  })
-                  .required()
-              )
-              .required(),
-          })
-          .required()
-      )
-      .required("Los resultados son requeridos"),
+    second_results: Yup.string().required("Los resultados son requeridos"),
   });
 
   const formik = useFormik({
@@ -388,9 +125,11 @@ export default function ExperimentForm({
       participants: experiment
         ? experiment.participants.data.map((participant: any) => participant.id)
         : [],
-      problem_definition: experiment ? experiment.problem_definition : "",
-      hypotesis: experiment ? experiment.hypotesis : "",
-      description: experiment ? experiment.description : "",
+      second_problem_definition: experiment
+        ? experiment.second_problem_definition
+        : "",
+      second_hypotesis: experiment ? experiment.second_hypotesis : "",
+      second_description: experiment ? experiment.second_description : "",
       vp: experiment ? experiment.vp.data.id : "",
       strategic_area: experiment ? experiment.strategic_area : "",
       stakeholder: experiment ? experiment.stakeholder : "",
@@ -398,13 +137,15 @@ export default function ExperimentForm({
       execution_methods: experiment
         ? experiment.execution_methods.data.map((method: any) => method.id)
         : [],
-      results: experiment ? experiment.results : "",
+      second_results: experiment ? experiment.second_results : "",
       roi: experiment ? experiment.roi : "",
       reference: experiment ? experiment.reference : "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setLoading(true);
+      console.log("🚀 ~ onSubmit: ~ values:", values);
+
       try {
         let media_reference = await uploadFile(values.reference);
 
@@ -460,6 +201,10 @@ export default function ExperimentForm({
 
     setReference(event?.target?.files[0].name);
   };
+
+  useEffect(() => {
+    console.log("🚀 ~ experiment:", experiment);
+  }, [experiment]);
 
   return (
     <>
@@ -783,132 +528,36 @@ export default function ExperimentForm({
           )}
         </li>
 
-        <li className="flex flex-col gap-2">
-          <label className="font-medium uppercase text-sm text-gray-900">
-            Planteamiento de la problemática*
-          </label>
+        <MarkdownEditor
+          label="Planteamiento de la problemática*"
+          value={formik.values.second_problem_definition}
+          onChange={(value) =>
+            formik.setFieldValue("second_problem_definition", value)
+          }
+          error={formik.errors.second_problem_definition}
+          touched={formik.touched.second_problem_definition}
+          readonly={localReadonly}
+        />
 
-          {localReadonly ? (
-            <div
-              className="text-sm text-gray-900"
-              dangerouslySetInnerHTML={{
-                __html: plainTextProblem.replace(/\n/g, "<br/>"),
-              }}
-            ></div>
-          ) : (
-            <div className="flex flex-col">
-              <Editor
-                toolbarHidden
-                editorState={editorState}
-                onEditorStateChange={(newState: any) => {
-                  setEditorState(newState);
-                  const blocks = convertEditorStateToBlocks(newState);
-                  formik.setFieldValue("problem_definition", blocks);
-                }}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName={
-                  "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
-                }
-                placeholder="Introduce la problemática"
-              />
-              {formik.touched.problem_definition &&
-              formik.errors.problem_definition ? (
-                <ErrorFormMessage
-                  message={
-                    typeof formik.errors.problem_definition === "string"
-                      ? formik.errors.problem_definition
-                      : JSON.stringify(formik.errors.problem_definition)
-                  }
-                />
-              ) : null}
-            </div>
-          )}
-        </li>
+        <MarkdownEditor
+          label="Planteamiento de hipótesis*"
+          value={formik.values.second_hypotesis}
+          onChange={(value) => formik.setFieldValue("second_hypotesis", value)}
+          error={formik.errors.second_hypotesis}
+          touched={formik.touched.second_hypotesis}
+          readonly={localReadonly}
+        />
 
-        <li className="flex flex-col gap-2">
-          <label className="font-medium uppercase text-sm text-gray-900">
-            Planteamiento de hipótesis*
-          </label>
-
-          {localReadonly ? (
-            <div
-              className="text-sm text-gray-900"
-              dangerouslySetInnerHTML={{
-                __html: plainTextHypothesis.replace(/\n/g, "<br/>"),
-              }}
-            ></div>
-          ) : (
-            <div className="flex flex-col">
-              <Editor
-                toolbarHidden
-                editorState={editorStateHypothesis}
-                onEditorStateChange={(newState: any) => {
-                  setEditorStateHypothesis(newState);
-                  const blocks = convertEditorStateToBlocks(newState);
-                  formik.setFieldValue("hypotesis", blocks);
-                }}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName={
-                  "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
-                }
-                placeholder="Introduce la hipótesis"
-              />
-              {formik.touched.hypotesis && formik.errors.hypotesis ? (
-                <ErrorFormMessage
-                  message={
-                    typeof formik.errors.hypotesis === "string"
-                      ? formik.errors.hypotesis
-                      : JSON.stringify(formik.errors.hypotesis)
-                  }
-                />
-              ) : null}
-            </div>
-          )}
-        </li>
-
-        <li className="flex flex-col gap-2">
-          <label className="font-medium uppercase text-sm text-gray-900">
-            Descripción de la solución*
-          </label>
-
-          {localReadonly ? (
-            <div
-              className="text-sm text-gray-900"
-              dangerouslySetInnerHTML={{
-                __html: plainTextDescription.replace(/\n/g, "<br/>"),
-              }}
-            ></div>
-          ) : (
-            <div className="flex flex-col">
-              <Editor
-                toolbarHidden
-                editorState={editorStateDescription}
-                onEditorStateChange={(newState: any) => {
-                  setEditorStateDescription(newState);
-                  const blocks = convertEditorStateToBlocks(newState);
-                  formik.setFieldValue("description", blocks);
-                }}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName={
-                  "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
-                }
-                placeholder="Introduce la descripción"
-              />
-              {formik.touched.description && formik.errors.description ? (
-                <ErrorFormMessage
-                  message={
-                    typeof formik.errors.description === "string"
-                      ? formik.errors.description
-                      : JSON.stringify(formik.errors.description)
-                  }
-                />
-              ) : null}
-            </div>
-          )}
-        </li>
+        <MarkdownEditor
+          label="Descripción de la solución*"
+          value={formik.values.second_description}
+          onChange={(value) =>
+            formik.setFieldValue("second_description", value)
+          }
+          error={formik.errors.second_description}
+          touched={formik.touched.second_description}
+          readonly={localReadonly}
+        />
 
         <li className="flex items-center gap-4">
           <Label subtext="Selecciona a que VP pertenece" htmlFor="vp">
@@ -1177,47 +826,14 @@ export default function ExperimentForm({
           />
         </li>
 
-        <li className="flex flex-col gap-2">
-          <label className="font-medium uppercase text-sm text-gray-900">
-            Resultados*
-          </label>
-
-          {localReadonly ? (
-            <div
-              className="text-sm text-gray-900"
-              dangerouslySetInnerHTML={{
-                __html: plainTextResults.replace(/\n/g, "<br/>"),
-              }}
-            ></div>
-          ) : (
-            <div className="flex flex-col">
-              <Editor
-                toolbarHidden
-                editorState={editorStateResults}
-                onEditorStateChange={(newState: any) => {
-                  setEditorStateResults(newState);
-                  const blocks = convertEditorStateToBlocks(newState);
-                  formik.setFieldValue("results", blocks);
-                }}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName={
-                  "border border-gray-300 px-2.5 rounded outline-blue-500 text-sm"
-                }
-                placeholder="Introduce los resultados"
-              />
-              {formik.touched.results && formik.errors.results ? (
-                <ErrorFormMessage
-                  message={
-                    typeof formik.errors.results === "string"
-                      ? formik.errors.results
-                      : JSON.stringify(formik.errors.results)
-                  }
-                />
-              ) : null}
-            </div>
-          )}
-        </li>
+        <MarkdownEditor
+          label="Resultados*"
+          value={formik.values.second_results}
+          onChange={(value) => formik.setFieldValue("second_results", value)}
+          error={formik.errors.second_results}
+          touched={formik.touched.second_results}
+          readonly={localReadonly}
+        />
       </form>
 
       {localReadonly && (
@@ -1230,7 +846,7 @@ export default function ExperimentForm({
               <ul className="flex flex-col gap-4">
                 {comments.map((comment: any, index: number) => (
                   <li
-                    className="border border-neutral-medium rounded-lg p-4"
+                    className="border border-neutral-medium rounded-lg p-4 overflow-hidden"
                     key={index}
                   >
                     <span className="text-sm flex w-full justify-end">
@@ -1258,7 +874,7 @@ export default function ExperimentForm({
                         </div>
                       </div>
                       <div className="pt-2 text-sm">
-                        <ReactMarkdown>
+                        <ReactMarkdown className="markdown">
                           {comment.attributes.description}
                         </ReactMarkdown>
                       </div>
