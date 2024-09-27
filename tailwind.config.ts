@@ -24,26 +24,29 @@ const config: Config = {
         "neutral-medium": "#DEDEDE",
         "neutral-light": "#F7F7F7",
       },
+      fontFamily: {
+        inter: ["var(--font-inter)", "Inter", "sans-serif"],
+      },
       boxShadow: {
-        "card": "0px 0px 12.277px 0px rgba(108, 108, 108, 0.08), 0px 24.555px 49.11px -12.277px rgba(108, 108, 108, 0.16);"
+        card: "0px 0px 12.277px 0px rgba(108, 108, 108, 0.08), 0px 24.555px 49.11px -12.277px rgba(108, 108, 108, 0.16);",
       },
       keyframes: {
-        "floating": {
+        floating: {
           "0%": { transform: "translate(0,  0px)" },
           "50%": { transform: "translate(0, 15px)" },
           "100%": { transform: "translate(0, -0px)" },
-        }
+        },
       },
       animation: {
-        "floating": "floating 3s ease-in-out infinite"
+        floating: "floating 3s ease-in-out infinite",
       },
       fontSize: {
-        '4.5xl': '2.5rem',
-        '3.2xl': '2rem',
+        "4.5xl": "2.5rem",
+        "3.2xl": "2rem",
       },
       maxWidth: {
-        '648': '40.5rem'
-      }
+        "648": "40.5rem",
+      },
     },
   },
   plugins: [],

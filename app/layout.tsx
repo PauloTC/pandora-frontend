@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/contexts";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import Script from "next/dist/client/script";
+
+const inter_init = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "Proyecto Pandora",
@@ -44,7 +51,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="overflow-x-hidden">
+      <body className={`overflow-x-hidden ${inter_init.variable} `}>
         <AuthProvider>
           <NextTopLoader showSpinner={false} />
           {children}

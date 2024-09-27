@@ -144,7 +144,6 @@ export default function ExperimentForm({
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setLoading(true);
-      console.log("🚀 ~ onSubmit: ~ values:", values);
 
       try {
         let media_reference = await uploadFile(values.reference);
@@ -201,10 +200,6 @@ export default function ExperimentForm({
 
     setReference(event?.target?.files[0].name);
   };
-
-  useEffect(() => {
-    console.log("🚀 ~ experiment:", experiment);
-  }, [experiment]);
 
   return (
     <>

@@ -130,7 +130,9 @@ export default function ExperimentsComponent() {
             filters.status === "Todos" &&
             filters.page === 1
           ) {
-            await getExperiments();
+            await filterExperiments({
+              pagination: { page: 1 },
+            });
           } else {
             await filterExperiments({
               sort: filters.sort,
@@ -286,7 +288,7 @@ export default function ExperimentsComponent() {
                         </div>
                       </div>
 
-                      <div className="flex justify-between items-center gap-2 mb-3 min-h-8 mb-2">
+                      <div className="flex justify-between items-center gap-2 min-h-8 mb-2">
                         <span className="max-w-32 font-semibold text-xs capitalize overflow-hidden overflow-ellipsis display-box line-clamp-2">
                           {vp}
                         </span>
@@ -367,7 +369,9 @@ export default function ExperimentsComponent() {
                       <p
                         className={`font-semibold h-12 flex items-center capitalize text-md w-full`}
                       >
-                        {strategic_area}
+                        {strategic_area.length > 15
+                          ? `${strategic_area.substring(0, 22)}...`
+                          : strategic_area}
                       </p>
                       <ul className="flex items-center justify-end grow relative w-40">
                         {participants

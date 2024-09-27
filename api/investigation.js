@@ -106,11 +106,15 @@ export class Investigation {
   }
 
   async filterInvestigations(filters) {
+    console.log(
+      "🚀 ~ Investigation ~ filterInvestigations ~ filters:",
+      filters
+    );
     const {
       project,
       objectivePublic,
       objetiveResearcher,
-      sort,
+      sort = "desc",
       pagination,
       search,
       status,

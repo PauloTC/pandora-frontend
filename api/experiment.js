@@ -94,7 +94,7 @@ export class Experiment {
 
   async filterExperiments(filters) {
     const {
-      sort,
+      sort = "desc",
       vp,
       execution_methods,
       experiment_type,

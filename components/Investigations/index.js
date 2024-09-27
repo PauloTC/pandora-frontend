@@ -127,9 +127,11 @@ export default function InvestigationsComponent() {
             filters.sort === "desc" &&
             filters.page === 1
           ) {
-            await getInvestigations();
+            await filterInvestigations({
+              pagination: { page: 1 },
+            });
           } else {
-            const investigations = await filterInvestigations({
+            await filterInvestigations({
               project: filters.project === "Todos" ? "" : filters.project,
               status: filters.status === "Todos" ? "" : filters.status,
               objectivePublic:
