@@ -333,20 +333,27 @@ export default function ExperimentForm({
           </Label>
 
           <div>
-            <input
-              type="text"
-              value={formik.values.title}
-              onChange={formik.handleChange}
-              id="title"
-              className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
-                localReadonly
-                  ? "border-none pointer-events-none"
-                  : "border border-gray-300"
-              }`}
-              placeholder="Titulo del experimento"
-              required
-              readOnly={localReadonly}
-            />
+            {localReadonly ? (
+              <p className="text-gray-900 text-sm font-medium w-64">
+                {formik.values.title}
+              </p>
+            ) : (
+              <input
+                type="text"
+                value={formik.values.title}
+                onChange={formik.handleChange}
+                id="title"
+                className={`self-start h-10 text-gray-900 text-sm rounded outline-blue-500 block w-64 p-2.5 ${
+                  localReadonly
+                    ? "border-none pointer-events-none"
+                    : "border border-gray-300"
+                }`}
+                placeholder="Titulo del experimento"
+                required
+                readOnly={localReadonly}
+              />
+            )}
+
             {formik.touched.title && formik.errors.title ? (
               <ErrorFormMessage
                 message={

@@ -261,7 +261,9 @@ export default function ExperimentsComponent() {
                     <div className="relative z-10">
                       <div className="flex mb-3">
                         <h4 className="font-semibold capitalize min-h-10 text-slate-800 text-sm">
-                          {title}
+                          {title.length > 40
+                            ? `${title.substring(0, 40)}...`
+                            : title}
                         </h4>
                       </div>
 
@@ -366,10 +368,8 @@ export default function ExperimentsComponent() {
                       </div>
                     </div>
                     <div className="relative z-10 flex pt-2">
-                      <p
-                        className={`font-semibold h-12 flex items-center capitalize text-md w-full`}
-                      >
-                        {strategic_area.length > 15
+                      <p className="font-semibold h-12 flex items-center capitalize text-md w-full">
+                        {strategic_area.length > 30
                           ? `${strategic_area.substring(0, 22)}...`
                           : strategic_area}
                       </p>
