@@ -9,7 +9,6 @@ export default function ExperimentDetail({
   onClose,
   sidebarMode,
   experiment,
-  children,
 }: any) {
   if (!isOpen) {
     return null;
@@ -47,12 +46,14 @@ export default function ExperimentDetail({
         <div className="flex-1 h-0 py-10 px-4 overflow-y-auto flex-col">
           {sidebarMode === "create" && <ExperimentForm onClose={onClose} />}
           {sidebarMode === "read" && (
-            <ExperimentForm
-              experiment={experiment.attributes}
-              readonly={true}
-              id={experiment.id}
-              onClose={onClose}
-            />
+            <>
+              <ExperimentForm
+                experiment={experiment.attributes}
+                readonly={true}
+                id={experiment.id}
+                onClose={onClose}
+              />
+            </>
           )}
         </div>
       </div>

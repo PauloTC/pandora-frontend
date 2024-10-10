@@ -51,7 +51,7 @@ export class Experiment {
   async getExperiment(id) {
     try {
       const populateExperiment =
-        "populate[1]=experiment_type&populate[2]=participants.photo&populate[3]=vp&populate[4]=project&populate[5]=experiment_type&populate[6]=vp&populate[7]=execution_methods";
+        "populate[1]=experiment_type&populate[2]=participants.photo&populate[3]=vp&populate[4]=project&populate[5]=experiment_type&populate[6]=vp&populate[7]=execution_methods&populate[8]=comments.user.photo";
 
       const url = `${ENV.API_URL}${ENV.ENDPOINTS.EXPERIMENTS}/${id}?${populateExperiment}`;
 
@@ -94,7 +94,7 @@ export class Experiment {
 
   async filterExperiments(filters) {
     const {
-      sort,
+      sort = "desc",
       vp,
       execution_methods,
       experiment_type,

@@ -16,7 +16,7 @@ export const LabelDetail = ({
   return (
     <li className={labelClass}>
       <p
-        className={classNames("font-medium", {
+        className={classNames("font-medium text-sm", {
           "text-left": orientation === "vertical",
           "w-full": orientation === "vertical",
         })}

@@ -6,7 +6,7 @@ export default function LayoutPage({ children }) {
   return (
     <ExperimentsProvider>
       <SidebarComponent />
-      <div className="p-8 sm:ml-64 relative">
+      <div className="p-4 sm:ml-64 relative">
         <HeaderComponent type="experiment" />
         {children}
       </div>

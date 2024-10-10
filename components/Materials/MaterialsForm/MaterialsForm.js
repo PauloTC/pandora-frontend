@@ -11,6 +11,7 @@ import { Material, Public, Location, Investigation } from "@/api";
 import { uploadToS3 } from "@/api";
 import PulseLoader from "react-spinners/PulseLoader";
 import { Label } from "@/components/Common";
+import MarkdownEditor from "@/components/Common/MarkdownEditor";
 
 export function MaterialsForm({ slug }) {
   const router = useRouter();
@@ -218,27 +219,15 @@ export function MaterialsForm({ slug }) {
                     />
                   </li>
 
-                  <li className="flex gap-4 flex-col">
-                    <Label subtext="" htmlFor="sample">
-                      Muestra
-                    </Label>
-
-                    <textarea
-                      id="sample"
-                      rows="5"
-                      maxLength={200}
-                      className="w-full text-sm text-gray-900 bg-white border border-gray-200 p-2.5 rounded outline-blue-500"
-                      placeholder="Escribir la muestra..."
-                      value={formik.values[material.id]?.sample || ""}
-                      onChange={(event) =>
-                        formik.setFieldValue(
-                          `${material.id}.sample`,
-                          event.target.value
-                        )
-                      }
-                      error={formik.errors[material.id]?.sample}
-                    ></textarea>
-                  </li>
+                  <MarkdownEditor
+                    label="Muestra"
+                    value={formik.values[material.id]?.sample || ""}
+                    onChange={(value) =>
+                      formik.setFieldValue(`${material.id}.sample`, value)
+                    }
+                    error={formik.errors[material.id]?.sample}
+                    touched={formik.touched[material.id]?.sample}
+                  />
 
                   <li className="flex gap-4">
                     <Label

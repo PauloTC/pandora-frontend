@@ -22,6 +22,7 @@ export const ENV = {
     VPS: "/vps",
     EXPERIMENT_TYPES: "/experiment-types",
     EXECUTION_METHODS: "/execution-methods",
+    COMMENTS: "/comments",
   },
   TOKEN: "token",
 };
